@@ -1,4 +1,13 @@
 #!/usr/bin/python3
+class col:
+    head = '\033[95m'
+    okb = '\033[94m'
+    okg = '\033[92m'
+    warn = '\033[93m'
+    fail = '\033[91m'
+    endl = '\033[0m'
+    bold = '\033[1m'
+    uline = '\033[4m'
 def reaverspecialdeps():
     import os
     if os.system("ls ~/.airscriptNG/options.txt 2>/dev/null >/dev/null") != 0 or os.system("ls ~/.airscriptNG/ >/dev/null") != 0:
@@ -363,7 +372,7 @@ def handshake_func():
             gpucrack = str(gpucrack)
             print("\n[\033[1;32;48mCAP FILE\033[1;39;48m]: %s" %(gpucrack))
             while True:
-                hcatinstalled = input("\nHave you installed hashcat and the drivers using option [8] from the menu? [y/n] \033[1;31;48m~# \033[0;39;48m")
+                hcatinstalled = input("\nHave you installed hashcat and the drivers using option [6] from the menu? [y/n] \033[1;31;48m~# \033[0;39;48m")
                 if hcatinstalled.lower().startswith("n"):
                     hashcatdownloadfunc()
                     driverdownloadfunc()
@@ -888,7 +897,7 @@ def install_deps(): #Needs a little bit of work
                 if com == 0 and sou == 0:
                     print("\033[1;32;48m[+] \033[1;35;48mAPT sources successfully added. If any problems occur remove last line from '/etc/apt/sources.list' file.")
                     depandancies()
-                    print("Dependancies successfully installed! If you see errors above remove last line from '/etc/apt/sources.list' file, or use option 4 from the main-menu.")
+                    print("Dependancies successfully installed! If you see errors above remove last line from '/etc/apt/sources.list' file, or use option [10] from the main-menu.")
                     clearScreen()
                 else:
                     print("Problems occured when trying to add the repos, reverting to old repo.")
@@ -994,7 +1003,7 @@ def reaver():  #Needs major overhaul
                 title()
                 os.system("rm log.txt 2>/dev/null")
 def aircrackng(): #Lots of effort needed 
-    import os,time
+    import os,time,subprocess
     print("\033[1;33;48m[-] \033[0;37;48mChecking for dependancies")
     check_depends()
     print("\033[1;33;48m[-] \033[0;35;48mAll dependancies are met. Make sure you have correct drivers! \033[0;37;48m")
@@ -1071,7 +1080,7 @@ def aircrackng(): #Lots of effort needed
                         input("\n\033[1;33;48mPress \033[1;32;48m[enter]\033[1;31;48m ~# \033[0;39;48m")
                         os.system("aircrack-ng HANDSHAKES/%s-01.cap -w %s" %(b,f))
                         print("\n\n\033[1;32;48m[+] \033[0;37;48mIf you see 'KEY FOUND:XXXXXXX', that's the PSK.")
-                        print("\033[1;32;48m[+] \033[0;37;48mIf the passphrase was not in the dictonary then try option [10] using hashcat.\n")
+                        print("\033[1;32;48m[+] \033[0;37;48mIf the passphrase was not in the dictonary then try option [4] using hashcat.\n")
                         clearScreen()
                     def standard():
                         os.system('clear')
@@ -1080,16 +1089,16 @@ def aircrackng(): #Lots of effort needed
                         stda = input("\n\033[1;39;48mPlease enter a number. Around 3-5 is sufficient for a good WiFi-card.\033[1;31;48m ~# \033[0;39;48m")
                         input("\n\033[1;33;48m[?] \033[1;37;48mONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT PRESS CTRL+C. \n\n[PRESS ENTER] \033[1;31;48m ~# \033[0;39;48m" %(d))
                         os.system("iwconfig %s channel %s" %(index,c))
-                        os.system("gnome-terminal $TOPLEFTBIG -e 'aireplay-ng -0 %s -a %s -c %s %s --ignore-negative-one && airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(g,stda,d,g,index,b,c,d,index))
+                        os.system("xterm -geometry 100x25+4320+7640 -title 'DEAUTHING: %s & CAPTURING'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'aireplay-ng -0 %s -a %s -c %s %s --ignore-negative-one && airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(g,stda,d,g,index,b,c,d,index))
                         post_frame()
                     def broadcast_deauth():
                         os.system('clear')
                         global brda 
                         print("\033[1;32;48m[info] \033[1;39;48mHow many de-auths do you want to send to all? Typing '0' will de-auth indefinitely, creating a denial of service.")
                         brda = input("\n\033[1;39;48mPlease enter a number. Around 3-5 is sufficient for a good WiFi-card.\033[1;31;48m ~# \033[0;39;48m")
-                        input("\n\033[1;33;48m[?] \033[1;39;48mONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT PRESS CTRL+C. \n\n[PRESS ENTER] \033[1;31;48m ~# \033[0;39;48m" %(d))
+                        input("\n\033[1;33;48m[?] \033[1;39;48mONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT PRESS CTRL+C or close the window. \n\n[PRESS ENTER] \033[1;31;48m ~# \033[0;39;48m" %(d))
                         os.system("iwconfig %s channel %s" %(index,c))
-                        os.system("gnome-terminal -e 'aireplay-ng -0 %s -a %s %s --ignore-negative-one && airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(brda,d,index,b,c,d,index))
+                        os.system("xterm -geometry 100x25+4320+7640 -title 'DEAUTHING ALL & CAPTURING'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'aireplay-ng -0 %s -a %s %s --ignore-negative-one && airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(brda,d,index,b,c,d,index))
                         post_frame()
                     def no_deauth():
                         os.system('clear')
@@ -1097,7 +1106,7 @@ def aircrackng(): #Lots of effort needed
                         print("\033[1;33;48m[info] \033[1;39;48mYou need to wait for someone to connect.")
                         input("\n\033[1;36;48m[info] \033[0;33;48mREADY? HIT \033[1;32;48m[ENTER]\033[0;33;48m TO RUN. ONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT PRESS CTRL+C.\033[1;31;48m ~# \033[0;39;48m" %(d))
                         os.system("\niwconfig %s channel %s" %(index,c))
-                        os.system("gnome-terminal -e 'airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(b,c,d,index))
+                        os.system("xterm -geometry 100x25+4320+7640 -title 'WAITING FOR HANDSHAKE' -bg '#FFFFFF' -fg '#000000' -e 'airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(b,c,d,index))
                         post_frame()
                     def sta():
                         os.system("gnome-terminal -e 'airodump-ng --bssid %s -c %s --ignore-negative-one %s' &" %(d,c,index))
@@ -1110,6 +1119,7 @@ def aircrackng(): #Lots of effort needed
                         #print("It is optional but you can also leave this blank if you still don't get it")
                         g = input("\n\033[1;33;48m[?] \033[0;32;48mPlease copy/paste a station address and hit enter.\033[1;31;48m ~# \033[0;39;48m")
                         os.system("kill $(ps | grep xterm | awk -F ' ' {'print $1'}) 2>/dev/null ")
+                        subprocess.call("kill $(ps a | grep -i \"airodump-ng --bssid\" | awk -F ' ' {'print $1'}) 2>/dev/null")
                         g = str(g)
                     if e.lower().startswith("n"):
                         no_deauth()
@@ -1137,31 +1147,43 @@ def aircrackng(): #Lots of effort needed
                 os.system("rm log.txt 2>/dev/null")
 def title(): #Works so far
     try:
-        import os
+        import os,subprocess,sys
+        from subprocess import check_output
         os.system('clear')
         if os.getuid() != 0:
             print("\033[1;33;48m[?] \033[0;39;48mNot running as root! Please re-run after 'sudo su'\n")
             os._exit(1)
-        print("\033[1;33;48m[?] \033[0;37;48mWhat tool would you like to use? Please run as root or after 'sudo su'")
+        uname = check_output(["uname","-n"])
+        print("\nHello %s%s%s!\n" %(col.warn,uname.decode("utf-8").rstrip(),col.endl))
+        unix = subprocess.check_output("cat /proc/cpuinfo | grep -i \"Model name\" | sort | uniq | awk -F ' ' {'print $4,$5,$6,$7,$8,$9,$10'}",shell=True)
+        print("%sYour CPU%s: %s%s%s" %(col.fail,col.endl,col.okg,unix.decode("utf-8").rstrip(),col.endl))
+        osi = subprocess.check_output("lsb_release -d | awk -F ':' {'print $2'} | tr -d \"\t\"", shell=True)
+        print("%sYour OS%s: %s%s%s" %(col.fail,col.endl,col.okg,osi.decode("utf-8").rstrip(),col.endl))
+        kernel = subprocess.check_output("uname -r", shell=True)
+        print("%sYour Kernel%s: %s%s%s" %(col.fail,col.endl,col.okg,kernel.decode("utf-8").rstrip(),col.endl))
+        print("\n\033[1;33;48m[?] \033[0;37;48mWhat tool would you like to use? Please run as root or after 'sudo su'")
+        print("\n\033[1;33;48m-----------------------------------------ATTACKS-----------------------------------------\033[0;39;48m\n")
         print("\033[1;35;48mType [1] - Aircrack-ng to crack WPA/WPA2")
         print("\033[1;34;48mType [2] - Reaver with pixie dust to crack WPS (rare vulnerability)")
-        print("\033[1;37;48mType [3] - Add the Kali-Rolling Sources and install any dependancies")
-        print("\033[1;31;48mType [4] - If you used option [3] and APT broke, use this to fix it")
+        print("\033[1;39;48mType [3] - Host a Evil-Twin/MITM AP to phish credentials, sniff traffic and more.")
+        print("\033[1;31;48mType [4] - Crack an existing WPA/WPA2 handshake using CPU/GPU.")
+        print("\n\033[1;32;48m----------------------------------------DOWNLOADS----------------------------------------\033[0;39;48m\n")
         print("\033[1;33;48mType [5] - Update and upgrade all system packages")
-        print("\033[1;32;48mType [6] - Add an alias to invoke from anywhere")
-        print("\033[1;36;48mType [7] - If you used option [6] and terminal broke, use this to fix")
-        print("\033[1;35;48mType [8] - Setup Hashcat and drivers to use GPU for cracking")
-        print("\033[1;30;48mType [9] - Host a Evil-Twin/MITM AP to phish credentials, sniff traffic and more.")
-        print("\033[1;37;48mType [10] - Crack an existing WPA/WPA2 handshake using CPU/GPU.")
-        print("\n\n\033[1;37;40mType [99] - Exit ")
-        selection = input("\033[0;39;48m\n|MENU|(Press 1, 2, 3, 4, 5, 6 or 7) >>")
+        print("\033[1;32;48mType [6] - Setup Hashcat and drivers to use GPU for cracking")
+        print("\n\033[1;34;48m--------------------------------------INSTALLATIONS--------------------------------------\033[0;39;48m\n")
+        print("\033[1;36;48mType [7] - If you used option [8] and terminal broke, use this to fix")
+        print("\033[1;35;48mType [8] - Add an alias to invoke from anywhere")
+        print("\033[1;30;48mType [9] - Add the Kali-Rolling Sources and install any dependancies")
+        print("\033[1;39;48mType [10] - If you used option [9] and APT broke, use this to fix it")
+        print("\n\n\033[1;37;40mType [99] - Exit \033[0;39;48m")
+        selection = input("\033[0;39;48m\n|MENU|(Press 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 or 99) >>")
         if selection == "1":
             aircrackng()
         elif selection == "2":
             reaver()
-        elif selection == "3":
+        elif selection == "9":
             install_deps()
-        elif selection == "4":
+        elif selection == "10":
             revert()
         elif selection == "5":
             import os
@@ -1183,11 +1205,11 @@ def title(): #Works so far
             else:
                 pass
             os._exit(1)
-        elif selection == "6":
+        elif selection == "8":
             aliasfunc()
         elif selection == "7":
             unaliasfunc()
-        elif selection == "8":
+        elif selection == "6":
             def menufunc():
                 import os
                 print("\033[1;33;48m[-] \033[0;37;48mChecking for dependancies")
@@ -1209,11 +1231,11 @@ def title(): #Works so far
                 else:
                     menufunc()
             menufunc()
-        elif selection == "9":
+        elif selection == "3":
             print("\n\033[1;33;48m[-] \033[0;37;48mChecking for dependancies")
             check_depends()
             mitm_fakeap_func()
-        elif selection == "10":
+        elif selection == "4":
             handshake_func()
         #elif selection == "98":
         #    os.system("rm ~/.airscriptNG/ -rf 2>/dev/null >/dev/null")
