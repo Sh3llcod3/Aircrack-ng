@@ -1,6 +1,7 @@
 ![alt text](https://goo.gl/wNmRxs)
 # What is this?
 A python script to automate the process of pentesting a WPA/WPA2/WPS network. Very quickly made. The focus is not to beat or re-write existing tools or scripts, but to leverage them to provide functionality and simplicity to the end user while performing existing attacks using widely recognised tools like aircrack-ng or reaver.
+It not only aids an user in gaining a WPA HANDSHAKE but it supports them through the process of cracking the handshake using tools like hashcat. see https://hashcat.net/hashcat/
 
 # Requirements?
 A chipset/wifi-card that supports monitor-mode/packet-injection and some distro of linux that uses the apt package manager (kali/ubuntu/debian). Dependancies will resolve automatically, and there is an option if additional repositories are needed.
