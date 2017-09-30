@@ -1169,7 +1169,7 @@ def title(): #Works so far
         print("\033[1;31;48mType [4] - Crack an existing WPA/WPA2 handshake using CPU/GPU.")
         print("\n\033[1;32;48m----------------------------------------DOWNLOADS----------------------------------------\033[0;39;48m\n")
         print("\033[1;33;48mType [5] - Update and upgrade all system packages")
-        print("\033[1;32;48mType [6] - Setup Hashcat and drivers to use GPU for cracking")
+        print("\033[1;32;48mType [6] - Setup Hashcat and the OpenCL driver to use GPU for cracking")
         print("\n\033[1;34;48m--------------------------------------INSTALLATIONS--------------------------------------\033[0;39;48m\n")
         print("\033[1;36;48mType [7] - If you used option [8] and terminal broke, use this to fix")
         print("\033[1;35;48mType [8] - Add an alias to invoke from anywhere")
