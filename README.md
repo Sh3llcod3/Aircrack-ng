@@ -31,7 +31,7 @@ Please note, the code is neither efficient or very advanced. This likely won't a
 - [x] Add option to resolve dependencies [Added 17/06/17]
 - [x] Add option to create captive portal/Evil-twin AP [Added 24/08/2017]
 - [x] Add option to crack existing *.cap* files using hashcat/GPU/CPU/Aircrack [Added 24/08/2017]
-- [x] Improve menu layout [COMING SOON] [Added 30/9/2017 In beta]
+- [x] Improve menu layout [Added 30/9/2017 In beta]
 - [ ] Add support for GENPMK/CoWPAtty [COMING SOON]
 - [ ] Make and integrate my own tools [VERY UNLIKELY]
 - [ ] (Ultimate Goal) Design and build a Gtk/Qt or any type of GUI [HELP REQUIRED, AS LIMITED KNOWLEDGE]
