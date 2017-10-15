@@ -1109,7 +1109,7 @@ def aircrackng(): #Lots of effort needed
                         os.system("xterm -geometry 100x25+4320+7640 -title 'WAITING FOR HANDSHAKE' -bg '#FFFFFF' -fg '#000000' -e 'airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(b,c,d,index))
                         post_frame()
                     def sta():
-                        os.system("gnome-terminal -e 'airodump-ng --bssid %s -c %s --ignore-negative-one %s' &" %(d,c,index))
+                        os.system("gnome-terminal --command='airodump-ng --bssid %s -c %s --ignore-negative-one %s' 2>/dev/null &" %(d,c,index))
                         global g
                         print("\n\033[0;37;48m[info] \033[1;33;48mIn the \033[1;32;48mTERMINAL\033[1;33;48m that appears, look at the column where it says bssid/station.")
                         #print("\033[1;35;48m[info] \033[1;37;48mIf you don't have that then leave you'll have to de-auth everyone or not de-auth by leaving it blank.")
@@ -1119,7 +1119,7 @@ def aircrackng(): #Lots of effort needed
                         #print("It is optional but you can also leave this blank if you still don't get it")
                         g = input("\n\033[1;33;48m[?] \033[0;32;48mPlease copy/paste a station address and hit enter.\033[1;31;48m ~# \033[0;39;48m")
                         os.system("kill $(ps | grep xterm | awk -F ' ' {'print $1'}) 2>/dev/null ")
-                        subprocess.call("kill $(ps a | grep -i \"airodump-ng --bssid\" | awk -F ' ' {'print $1'}) 2>/dev/null")
+                        subprocess.call("kill $(ps a | grep -i \"airodump-ng --bssid\" | awk -F ' ' {'print $1'}) 2>/dev/null",shell=True)
                         g = str(g)
                     if e.lower().startswith("n"):
                         no_deauth()
