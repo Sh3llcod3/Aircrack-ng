@@ -13,9 +13,9 @@ sudo python3 airscript-ng.py
 ```
 Alternatively: 
 ```
-sudo chmod +x airscript-ng.py no-color-airscript-ng.py
+sudo chmod +x airscript-ng-old-stable.py no-color-airscript-ng.py airscript-new-features.py
 sudo su
-./airscript-ng.py
+./airscript-new-features.py
 ```
 or, if you want it without colours:
 ```
@@ -25,6 +25,8 @@ sudo su
 The rest is self explainatory once run. Anyone can use this script to pentest a wireless network, it really is that simple.
 
 Please note, the code is neither efficient or very advanced. This likely won't affect usage and while efficiency is very important, functionality is a must. As long as it runs with as little bugs as possible, I am satisfied for the time being. 
+
+Additonal note: There used to just be a version called airscript-ng.py and the no colour one. However, since I am actively learning python, lots of new elements have been introduced since then. Therefore, I have decided to keep the old-stable version and the new (sort of beta) version that I am actively working on. What do I mean? Well, the old-stable one will still be updated but it may often contain an older build that is known to be stable.
 
 ## Upcoming
 - [x] Make a basic python script
