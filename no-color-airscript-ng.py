@@ -384,7 +384,7 @@ def handshake_func():
             input("\nPlease specify a Wordlist. (press enter) ~# ")
             wordcrack = askopenfilename()
             wordcrack = str(wordcrack)
-            os.system("aircrack-ng %s -w %s" %(cpucrack,wordcrack))
+            subprocess.call("aircrack-ng %s -w %s" %(cpucrack,wordcrack),shell=True)
             print("\n")
             os._exit(1)
         elif cpugpu == "2": #GPU CRACK SECTION
@@ -641,7 +641,8 @@ def handshake_func():
         else:
             handshake_func()
     except(KeyboardInterrupt,EOFError,TypeError,TabError,NameError,ValueError):
-        import os
+        import os,subprocess
+        subprocess.call("kill $(ps aux | grep -i \"aircrack-ng\" | awk -F ' ' {'print $2'}) 2>/dev/null", shell=True)
         os.system("clear")
         os._exit(1)
     #Finish here
@@ -1076,6 +1077,14 @@ def aircrackng(): #Lots of effort needed
                     def post_frame():
                         print("\n\n[info] If you saw [WPA HANDSHAKE: %s] at the top right, then its time to crack the handshake." %(d))
                         print("[info] We need a wordlist. You can download one from here: https://goo.gl/3UoZ34")
+                        while True:
+                            print("\nDo you want to crack using CPU/GPU?")
+                            print("If you use GPU remember the handshake will be in a folder called \"HANDSHAKES\" ")
+                            choice_of_cpu_gpu = input("CPU-->[c] | GPU-->[g] $ ")
+                            if choice_of_cpu_gpu.lower().startswith("c"):
+                                break
+                            elif choice_of_cpu_gpu.lower().startswith("g"):
+                                handshake_func()
                         #print("[info] Please download or locate one ")
                         #print("[info] Hopefully the password will be in there or put it in there")
                         input("\n[+] Please Specify wordlist. Press [enter] to open file selection  ~# ")
@@ -1092,8 +1101,12 @@ def aircrackng(): #Lots of effort needed
                         print("[WORDLIST]: %s" %(f))
                         #print("[info] Ok, ready? press enter to start cracking")
                         #print("[info] If nothing is found then ctrl+c and try again")
-                        input("\nPress [enter] ~# ")
-                        os.system("aircrack-ng HANDSHAKES/%s-01.cap -w %s" %(b,f))
+                        input("\nPress [enter]/CTRL+C ~# ")
+                        try:
+                            subprocess.call("aircrack-ng HANDSHAKES/%s-01.cap -w %s" %(b,f),shell=True)
+                        except(KeyboardInterrupt,EOFError) as some_random_exception:
+                            print("^Recieved . Cancelling..." %(some_random_exception))
+                            subprocess.call("kill $(ps aux | grep -i \"aircrack-ng\" | awk -F ' ' {'print $2'}) 2>/dev/null", shell=True)
                         print("\n\n[+] If you see 'KEY FOUND:XXXXXXX', that's the PSK.")
                         print("[+] If the passphrase was not in the dictonary then try option [4] using hashcat.\n")
                         clearScreen()
