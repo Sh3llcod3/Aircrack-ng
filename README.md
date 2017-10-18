@@ -28,6 +28,13 @@ Please note, the code is neither efficient or very advanced. This likely won't a
 
 Additonal note: Since I am actively developing this, lots of new elements have been introduced since then. Therefore, I have decided to keep the airscript-old-stable.py version and airscript-ng.py separate. This allows me to experiment with new features and release them without causing problems with existing versions. I'll keep updating the old stable version, but often it will feature an older build that is known to run stable. If you want the latest and greatest, you have to run airscript-ng.py
 
+Having problems updating this script?
+Until I fix that, please update from GitHub using these simple commands in the directory you have it saved:
+```
+git stash
+git pull
+```
+
 ## Upcoming
 - [x] Make a basic python script
 - [x] Make and integrate similar script for reaver/other-tools [Reaver/Pixie Dust added 11/06/17]
