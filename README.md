@@ -13,7 +13,7 @@ sudo python3 airscript-ng.py
 ```
 Alternatively: 
 ```
-sudo chmod +x airscript-old-stable.py no-color-airscript-ng.py airscript-ng.py
+sudo chmod +x airscript-ng.py no-color-airscript-ng.py airscript-old-stable.py
 sudo su
 ./airscript-ng.py
 ```
