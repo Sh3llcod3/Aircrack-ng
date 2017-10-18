@@ -13,9 +13,9 @@ sudo python3 airscript-ng.py
 ```
 Alternatively: 
 ```
-sudo chmod +x airscript-ng-old-stable.py no-color-airscript-ng.py airscript-new-features.py
+sudo chmod +x airscript-old-stable.py no-color-airscript-ng.py airscript-ng.py
 sudo su
-./airscript-new-features.py
+./airscript-ng.py
 ```
 or, if you want it without colours:
 ```
@@ -26,7 +26,7 @@ The rest is self explainatory once run. Anyone can use this script to pentest a 
 
 Please note, the code is neither efficient or very advanced. This likely won't affect usage and while efficiency is very important, functionality is a must. As long as it runs with as little bugs as possible, I am satisfied for the time being. 
 
-Additonal note: There used to just be a version called airscript-ng.py and the no colour one. However, since I am actively learning python, lots of new elements have been introduced since then. Therefore, I have decided to keep the old-stable version and the new (sort of beta) version that I am actively working on. What do I mean? Well, the old-stable one will still be updated but it may often contain an older build that is known to be stable.
+Additonal note: Since I am actively developing this, lots of new elements have been introduced since then. Therefore, I have decided to keep the airscript-old-stable.py version and airscript-ng.py separate. This allows me to experiment with new features and release them without causing problems with existing versions. I'll keep updating the old stable version, but often it will feature an older build that is known to run stable. If you want the latest and greatest, you have to run airscript-ng.py
 
 ## Upcoming
 - [x] Make a basic python script
