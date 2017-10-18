@@ -41,7 +41,7 @@ Additonal note: Since I am actively developing this, lots of new elements have b
 - [ ] (Ultimate Goal) Design and build a Gtk/Qt or any type of GUI [HELP REQUIRED, AS LIMITED KNOWLEDGE]
 
 ## Screenshots
-[Title Menu](https://goo.gl/hMABZe)
-[Aircrack-ng](https://goo.gl/8gqVHX)
+[Title Menu](https://goo.gl/bGp5gk)
+[Aircrack-ng](https://goo.gl/UwPb6c)
 [Fake AP](https://goo.gl/fDxzdZ)
 [Crack Existing](https://goo.gl/y5f2zS)
