@@ -1105,7 +1105,7 @@ def aircrackng(): #Lots of effort needed
                         try:
                             subprocess.call("aircrack-ng HANDSHAKES/%s-01.cap -w %s" %(b,f),shell=True)
                         except(KeyboardInterrupt,EOFError) as some_random_exception:
-                            print("^Recieved . Cancelling..." %(some_random_exception))
+                            print("^Recieved %s. Cancelling..." %(some_random_exception))
                             subprocess.call("kill $(ps aux | grep -i \"aircrack-ng\" | awk -F ' ' {'print $2'}) 2>/dev/null", shell=True)
                         print("\n\n[+] If you see 'KEY FOUND:XXXXXXX', that's the PSK.")
                         print("[+] If the passphrase was not in the dictonary then try option [4] using hashcat.\n")
