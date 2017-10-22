@@ -11,6 +11,17 @@ class col:
     blue_deep = '\033[1;34;48m'
     warn_deep = '\033[1;33;48m'
     fail_deep = '\033[1;31;48m'
+def update_this_script():
+    check_depends()
+    import subprocess,os
+    while True:
+        up_choc = input("\nUpdate this script? Any local changes will be lost! y/n > ")
+        if up_choc.lower().startswith("y"):
+            subprocess.call("git stash && git pull",shell=True)
+            print("Update is done. Relaunch!")
+            os._exit(1)
+        elif up_choc.lower().startswith("n"):
+            title()
 def get_wifi_cards_pick():
     import subprocess
     iostream = subprocess.check_output
@@ -1088,7 +1099,7 @@ def aircrackng(): #Lots of effort needed
                         print("\n\n\033[1;34;48m[info] \033[1;32;48mIf you saw [WPA HANDSHAKE: %s] at the top right, then its time to crack the handshake." %(d))
                         while True:
                             #print("\n\033[1;36;48mDo you want to crack using\033[0;39;48m %sCPU/GPU?%s" %(col.warn_deep,col.endl))
-                            print("[1;33;48m[info] \033[1;39;48m%sIf you use GPU remember the handshake will be in a folder called%s%s \"HANDSHAKES\" %s" %(col.fail,col.endl,col.blue_deep,col.endl))
+                            print("\033[1;33;48m[info] \033[1;39;48m%sIf you use GPU remember the handshake will be in a folder called%s%s \"HANDSHAKES\" %s" %(col.fail,col.endl,col.blue_deep,col.endl))
                             choice_of_cpu_gpu = input("%sCrack using: CPU-->[c] |GPU-->[g]%s %s$%s " %(col.blue_deep,col.endl,col.okg,col.endl))
                             if choice_of_cpu_gpu.lower().startswith("c"):
                                 break
@@ -1213,8 +1224,9 @@ def title(): #Works so far
         print("\033[1;35;48mType [8] - Add an alias to invoke from anywhere")
         print("\033[1;30;48mType [9] - Add the Kali-Rolling Sources and install any dependancies")
         print("\033[1;39;48mType [10] - If you used option [9] and APT broke, use this to fix it")
+        print("\033[1;34;48mType [11] - Update this script from GitHub, removing any changes\033[1;39;48m")
         print("\n\n\033[1;37;40mType [99] - Exit \033[0;39;48m")
-        selection = input("\033[0;39;48m\n|MENU|(Press 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 or 99) >>")
+        selection = input("\033[0;39;48m\n|MENU|(Press 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 or 99) >>")
         if selection == "1":
             aircrackng()
         elif selection == "2":
@@ -1234,6 +1246,8 @@ def title(): #Works so far
                 os._exit(1)
             else:
                 title()
+        elif selection == "11":
+            update_this_script()
         elif selection == "99":
             import os
             log = os.system("ls -a | grep -i 'log.txt' >> log.txt")
