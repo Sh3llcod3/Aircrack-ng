@@ -378,6 +378,7 @@ def handshake_func():
         cpugpu = str(cpugpu)
         if cpugpu == "1": #CPU CRACK SECTION
             from tkinter.filedialog import askopenfilename, Tk as capture
+            import subprocess
             capture().withdraw()
             global cpucrack
             somepath = input("\nPlease specify a .cap file. (press enter) \033[1;31;48m~# \033[0;39;48m")
@@ -387,7 +388,13 @@ def handshake_func():
             input("\nPlease specify a Wordlist. (press enter) \033[1;31;48m~# \033[0;39;48m")
             wordcrack = askopenfilename()
             wordcrack = str(wordcrack)
-            subprocess.call("aircrack-ng %s -w %s" %(cpucrack,wordcrack),shell=True)
+            try:
+                subprocess.call("aircrack-ng %s -w %s" %(cpucrack,wordcrack),shell=True)
+                #subprocess.call("/bin/bash -c \"aircrack-ng %s -w %s\"" %(cpucrack,wordcrack),shell=True)
+            except(KeyboardInterrupt,EOFError):
+                subprocess.call("kill $(ps aux | grep -i \"aircrack-ng\" | awk -F ' ' {'print $2'}) 2>/dev/null", shell=True)
+                print("Recieved TERMINATE signal, quitting...")
+                os._exit(1)
             print("\n")
             os._exit(1)
         elif cpugpu == "2": #GPU CRACK SECTION
@@ -563,7 +570,7 @@ def handshake_func():
                                 continue
                         hfinal()
                         print("[\033[1;32;48mINPUT MASK/CHARSET\033[1;39;48m]: %s" %(mainhashmask))
-                        if os.system("ls ~/.airscriptNG/ >/dev/null") != 0:
+                        if os.system("ls ~/.airscriptNG/ >/dev/null 2>/dev/null") != 0:
                             os.system("mkdir ~/.airscriptNG/ 2>/dev/null")
                         if input("\n\033[0;39;48mOptions correctly chosen? Start cracking? [y/n] \033[1;31;48m~# \033[0;39;48m").lower().startswith("y"):
                             if os.system("ls ~/.airscriptNG/HANDSHAKEFILE >/dev/null 2>/dev/null") != 0:
@@ -1079,17 +1086,17 @@ def aircrackng(): #Lots of effort needed
                     e = str(e)
                     def post_frame():
                         print("\n\n\033[1;34;48m[info] \033[1;32;48mIf you saw [WPA HANDSHAKE: %s] at the top right, then its time to crack the handshake." %(d))
-                        print("\033[1;32;48m[info] \033[1;36;48mWe need a wordlist. You can download one from here: https://goo.gl/3UoZ34")
                         while True:
-                            print("\n\033[1;36;48mDo you want to crack using\033[0;39;48m %sCPU/GPU?%s" %(col.warn_deep,col.endl))
-                            print("If you use GPU remember the handshake will be in a folder called%s \"HANDSHAKES\" %s" %(col.blue_deep,col.endl))
-                            choice_of_cpu_gpu = input("%sCPU-->[c] | GPU-->[g]%s %s$%s " %(col.blue_deep,col.endl,col.okg,col.endl))
+                            #print("\n\033[1;36;48mDo you want to crack using\033[0;39;48m %sCPU/GPU?%s" %(col.warn_deep,col.endl))
+                            print("[1;33;48m[info] \033[1;39;48m%sIf you use GPU remember the handshake will be in a folder called%s%s \"HANDSHAKES\" %s" %(col.fail,col.endl,col.blue_deep,col.endl))
+                            choice_of_cpu_gpu = input("%sCrack using: CPU-->[c] |GPU-->[g]%s %s$%s " %(col.blue_deep,col.endl,col.okg,col.endl))
                             if choice_of_cpu_gpu.lower().startswith("c"):
                                 break
                             elif choice_of_cpu_gpu.lower().startswith("g"):
                                 handshake_func()
                         #print("\033[1;34;48m[info] \033[0;34;48mPlease download or locate one ")
                         #print("\033[1;36;48m[info] \033[0;33;48mHopefully the password will be in there or put it in there")
+                        print("\033[1;32;48m[info]%sWe need a wordlist. You can download one from here: %shttps://goo.gl/3UoZ34 %s" %(col.endl,col.blue_deep,col.endl))
                         input("\n\033[1;32;48m[+] \033[1;31;48mPlease Specify wordlist. Press \033[1;32;48m[enter]\033[1;31;48m to open file selection \033[1;31;48m ~# \033[0;39;48m")
                         def wordlist():
                             from tkinter.filedialog import Tk
