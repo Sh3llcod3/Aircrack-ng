@@ -1,13 +1,16 @@
 #!/usr/bin/python3
 class col:
-    head = '\033[95m'
-    okb = '\033[94m'
-    okg = '\033[92m'
-    warn = '\033[93m'
-    fail = '\033[91m'
+    head = '\033[0m'
+    okb = '\033[0m'
+    okg = '\033[0m'
+    warn = '\033[0m'
+    fail = '\033[0m'
     endl = '\033[0m'
-    bold = '\033[1m'
-    uline = '\033[4m'
+    bold = '\033[0m'
+    uline = '\033[0m'
+    blue_deep = '\033[0m'
+    warn_deep = '\033[0m'
+    fail_deep = '\033[0m'
 def get_wifi_cards_pick():
     import subprocess
     iostream = subprocess.check_output
@@ -17,7 +20,7 @@ def get_wifi_cards_pick():
     for i in range(1,int(def_range)+1):
         wireless_cards.append(iostream("ls /sys/class/net/ | grep ^wl | head -n %s | tail -n 1" %(i),shell=True).decode("utf-8").rstrip())
         index_array.append(i)
-        print("To choose %s enter [%s]" %(wireless_cards[i-1],i))
+        print("%sTo choose %s%s%s %senter %s[%s]%s" %(col.fail_deep,col.blue_deep,wireless_cards[i-1],col.endl,col.fail_deep,col.warn_deep,i,col.endl))
     print("\n")
     def get_card_name():
         global index
@@ -375,6 +378,7 @@ def handshake_func():
         cpugpu = str(cpugpu)
         if cpugpu == "1": #CPU CRACK SECTION
             from tkinter.filedialog import askopenfilename, Tk as capture
+            import subprocess
             capture().withdraw()
             global cpucrack
             somepath = input("\nPlease specify a .cap file. (press enter) ~# ")
@@ -384,7 +388,13 @@ def handshake_func():
             input("\nPlease specify a Wordlist. (press enter) ~# ")
             wordcrack = askopenfilename()
             wordcrack = str(wordcrack)
-            subprocess.call("aircrack-ng %s -w %s" %(cpucrack,wordcrack),shell=True)
+            try:
+                subprocess.call("aircrack-ng %s -w %s" %(cpucrack,wordcrack),shell=True)
+                #subprocess.call("/bin/bash -c \"aircrack-ng %s -w %s\"" %(cpucrack,wordcrack),shell=True)
+            except(KeyboardInterrupt,EOFError):
+                subprocess.call("kill $(ps aux | grep -i \"aircrack-ng\" | awk -F ' ' {'print $2'}) 2>/dev/null", shell=True)
+                print("Recieved TERMINATE signal, quitting...")
+                os._exit(1)
             print("\n")
             os._exit(1)
         elif cpugpu == "2": #GPU CRACK SECTION
@@ -560,7 +570,7 @@ def handshake_func():
                                 continue
                         hfinal()
                         print("[INPUT MASK/CHARSET]: %s" %(mainhashmask))
-                        if os.system("ls ~/.airscriptNG/ >/dev/null") != 0:
+                        if os.system("ls ~/.airscriptNG/ >/dev/null 2>/dev/null") != 0:
                             os.system("mkdir ~/.airscriptNG/ 2>/dev/null")
                         if input("\nOptions correctly chosen? Start cracking? [y/n] ~# ").lower().startswith("y"):
                             if os.system("ls ~/.airscriptNG/HANDSHAKEFILE >/dev/null 2>/dev/null") != 0:
@@ -1076,17 +1086,17 @@ def aircrackng(): #Lots of effort needed
                     e = str(e)
                     def post_frame():
                         print("\n\n[info] If you saw [WPA HANDSHAKE: %s] at the top right, then its time to crack the handshake." %(d))
-                        print("[info] We need a wordlist. You can download one from here: https://goo.gl/3UoZ34")
                         while True:
-                            print("\nDo you want to crack using CPU/GPU?")
-                            print("If you use GPU remember the handshake will be in a folder called \"HANDSHAKES\" ")
-                            choice_of_cpu_gpu = input("CPU-->[c] | GPU-->[g] $ ")
+                            #print("\nDo you want to crack using %sCPU/GPU?%s" %(col.warn_deep,col.endl))
+                            print("[1;33;48m[info] %sIf you use GPU remember the handshake will be in a folder called%s%s \"HANDSHAKES\" %s" %(col.fail,col.endl,col.blue_deep,col.endl))
+                            choice_of_cpu_gpu = input("%sCrack using: CPU-->[c] |GPU-->[g]%s %s$%s " %(col.blue_deep,col.endl,col.okg,col.endl))
                             if choice_of_cpu_gpu.lower().startswith("c"):
                                 break
                             elif choice_of_cpu_gpu.lower().startswith("g"):
                                 handshake_func()
                         #print("[info] Please download or locate one ")
                         #print("[info] Hopefully the password will be in there or put it in there")
+                        print("[info]%sWe need a wordlist. You can download one from here: %shttps://goo.gl/3UoZ34 %s" %(col.endl,col.blue_deep,col.endl))
                         input("\n[+] Please Specify wordlist. Press [enter] to open file selection  ~# ")
                         def wordlist():
                             from tkinter.filedialog import Tk
@@ -1105,7 +1115,7 @@ def aircrackng(): #Lots of effort needed
                         try:
                             subprocess.call("aircrack-ng HANDSHAKES/%s-01.cap -w %s" %(b,f),shell=True)
                         except(KeyboardInterrupt,EOFError) as some_random_exception:
-                            print("^Recieved %s. Cancelling..." %(some_random_exception))
+                            print("%s^Recieved %s. Cancelling...%s" %(col.fail_deep,some_random_exception,col.endl))
                             subprocess.call("kill $(ps aux | grep -i \"aircrack-ng\" | awk -F ' ' {'print $2'}) 2>/dev/null", shell=True)
                         print("\n\n[+] If you see 'KEY FOUND:XXXXXXX', that's the PSK.")
                         print("[+] If the passphrase was not in the dictonary then try option [4] using hashcat.\n")
