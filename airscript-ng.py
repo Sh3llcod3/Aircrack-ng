@@ -15,7 +15,7 @@ def update_this_script():
     check_depends()
     import subprocess,os
     while True:
-        up_choc = input("\nUpdate this script? Any local changes will be lost! y/n > ")
+        up_choc = input("\n%sUpdate this script? Any local changes will be lost! y/n > " %(col.endl))
         if up_choc.lower().startswith("y"):
             subprocess.call("git stash && git pull",shell=True)
             print("Update is done. Relaunch!")
@@ -1217,14 +1217,13 @@ def title(): #Works so far
         print("\033[1;39;48mType [3] - Host a Evil-Twin/MITM AP to phish credentials, sniff traffic and more.")
         print("\033[1;31;48mType [4] - Crack an existing WPA/WPA2 handshake using CPU/GPU.")
         print("\n\033[1;32;48m----------------------------------------DOWNLOADS----------------------------------------\033[0;39;48m\n")
-        print("\033[1;33;48mType [5] - Update and upgrade all system packages")
+        print("\033[1;33;48mType [5] - Update/upgrade all system packages and this script")
         print("\033[1;32;48mType [6] - Setup Hashcat and the OpenCL driver to use GPU for cracking")
         print("\n\033[1;34;48m--------------------------------------INSTALLATIONS--------------------------------------\033[0;39;48m\n")
         print("\033[1;36;48mType [7] - If you used option [8] and terminal broke, use this to fix")
         print("\033[1;35;48mType [8] - Add an alias to invoke from anywhere")
         print("\033[1;30;48mType [9] - Add the Kali-Rolling Sources and install any dependancies")
         print("\033[1;39;48mType [10] - If you used option [9] and APT broke, use this to fix it")
-        print("\033[1;34;48mType [11] - Update this script from GitHub, removing any changes\033[1;39;48m")
         print("\n\n\033[1;37;40mType [99] - Exit \033[0;39;48m")
         selection = input("\033[0;39;48m\n|MENU|(Press 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 or 99) >>")
         if selection == "1":
@@ -1241,13 +1240,12 @@ def title(): #Works so far
             if input("\033[0;32;48m\n[+]\033[0;38;48m|MENU|APT_UPDATE|(Update system and perform full-upgrade to system?) \033[0;32;48m [y/n]\033[0;34;48m>>").lower().startswith("y"):
                 os.system("sudo apt-get install xterm apt >> log.txt -y --allow-unauthenticated")
                 os.system("sudo xterm $HOLD -title 'Updating, do not close!'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'apt update --allow-unauthenticated;apt full-upgrade -y --allow-unauthenticated;apt autoclean;apt autoremove -y --allow-unauthenticated' ")
+                update_this_script()
                 print("\033[0;32;48mSystem is up to date, Goodbye!")
                 os.system("rm log.txt 2>/dev/null")
                 os._exit(1)
             else:
                 title()
-        elif selection == "11":
-            update_this_script()
         elif selection == "99":
             import os
             log = os.system("ls -a | grep -i 'log.txt' >> log.txt")
