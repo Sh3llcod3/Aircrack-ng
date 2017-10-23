@@ -17,8 +17,22 @@ def update_this_script():
     while True:
         up_choc = input("\n%sUpdate this script? Any local changes will be lost! y/n > " %(col.endl))
         if up_choc.lower().startswith("y"):
-            subprocess.call("git stash && git pull",shell=True)
+            status_code_update = subprocess.call("git stash && git pull",shell=True)
             print("Update is done. Relaunch!")
+            if status_code_update != 0:
+                while True:
+                    fix_git_config_rand = input("See something to do with %sgit-config%s? Fix that? %sy%s/%sn%s> " %(col.blue_deep,col.endl,col.okg,col.endl,col.warn,col.endl))
+                    if fix_git_config_rand.lower().startswith("y"):
+                        find_out = subprocess.check_output
+                        user_git_name = find_out("id -u -n",shell=True).decode("utf-8").rstrip()
+                        user_git_hostname = find_out("uname -n",shell=True).decode("utf-8").rstrip()
+                        subprocess.call("git config user.email \"%s@%s.com\" "  %(user_git_name,user_git_hostname),shell=True)
+                        subprocess.call("git config user.name \"%s\" " %(user_git_name),shell=True)
+                        print("Applied fix, pulling update...")
+                        subprocess.call("git stash && git pull",shell=True)
+                        break
+                    elif fix_git_config_rand.lower().startswith("n"):
+                        break
             os._exit(1)
         elif up_choc.lower().startswith("n"):
             title()
@@ -43,7 +57,7 @@ def get_wifi_cards_pick():
                 subprocess.call("ip link set %s down;iw dev %s set type monitor;ip link set %s up" %(index,index,index),shell=True)
                 return index
             else:
-                aircrackng()
+                title()
         else:
             get_card_name()
     get_card_name()
