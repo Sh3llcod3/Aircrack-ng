@@ -26,7 +26,7 @@ The rest is self explainatory once run. Anyone can use this script to pentest a 
 
 Please note, the code is neither efficient or very advanced. This likely won't affect usage and while efficiency is very important, functionality is a must. As long as it runs with as little bugs as possible, I am satisfied for the time being. 
 
-Additonal note: Since I am actively developing this, lots of new elements have been introduced since then. Therefore, I have decided to keep the airscript-old-stable.py version and airscript-ng.py separate. This allows me to experiment with new features and release them without causing problems with existing versions. I'll keep updating the old stable version, but often it will feature an older build that is known to run stable. If you want the latest and greatest, you have to run airscript-ng.py
+Additonal note: Since I am actively developing this, lots of new elements have been introduced since then. Therefore, I have decided to keep the airscript-old-stable.py version and airscript-ng.py separate. This allows me to experiment with new features and release them without causing problems with existing versions. I'll keep updating the old stable version, but often it will feature an older build that is known to run stable. If you want the latest and greatest, you have to run airscript-ng.py. If you're going to fork this project, please ensure to keep checking back, as your fork may be outdated.
 
 Having problems updating this script?
 Until I fix that, please update from GitHub using these simple commands in the directory you have it saved:
@@ -43,6 +43,7 @@ git pull
 - [x] Add option to crack existing *.cap* files using hashcat/GPU/CPU/Aircrack [Added 24/08/2017]
 - [x] Improve menu layout [Added 30/9/2017 In beta]
 - [x] Add options to install opencl-runtime for hashcat [Added 30/9/2017 In beta]
+- [x] Add support for Hostapd [Added 27/10/2017]
 - [ ] Add support for GENPMK/CoWPAtty [COMING SOON]
 - [ ] Make and integrate my own tools [VERY UNLIKELY]
 - [ ] (Ultimate Goal) Design and build a Gtk/Qt or any type of GUI [HELP REQUIRED, AS LIMITED KNOWLEDGE]
