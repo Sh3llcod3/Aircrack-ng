@@ -978,11 +978,11 @@ def depandancies(): #This is fine
     import os,time
     print("[-] Updating system and installing some dependancies. Please hold!")
     os.system("echo '[-] 25% done';sudo apt update --allow-unauthenticated 2>/dev/null && echo '[-] 50% done' && sudo apt install xterm -y --allow-unauthenticated >/dev/null 2>/dev/null")
-    os.system("xterm $HOLD -title 'Installing any dependancies [airscript-ng]'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'sudo apt install gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk driftnet dsniff bzip2 apache2 gnome-terminal -y --allow-unauthenticated && update-rc.d isc-dhcp-server disable && update-rc.d apache2 disable'")
+    os.system("xterm $HOLD -title 'Installing any dependancies [airscript-ng]'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'sudo apt install gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk driftnet dsniff bzip2 apache2 gnome-terminal hostapd psmisc -y --allow-unauthenticated && update-rc.d isc-dhcp-server disable && update-rc.d apache2 disable'")
     time.sleep(2)
 def check_depends(): #Still works
     import os,time
-    x = os.system("dpkg -s xterm gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk dsniff driftnet bzip2 gnome-terminal apache2 2>/dev/null >/dev/null")
+    x = os.system("dpkg -s xterm gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk dsniff driftnet bzip2 gnome-terminal apache2 hostapd psmisc 2>/dev/null >/dev/null")
     if x == 0:
         pass
     else:
