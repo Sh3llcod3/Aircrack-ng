@@ -920,8 +920,8 @@ def reaver():  #Needs major overhaul
         if ack.lower().startswith('y'):
             print("\033[1;33;48m[-] \033[0;37;48mChecking for dependancies")
             print("\033[1;32;48m[-] \033[0;37;48m5% done")
-            reaverspecialdeps()
-            #check_depends()
+            #reaverspecialdeps()
+            check_depends()
             print("\033[1;33;48m[-] \033[0;35;48mAll dependancies are met. Make sure you have correct drivers! \033[0;37;48m")
             time.sleep(1)
             os.system('clear')
