@@ -112,8 +112,9 @@ def reaverspecialdeps():
 def mitm_fakeap_func():#FIX THIS
     try:
         import os, time, subprocess
-        if os.system("ls -l /var/lib/dhcp/dhcpd.leases 2>/dev/null >/dev/null") != 0:
-            os.system("touch /var/lib/dhcp/dhcpd.leases")
+        subprocess.call("rm /var/lib/dhcp/dhcpd.leases && touch /var/lib/dhcp/dhcpd.leases",shell=True)
+        #if os.system("ls -l /var/lib/dhcp/dhcpd.leases 2>/dev/null >/dev/null") != 0:
+        #    os.system("touch /var/lib/dhcp/dhcpd.leases")
         global ch2
         global ch3
         global ch4
