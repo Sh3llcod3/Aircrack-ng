@@ -1247,8 +1247,8 @@ def reaver():  #Needs minor fixes
         os.system("sudo systemctl start NetworkManager.service")
         os.system("sudo systemctl start wpa_supplicant.service")
         os.system("clear")
-        exc_info = sys.exc_info() #ENABLE THIS AND LINE BELOW FOR TRACEBACK
-        traceback.print_exception(*exc_info)
+        #exc_info = sys.exc_info() #ENABLE THIS AND LINE BELOW FOR TRACEBACK
+        #traceback.print_exception(*exc_info)
         if input("\n\033[1;37;48m[-] \033[0;38;48mPress [y] to exit or any other key to return to start>>").lower().startswith("y"):
             os.system("rm log.txt 2>/dev/null")
             os._exit(1)
