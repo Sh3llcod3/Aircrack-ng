@@ -100,7 +100,7 @@ def gitdeps():
     call = subprocess.call
     if call("ls ~/.airscriptNG/air 2>/dev/null >/dev/null",shell=True) != 0:
         if call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
-            call("mkdir -p ~/.airscriptNG/air && cd ~/.airscriptNG/air && apt update && apt install git git-core libnl-3-dev openssl libnl*-gen* libgcrypt20-dev build-essential libssl1.0-dev -y && git clone git://git.kali.org/packages/aircrack-ng.git -b upstream && cd * && make",shell=True)
+            call("mkdir -p ~/.airscriptNG/air && cd ~/.airscriptNG/air && apt update && apt install git git-core libnl-3-dev openssl libnl*-gen* libgcrypt20-dev build-essential libssl-dev -y && git clone git://git.kali.org/packages/aircrack-ng.git -b upstream && cd * && make",shell=True)
         else:
             print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
             os._exit(1)
