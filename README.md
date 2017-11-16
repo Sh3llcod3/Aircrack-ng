@@ -44,6 +44,7 @@ git pull
 - [x] Improve menu layout [Added 30/9/2017 In beta]
 - [x] Add options to install opencl-runtime for hashcat [Added 30/9/2017 In beta]
 - [x] Add support for Hostapd [Added 27/10/2017]
+- [x] Add Airodump-ng CSV files support [Added 16/11/2017]
 - [ ] Add support for GENPMK/CoWPAtty [COMING SOON]
 - [ ] Make and integrate my own tools [VERY UNLIKELY]
 - [ ] (Ultimate Goal) Design and build a Gtk/Qt or any type of GUI [HELP REQUIRED, AS LIMITED KNOWLEDGE]
