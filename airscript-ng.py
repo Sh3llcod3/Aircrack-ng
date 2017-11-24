@@ -100,19 +100,19 @@ def gitdeps():
     call = subprocess.call
     if call("ls ~/.airscriptNG/air 2>/dev/null >/dev/null",shell=True) != 0:
         if call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
-            call("mkdir -p ~/.airscriptNG/air && cd ~/.airscriptNG/air && apt update && apt install git git-core libnl-3-dev openssl libnl*-gen* libgcrypt20-dev build-essential libssl-dev -y && git clone git://git.kali.org/packages/aircrack-ng.git -b upstream && cd * && make gcrypt=true",shell=True)
+            call("mkdir -p ~/.airscriptNG/air && cd ~/.airscriptNG/air && apt update --allow-unauthenticated && apt install git git-core libnl-3-dev openssl libnl*-gen* libgcrypt20-dev build-essential libssl-dev -y --allow-unauthenticated && git clone git://git.kali.org/packages/aircrack-ng.git -b upstream && cd * && make gcrypt=true",shell=True)
         else:
             print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
             os._exit(1)
     if call("ls ~/.airscriptNG/wps 2>/dev/null >/dev/null",shell=True) != 0:
         if call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
-            call("mkdir -p ~/.airscriptNG/wps && cd ~/.airscriptNG/wps && apt update && apt install libpcap-dev build-essential -y && git clone git://git.kali.org/packages/reaver.git -b upstream && cd */src && ./configure && make",shell=True)
+            call("mkdir -p ~/.airscriptNG/wps && cd ~/.airscriptNG/wps && apt update --allow-unauthenticated && apt install libpcap-dev build-essential -y --allow-unauthenticated && git clone git://git.kali.org/packages/reaver.git -b upstream && cd */src && ./configure && make",shell=True)
         else:
             print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
             os._exit(1)
     if call("ls ~/.airscriptNG/magic 2>/dev/null >/dev/null",shell=True) != 0:
         if call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
-            call("mkdir -p ~/.airscriptNG/magic && cd ~/.airscriptNG/magic && apt update && apt install libssl-dev build-essential -y && git clone git://git.kali.org/packages/pixiewps.git -b upstream && cd */src/ && make && make install",shell=True)
+            call("mkdir -p ~/.airscriptNG/magic && cd ~/.airscriptNG/magic && apt update --allow-unauthenticated && apt install libssl-dev build-essential -y --allow-unauthenticated && git clone git://git.kali.org/packages/pixiewps.git -b upstream && cd */src/ && make && make install",shell=True)
         else:
             print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
             os._exit(1)
