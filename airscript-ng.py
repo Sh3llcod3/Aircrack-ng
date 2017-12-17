@@ -39,6 +39,45 @@ def update_this_script():
             os._exit(1)
         elif up_choc.lower().startswith("n"):
             title()
+def checkCompileStatus(name,binaryPath):
+    import subprocess,time,sys,shlex,os
+    call = subprocess.call
+    say = sys.stdout.write
+    err = sys.stderr.write
+    interrupt = time.sleep
+    #Check binaries are present for aircrack-ng
+    #ls -l ~/.airscriptNG/air/aircrack-ng/src/aircrack-ng &>/dev/null ; echo $? >~/.airscriptNG/returnCode.txt
+    #~/.airscriptNG/air/aircrack-ng/src/aircrack-ng <-- path of aircrack-ng binaries
+    iostream = subprocess.check_output
+    lex = shlex.split
+    def confirmCode():
+        if call('ls %s >/dev/null 2>/dev/null' %(binaryPath),shell=True) == 0:
+            return True
+    countUp = 0
+    while True:
+        try:
+            interrupt(1)
+            countUp += 1
+            if countUp == 900:
+                say('\r\n\nCouldn\'t compile for some reason. Report this as an issue in GitHub. Quitting\n\n')
+                os._exit(0)
+            if countUp%2 == 0:
+                y = "\033[1;32;48m wait:)\033[0;39;48m"
+                z = ""
+            elif countUp%2 != 0:
+                z = "\033[1;32;48m please\033[0;39;48m"
+                y = ""
+            x = ('\r\033[1;31;48mCompiling %s\033[0;39;48m..............................%s%s' %(name,y,z))
+            if confirmCode() == True:
+                x+=" \b\b\b\b\b\b\b\033[1;34;48mCompilation successful\033[0;39;48m\n"
+                say(x)
+                interrupt(2)
+                break
+            else:
+                confirmCode()
+        except(subprocess.CalledProcessError):
+            confirmCode()
+        say(x)
 def get_wifi_cards_pick():
     import subprocess
     iostream = subprocess.check_output
@@ -98,21 +137,29 @@ def get_wifi_cards_pick_alt(choice):
 def gitdeps():
     import subprocess
     call = subprocess.call
-    if call("ls ~/.airscriptNG/air 2>/dev/null >/dev/null",shell=True) != 0:
+    if call("ls ~/.airscriptNG/air/aircrack-ng/src/aircrack-ng 2>/dev/null >/dev/null",shell=True) != 0:
+        call('rm ~/.airscriptNG/air -r 2>/dev/null',shell=True)
         if call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
-            call("mkdir -p ~/.airscriptNG/air && cd ~/.airscriptNG/air && apt update --allow-unauthenticated && apt install git git-core libnl-3-dev openssl libnl*-gen* libgcrypt20-dev build-essential libssl-dev -y --allow-unauthenticated && git clone git://git.kali.org/packages/aircrack-ng.git -b upstream && cd * && make gcrypt=true",shell=True)
+            call("bash -c 'mkdir -p ~/.airscriptNG/air &>/dev/null && cd ~/.airscriptNG/air &>/dev/null && apt update --allow-unauthenticated &>/dev/null && apt install git git-core libnl-3-dev openssl libnl*-gen* libgcrypt20-dev build-essential libssl-dev -y --allow-unauthenticated &>/dev/null && git clone git://git.kali.org/packages/aircrack-ng.git -b upstream &>/dev/null && cd * &>/dev/null && make gcrypt=true &>/dev/null &'",shell=True)
+            print('\n')
+            checkCompileStatus('Aircrack-ng (May take up to 15Mins)','~/.airscriptNG/air/aircrack-ng/src/aircrack-ng')
         else:
             print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
             os._exit(1)
-    if call("ls ~/.airscriptNG/wps 2>/dev/null >/dev/null",shell=True) != 0:
+    if call("ls /root/.airscriptNG/wps/reaver/src/reaver 2>/dev/null >/dev/null",shell=True) != 0:
+        call('rm /root/.airscriptNG/wps -r 2>/dev/null',shell=True)
         if call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
-            call("mkdir -p ~/.airscriptNG/wps && cd ~/.airscriptNG/wps && apt update --allow-unauthenticated && apt install libpcap-dev build-essential -y --allow-unauthenticated && git clone git://git.kali.org/packages/reaver.git -b upstream && cd */src && ./configure && make",shell=True)
+            call("bash -c 'mkdir -p ~/.airscriptNG/wps &>/dev/null && cd ~/.airscriptNG/wps &>/dev/null && apt update --allow-unauthenticated &>/dev/null && apt install libpcap-dev build-essential -y --allow-unauthenticated &>/dev/null && git clone git://git.kali.org/packages/reaver.git -b upstream &>/dev/null && cd */src &>/dev/null && ./configure &>/dev/null && make &>/dev/null &'",shell=True)
+            checkCompileStatus('Reaver (Should compile quickly)','/root/.airscriptNG/wps/reaver/src/reaver')
+            #/root/.airscriptNG/wps/reaver/src
         else:
             print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
             os._exit(1)
-    if call("ls ~/.airscriptNG/magic 2>/dev/null >/dev/null",shell=True) != 0:
+    if call("ls /root/.airscriptNG/magic/pixiewps/src/pixiewps 2>/dev/null >/dev/null",shell=True) != 0:
+        call('rm /root/.airscriptNG/magic -r 2>/dev/null',shell=True)
         if call('/usr/bin/env ping -c1 8.8.8.8 >/dev/null 2>/dev/null',shell=True) == 0:
-            call("mkdir -p ~/.airscriptNG/magic && cd ~/.airscriptNG/magic && apt update --allow-unauthenticated && apt install libssl-dev build-essential -y --allow-unauthenticated && git clone git://git.kali.org/packages/pixiewps.git -b upstream && cd */src/ && make && make install",shell=True)
+            call("bash -c 'mkdir -p ~/.airscriptNG/magic &>/dev/null && cd ~/.airscriptNG/magic &>/dev/null && apt update --allow-unauthenticated &>/dev/null && apt install libssl-dev build-essential -y --allow-unauthenticated &>/dev/null && git clone git://git.kali.org/packages/pixiewps.git -b upstream &>/dev/null && cd */src/ &>/dev/null && make &>/dev/null && make install &>/dev/null &'",shell=True)
+            checkCompileStatus('Pixiewps (Compiles near instantly)','/root/.airscriptNG/magic/pixiewps/src/pixiewps')
         else:
             print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
             os._exit(1)
