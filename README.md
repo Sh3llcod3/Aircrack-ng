@@ -64,7 +64,9 @@ How do you update this script? just run it and type `5` in the menu.
 [Fake AP](https://goo.gl/fDxzdZ)
 [Crack Existing](https://goo.gl/y5f2zS)
 
-## Credits
+## Credits and inspirations.
 > **Thanks to Joshua D. for extensively testing it on his machine!**
 > **Thanks to [TomHulmeUK](https://github.com/TomHulmeUK) for helping with testing!**
 > **Project inspired by [Airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon) and [Fluxion](https://github.com/FluxionNetwork/fluxion)**
+
+> [*__WPA3 ANNOUNCED!__*](https://www.theregister.co.uk/2018/01/09/wi_fi_wpa3/)
