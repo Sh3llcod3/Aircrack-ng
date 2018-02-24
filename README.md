@@ -1,4 +1,3 @@
-![Cool logo](https://goo.gl/wNmRxs)
 # What is this?
 This is a python script to automate the process of performing basic pen-testing on a WPA/WPA2/WPS network. The goal here is not to compete with existing tools or scripts, but to leverage them to provide as much functionality and simplicity to the end user as possible, so that someone with no previous knowledge or experience can use tools like aircrack-ng or reaver with ease. As long as you can type single digit numbers and letters, you can use this script.
 
@@ -69,4 +68,6 @@ How do you update this script? just run it and type `5` in the menu.
 > **Thanks to [TomHulmeUK](https://github.com/TomHulmeUK) for helping with testing!**
 > **Project inspired by [Airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon) and [Fluxion](https://github.com/FluxionNetwork/fluxion)**
 
-> [*__WPA3 ANNOUNCED!__*](https://www.theregister.co.uk/2018/01/09/wi_fi_wpa3/)
+> [*__WPA3 ANNOUNCED!__*](https://www.theverge.com/2018/1/9/16867940/wi-fi-alliance-new-wpa3-security-protections-wpa2-announced)
+
+![Cool logo](https://goo.gl/wNmRxs)
