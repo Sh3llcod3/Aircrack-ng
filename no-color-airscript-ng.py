@@ -259,7 +259,7 @@ class functions:
         if bashReturnValue("ls ~/.airscriptNG/magic/*/src/pixiewps ") != '0':
             if bashReturnValue('/usr/bin/env ping -c1 8.8.8.8 ') == '0':
                 bashRun("rm ~/.airscriptNG/magic/ -r 2>/dev/null")
-                bashRun("mkdir -p ~/.airscriptNG/magic && cd ~/.airscriptNG/magic && apt update --allow-unauthenticated && apt install libssl-dev build-essential -y --allow-unauthenticated && git clone git://git.kali.org/packages/pixiewps.git -b upstream && cd */src/ && make && make install")
+                bashRun("mkdir -p ~/.airscriptNG/magic && cd ~/.airscriptNG/magic && apt update --allow-unauthenticated && apt install libssl-dev build-essential -y --allow-unauthenticated && git clone git://git.kali.org/packages/pixiewps.git -b upstream && cd */src/ && make || cd ../ && make && make install")
             else:
                 print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
                 os._exit(1)
