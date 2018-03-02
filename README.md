@@ -65,7 +65,7 @@ How do you update this script? just run it and type `5` in the menu. Want to upd
 [Reaver](https://goo.gl/G4PsNm)
 [Fake AP](https://goo.gl/8KsYEf)
 [MITM](https://goo.gl/e2YsZa)
-[Crack Handshake](https://goo.gl/y5f2zS)
+[Crack Handshake](https://goo.gl/HnBUpE)
 
 ## Credits and inspirations.
 > **Thanks to Joshua D. for extensively testing it on his machine!**
