@@ -205,7 +205,7 @@ class functions:
         return getCardNameAlt()
     #This function git clones and makes different dependencies. This is needed for compatibility as some repositories hold outdated packages.
     def gitDeps():
-        if bashReturnValue("ls ~/.airscriptNG/air/aircrack-ng/src/aircrack-ng ~/.airscriptNG/wps/reaver/src/reaver ~/.airscriptNG/magic/pixiewps/src/pixiewps ") != '0':
+        if bashReturnValue("ls ~/.airscriptNG/air/aircrack-ng/src/aircrack-ng ~/.airscriptNG/wps/reaver/src/reaver && ls ~/.airscriptNG/magic/pixiewps/src/pixiewps 2>/dev/null || ls ~/.airscriptNG/magic/pixiewps/pixiewps") != '0':
             if bashReturnValue('/usr/bin/env ping -c1 8.8.8.8 ') == '0':
                 while True:
                     try:
