@@ -96,10 +96,8 @@ if invocationType.lower().startswith('./'):
     scriptInvocation = ('%s' %(sys.argv[0]))
 else:
     scriptInvocation = ('python3 %s' %(sys.argv[0]))
-if bashReturnValue("ls -l ~/.airscriptNG/air/aircrack-ng/src/aircrack-ng ~/.airscriptNG/wps/reaver/src/reaver ~/.airscriptNG/magic/pixiewps/src/pixiewps ") != '0':
-    dependenciesInstalled = ('%sNot installed%s' %(col.fail,col.endl))
-else:
-    dependenciesInstalled = ('%sInstalled%s' %(col.okg,col.endl))
+#Huh, A lamda function? With a ternary operator? Terrible programming or Terrific programming?
+dependenciesInstalled = lambda : '{}Not installed{}'.format(col.fail,col.endl) if bashReturnValue("ls -l ~/.airscriptNG/air/aircrack-ng/src/aircrack-ng ~/.airscriptNG/wps/reaver/src/reaver >/dev/null 2>/dev/null && ls ~/.airscriptNG/magic/pixiewps/src/pixiewps 2>/dev/null || ls ~/.airscriptNG/magic/*/pixiewps") != '0' else '{}Installed{}'.format(col.okg,col.endl)
 #The GPLv3+ exclusion of warranty. Just in case.
 def displayWarranty():
     print("    %sAirscript-ng Copyright (C) 2017-2018 Sh3llcod3%s" %(col.fail,col.endl))
@@ -205,7 +203,7 @@ class functions:
         return getCardNameAlt()
     #This function git clones and makes different dependencies. This is needed for compatibility as some repositories hold outdated packages.
     def gitDeps():
-        if bashReturnValue("ls ~/.airscriptNG/air/aircrack-ng/src/aircrack-ng ~/.airscriptNG/wps/reaver/src/reaver && ls ~/.airscriptNG/magic/pixiewps/src/pixiewps 2>/dev/null || ls ~/.airscriptNG/magic/pixiewps/pixiewps") != '0':
+        if bashReturnValue("ls ~/.airscriptNG/air/aircrack-ng/src/aircrack-ng ~/.airscriptNG/wps/reaver/src/reaver >/dev/null 2>/dev/null && ls ~/.airscriptNG/magic/pixiewps/src/pixiewps 2>/dev/null || ls ~/.airscriptNG/magic/pixiewps/pixiewps") != '0':
             if bashReturnValue('/usr/bin/env ping -c1 8.8.8.8 ') == '0':
                 while True:
                     try:
@@ -256,7 +254,7 @@ class functions:
             else:
                 print('\n%s[-]%s Failed to install inital dependancies, please connect to the internet and try again\n' %(col.fail,col.endl))
                 os._exit(1)
-        if bashReturnValue("ls ~/.airscriptNG/magic/*/src/pixiewps ") != '0':
+        if bashReturnValue("ls ~/.airscriptNG/magic/*/src/pixiewps ") != '0' and bashReturnValue("ls ~/.airscriptNG/magic/*/pixiewps") != "0":
             if bashReturnValue('/usr/bin/env ping -c1 8.8.8.8 ') == '0':
                 bashRun("rm ~/.airscriptNG/magic/ -r 2>/dev/null")
                 bashRun("mkdir -p ~/.airscriptNG/magic && cd ~/.airscriptNG/magic && apt update --allow-unauthenticated && apt install libssl-dev build-essential -y --allow-unauthenticated && git clone git://git.kali.org/packages/pixiewps.git -b upstream && cd */src/ && make || cd ../ && make && make install")
@@ -1533,7 +1531,7 @@ def mainMenu():
             #if sys.argv[1].lower().startswith(('-v','--v','',' ')):
             print("%sYour Kernel%s: %s%s%s" %(col.fail,col.endl,col.okg,userKernel,col.endl)) #These lines may be made optional to view on a future version.
             print("%sYour Architecture%s: %s%s\\%s%s" %(col.fail,col.endl,col.okg,userArch,userArchDpkg.upper(),col.endl)) #These lines may be made optional to view on a future version.
-            print("%sDependencies%s: %s%s%s" %(col.fail,col.endl,col.okg,dependenciesInstalled,col.endl)) #These lines may be made optional to view on a future version.
+            print("%sDependencies%s: %s%s%s" %(col.fail,col.endl,col.okg,dependenciesInstalled(),col.endl)) #These lines may be made optional to view on a future version.
         print("%sScript version%s: %s%s%s" %(col.fail,col.endl,col.okg,scriptVersion,col.endl))
         #A 2d list spanning across multiple lines that stores all the info for the menu.
         #Probably not the most efficient solution here, but its simple to maintain.
