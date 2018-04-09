@@ -26,20 +26,20 @@ In addition to allowing a user to capture a handshake, this script can host a ba
 
 
 # Usage?
-```
-sudo su
-python3 airscript-ng.py
+```shell
+$ sudo su
+$ python3 airscript-ng.py
 ```
 Alternatively: 
-```
-sudo su
-chmod +x airscript-ng.py no-color-airscript-ng.py airscript-old-stable.py
-./airscript-ng.py
+```shell
+$ sudo su
+$ chmod +x airscript-ng.py no-color-airscript-ng.py airscript-old-stable.py
+$ ./airscript-ng.py
 ```
 or, if you want it without colours:
-```
-sudo su
-./no-color-airscript-ng.py
+```shell
+$ sudo su
+$ ./no-color-airscript-ng.py
 ```
 The rest is self explainatory once run, choose your attack option from the menu and you are good to go! Anyone can use this script to pentest a wireless network, it really is that simple to use.
 
