@@ -3,6 +3,10 @@ This is a script written in Python3 to automate the process of performing basic 
 
 In addition to allowing a user to capture a handshake, this script can host a basic Evil-Twin wireless AP and crack a WPA2 handshake using your GPU with Hashcat. see https://hashcat.net/hashcat/.
 
+![GitHub forks](https://img.shields.io/github/forks/Sh3llcod3/Airscript-ng.svg?style=for-the-badge&label=Fork)
+![GitHub stars](https://img.shields.io/github/stars/Sh3llcod3/Airscript-ng.svg?style=for-the-badge&label=Stars)
+![GitHub watchers](https://img.shields.io/github/watchers/Sh3llcod3/Airscript-ng.svg?style=for-the-badge&label=Watch)
+
 # Prerequisites 
 - Some familiarity with the Linux command line (e.g. Basic usage, running python scripts, filesystem navigation)
 - [Some basic knowledge of how WiFi hacking works.](https://null-byte.wonderhowto.com/how-to/wi-fi-hacking/)
