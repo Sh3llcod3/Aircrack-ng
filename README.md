@@ -24,7 +24,7 @@ In addition to allowing a user to capture a handshake, this script can host a ba
 - (Optional) A second WiFi card, needed to create a Evil-Twin/Fake-AP. This doesn't need monitor mode or packet injection.
 
 
-# Usage?
+# Usage
 ```shell
 $ sudo chmod +x ./setup.sh
 $ sudo ./setup.sh
@@ -46,8 +46,8 @@ How do you update this script? just run it and type `5` in the menu. Want to upd
 - [x] Add options to install opencl-runtime for hashcat [Added 30/9/2017]
 - [x] Add support for Hostapd [Added 27/10/2017]
 - [x] Add Airodump-ng CSV files support [Added 16/11/2017]
-- [ ] Add support for GENPMK/CoWPAtty [Coming soon]
 - [x] Make code more efficient [Improved 20/06/2018] 
+- [ ] Add support for GENPMK/CoWPAtty [Coming soon]
 - [ ] Add FHS support/compliancy
 - [ ] Add support for MDK3
 - [ ] Design and build a Gtk/Qt or any type of GUI [Help needed, due to limited knowledge of GUIs]
@@ -67,4 +67,4 @@ How do you update this script? just run it and type `5` in the menu. Want to upd
 
 > [*__WPA3 ANNOUNCED!__*](https://www.theverge.com/2018/1/9/16867940/wi-fi-alliance-new-wpa3-security-protections-wpa2-announced)
 
-![Cool logo](https://goo.gl/wNmRxs)
+<img src="https://goo.gl/wNmRxs" width="870px" height="auto">
