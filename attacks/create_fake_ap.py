@@ -207,6 +207,7 @@ class apObj(object):
         chooseCardQuestion2 += " {}(enter #) {}>> ".format(COL.green_deep,COL.pink_deep)
         while True:
             try:
+                self.firstCard.resetCards()
                 userAskedCard = int(input(chooseCardQuestion))
                 if self.firstCard.verifyChosenCard(userAskedCard):
                     if self.firstCard.chooseCard(userAskedCard):
