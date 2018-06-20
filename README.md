@@ -53,12 +53,12 @@ How do you update this script? just run it and type `5` in the menu. Want to upd
 - [ ] Design and build a Gtk/Qt or any type of GUI [Help needed, due to limited knowledge of GUIs]
 
 ## Screenshots
-[Title Menu](https://goo.gl/h16ecK)
-[Aircrack-ng](https://goo.gl/FBd2r3)
-[Reaver](https://goo.gl/G4PsNm)
-[Fake AP](https://goo.gl/8KsYEf)
-[MITM](https://goo.gl/e2YsZa)
-[Crack Handshake](https://goo.gl/HnBUpE)
+[Title Menu](https://goo.gl/b94o9v)
+[Aircrack-ng](https://goo.gl/xEaXi1)
+[Reaver](https://goo.gl/aH4WGy)
+[Fake AP](https://goo.gl/mXuBwR)
+[MITM](https://goo.gl/EmWBiH)
+[Crack Handshake](https://goo.gl/nSL1Bd)
 
 ## Credits and inspirations.
 > **Thanks to Joshua. for extensively testing it on his machine!**
