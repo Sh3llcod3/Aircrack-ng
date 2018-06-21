@@ -101,14 +101,14 @@ def quickCheckDepsInstalled():
 def stashAndPullUpdate(COLORS):
     userConfirmationQuestion = "Pull the latest version from GitHub?"
     if yesNo(userConfirmationQuestion, COLORS):
-        if bashReturnValue("git stash && git pull") == "0":
+        if bashReturnValue("git stash && git stash clear && git pull && chmod +x ./setup.sh && ./setup.sh") == "0":
             return True
         else:
             userHostId = ioStream("id -u -n")
             userName = ioStream("uname -n")
             bashRun("git config user.email '{0}@{1}.com' ".format(userHostId,userName))
             bashRun("git config user.name '{0}' ".format(userHostId))
-            if bashReturnValue("git stash && git pull") == "0":
+            if bashReturnValue("git stash && git stash clear && git pull && chmod +x ./setup.sh && ./setup.sh") == "0":
                 return True
             else:
                 printRed(col,"Couldn't pull update, try 'git stash && git pull'. ")
