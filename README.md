@@ -50,7 +50,7 @@ How do you update this script? just run it and type `5` in the menu. Want to upd
 - [ ] Add support for GENPMK/CoWPAtty [Coming soon]
 - [ ] Add FHS support/compliancy
 - [ ] Add support for MDK3
-- [ ] Design and build a Gtk/Qt or any type of GUI [Help needed, due to limited knowledge of GUIs]
+- [ ] Design and build a GUI [Help needed]
 
 ## Screenshots
 [Title Menu](https://goo.gl/b94o9v)
@@ -60,7 +60,7 @@ How do you update this script? just run it and type `5` in the menu. Want to upd
 [MITM](https://goo.gl/EmWBiH)
 [Crack Handshake](https://goo.gl/nSL1Bd)
 
-## Credits and inspirations.
+## Credits and inspirations
 > **Thanks to Joshua. for extensively testing it on his machine!**
 > **Thanks to [TomHulmeUK](https://github.com/TomHulmeUK) for helping with testing!**
 > **Project inspired by [Airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon) and [Fluxion](https://github.com/FluxionNetwork/fluxion)**
