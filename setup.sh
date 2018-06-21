@@ -6,11 +6,10 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 set -x
-cd attacks/
-chmod +x *
-cd ../modules/
-chmod +x *
-cd ..
+chmod +x attacks/*
+chmod +x modules/*
+chmod +x scripts/* 2>/dev/null
+chmod +x airscript-old-stable.py 2>/dev/null
 chmod +x airscript-ng.py
 /usr/bin/env python3 -c "import attacks, modules"
 set +x
