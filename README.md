@@ -32,7 +32,7 @@ $ sudo ./airscript-ng.py
 ```
 The rest is self explainatory once run, choose your attack option from the menu and you are good to go! Anyone can use this script to pentest a wireless network, it really is that simple to use. Try it out!
 
-Additonal note: If you're going to fork this project, please ensure to keep checking back, as your fork may be outdated. Any contributions are absolutely welcome, please create a pull request.
+Additonal note: Airscript-ng is in active development. If you're going to fork this project, please ensure to keep checking back, as your fork may be outdated. Any contributions are absolutely welcome, please create a pull request.
 
 How do you update this script? just run it and type `5` in the menu. Want to update manually? Simply `git stash` the changes and `git pull` the new additions.
 
