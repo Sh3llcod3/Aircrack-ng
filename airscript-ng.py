@@ -181,6 +181,7 @@ class main:
         functions.getDependencies()
         try:
             apMethod = attacks.apObj(col)
+            apMethod.setInitialFiles()
             apMethod.showLogo()
             apMethod.selectOptions()
             apMethod.setupConfigFiles()
