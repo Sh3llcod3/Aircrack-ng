@@ -453,5 +453,3 @@ class apObj(object):
             bashRun("rm dsniff.services 2>/dev/null")
             bashRun("echo 0 > /proc/sys/net/ipv4/ip_forward")
             clearTerm()
-        #FINISH THIS
-    #FINISH THIS SECTION
