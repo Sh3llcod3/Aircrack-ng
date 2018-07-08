@@ -36,7 +36,7 @@ bashReturnValue = modules.bashReturnValue
 clearTerm = modules.clearTerm
 col = modules.col
 #Script Version number
-scriptVersion = "1.8_build_date_20/06/2018"
+scriptVersion = "1.9_build_date_07/07/2018"
 #Some variables which will find out some basic system info
 cpuModel = ioStream("cat /proc/cpuinfo | grep -i \"Model name\" | sort | uniq | awk -F ' ' {'print $4,$5,$6,$7,$8,$9,$10'}")
 userName = ioStream("uname -n")
@@ -174,6 +174,51 @@ class functions:
             return True
         else:
             return False
+    #Install all dependencies from GitHub instead of git.kali.org
+    #If dependencies are already built, remove and replace them.
+    def fetchGitHubDeps():
+        clearTerm()
+        try:
+            modules.createNewLine()
+            modules.printBlue(col, "This will clone aircrack-ng, reaver, pixiewps and mdk4 from GitHub.")
+            modules.printBlue(col, "This is not normally required, as the script will automatically get")
+            modules.printBlue(col, "any missing dependencies from git.kali.org. However, you can get them")
+            modules.printBlue(col, "from GitHub instead of git.kali.org, if you want.")
+            modules.createNewLine()
+            modules.printYellow(col, "Warning: This may result in compatibility or instability issues!")
+            modules.printYellow(col, "Warning: Compilation may take longer due to different procedures.")
+            modules.createNewLine()
+            if modules.yesNo("Confirm download from GitHub?", col):
+                modules.cloneAircrackGitHub()
+                modules.cloneReaverGitHub()
+                modules.clonePixiewpsGitHub()
+                modules.cloneMDK4Deps()
+                modules.createNewLine()
+                modules.printSuccess(col, "Successfully built all dependencies.")
+        except(KeyboardInterrupt, EOFError, Exception):
+            modules.createNewLine()
+        finally:
+            functions.menuOrExit()
+    #Delete the dependencies folder, if the user wants.
+    def removeResidualFiles():
+        clearTerm()
+        modules.createNewLine()
+        if modules.yesNo("Confirm delete all residual files?", col):
+            bashRun("rm ~/.airscriptNG/ -rf 2>/dev/null")
+            modules.printSuccess(col, "Successfully removed the files.")
+        functions.menuOrExit()
+    #Allow the use full manual control over their wireless cards.
+    def manualCardControl():
+        functions.getDependencies()
+        try:
+            interfaceMethod = attacks.interfaceObj(col)
+            while True:
+                interfaceMethod.displayMenu()
+        except(KeyboardInterrupt, EOFError, Exception):
+            modules.createNewLine()
+        finally:
+            functions.menuOrExit()
+    #Finish this function!
 #Create the main class, which will store all the main functions of the program
 class main:
     #This function is responsible for hosting the evil-twin/fake AP
@@ -394,6 +439,20 @@ class main:
                 modules.createNewLine()
         finally:
             functions.menuOrExit()
+    #This will handle mdk4. A very useful tool with quite a few interesting options.
+    def mdk4():
+        functions.getDependencies()
+        try:
+            mdkMethod = attacks.mdkObj(col)
+            mdkMethod.showLogo()
+            mdkMethod.selectAttackMode()
+        except(KeyboardInterrupt, EOFError, Exception) as e:
+            try:
+                mdkMethod.cleanupCard()
+            except(KeyboardInterrupt, EOFError, Exception):
+                modules.createNewLine()
+        finally:
+            functions.menuOrExit()
 #Define the main menu, where user will be presented with options and function of script.
 def mainMenu():
     try:
@@ -431,15 +490,19 @@ def mainMenu():
         #Probably not the most efficient solution here, but its simple to maintain.
         menuTextItemArray = \
     [[col.pink_deep,'Aircrack-ng to crack WPA/WPA2','1','main.aircrackng'],
-    [col.blue_deep,'Reaver with pixie dust to crack WPS (rare vulnerability)','2','main.reaver'],
+    [col.blue_deep,'Reaver with pixie dust to crack WPS','2','main.reaver'],
     [col.endl_deep,'Host a Evil-Twin/MITM AP to phish credentials, sniff traffic and more.','3','main.EvilTwinFakeAP'],
     [col.red_deep,'Crack an existing WPA/WPA2 handshake using CPU/GPU.','4','main.crackCaptureFile'],
-    [col.yellow_deep,'Update/upgrade all system packages and this script','5','functions.updateAptPackagesFull'],
-    [col.green_deep,'Setup Hashcat and Hashcat-utils to use GPU for cracking','6','functions.hashcatDownloadFunction'],
-    [col.light_blue,'Add a symlink to invoke from anywhere','7','main.createSymlink'],
-    [col.pink_deep,'Delete the symlink from option [7]','8','main.removeSymlink'],
-    [col.black_deep,'Turn the colors on/off','9','functions.switchColors'],
-    [col.endl_deep,'If apt is broken, use this to fix it','10','functions.revertKaliSources'],
+    [col.green_deep,'Use mdk4 to create a beacon flood, denial-of-service and more.','5','main.mdk4'],
+    [col.yellow_deep,'Manipulate the system\'s WiFi-cards with manual control.','6','functions.manualCardControl'],
+    [col.blue_deep,'Download and build the dependencies from GitHub.','7','functions.fetchGitHubDeps'],
+    [col.yellow_deep,'Update/upgrade all system packages and this script','8','functions.updateAptPackagesFull'],
+    [col.green_deep,'Setup Hashcat and Hashcat-utils to use GPU for cracking','9','functions.hashcatDownloadFunction'],
+    [col.light_blue,'Add a symlink to invoke from anywhere','10','main.createSymlink'],
+    [col.pink_deep,'Delete the symlink from option [10]','11','main.removeSymlink'],
+    [col.black_deep,'Turn the colors on/off','12','functions.switchColors'],
+    [col.endl_deep,'If apt is broken, use this to fix it','13','functions.revertKaliSources'],
+    [col.red_deep,'Delete the folder containing dependencies.','14','functions.removeResidualFiles'],
     [col.highlight+'\n','Exit \033[0m'+col.endl,'99','functions.silentExit']]
         #The menu, in short.
         print("\n%s[?] %sWhat tool would you like to use? Please run as root." %(col.yellow_deep,col.endl))
@@ -448,11 +511,11 @@ def mainMenu():
             col.endl))
         for i in range(1,int(menuTextItemArray[-2][2])+2):
             print("%sType [%s] - %s" %(menuTextItemArray[i-1][0],menuTextItemArray[i-1][2],menuTextItemArray[i-1][1]))
-            if i == 4:
+            if i == 6:
                 print("\n{}----------------------------------------DOWNLOADS----------------------------------------{}\n".format(
                     col.green_deep,
                     col.endl))
-            if i == 6:
+            if i == 9:
                 print("\n{}--------------------------------------INSTALLATIONS--------------------------------------{}\n".format(
                     col.blue_deep,
                     col.endl))
