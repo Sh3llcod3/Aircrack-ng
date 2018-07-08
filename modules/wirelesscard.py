@@ -109,3 +109,7 @@ class wirelessCard(object):
         wirelessCard.chosenCardCount = 0
         wirelessCard.chosenCards.clear()
         self.enumerateCards(optionShowAllCards)
+    def setCardDown(self):
+        bashRun("ip link set {0} down".format(self.cardName))
+    def setCardUp(self):
+        bashRun("ip link set {0} up".format(self.cardName))

@@ -135,22 +135,56 @@ def clonePixiewpsDeps():
     pixiewpsCloneAndBuild += "git clone git://git.kali.org/packages/pixiewps.git -b upstream && "
     pixiewpsCloneAndBuild += "cd * && make && make install"
     bashRun(pixiewpsCloneAndBuild)
+#These functions below will clone the packages mentioned above from GitHub
+#This is there as a backup as git.kali.org could experience outages
+#MDK4 is only on GitHub (as of now), so it can only be cloned from GitHub
+def cloneMDK4Deps():
+    #https://github.com/aircrack-ng/mdk4.git
+    bashRun("rm ~/.airscriptNG/mdk/ -r 2>/dev/null")
+    mdkCloneAndBuild = "mkdir -p ~/.airscriptNG/mdk && cd ~/.airscriptNG/mdk && "
+    mdkCloneAndBuild += "git clone https://github.com/aircrack-ng/mdk4.git "
+    mdkCloneAndBuild += "&& cd * && make "
+    bashRun(mdkCloneAndBuild)
+def cloneAircrackGitHub():
+    bashRun("rm ~/.airscriptNG/air/ -r 2>/dev/null")
+    aircrackCloneAndBuild = "mkdir -p ~/.airscriptNG/air && cd ~/.airscriptNG/air && "
+    aircrackCloneAndBuild += "git clone https://github.com/aircrack-ng/aircrack-ng.git "
+    aircrackCloneAndBuild += "&& cd * && autoreconf -i && ./configure --with-gcrypt "
+    aircrackCloneAndBuild += "&& make"
+    bashRun(aircrackCloneAndBuild)
+    bashRun("chmod +x ~/.airscriptNG/air/*/scripts/airmon-ng")
+def cloneReaverGitHub():
+    bashRun("rm ~/.airscriptNG/wps/ -r 2>/dev/null")
+    reaverCloneAndBuild = "mkdir -p ~/.airscriptNG/wps && cd ~/.airscriptNG/wps && "
+    reaverCloneAndBuild += "git clone https://github.com/t6x/reaver-wps-fork-t6x.git && "
+    reaverCloneAndBuild += "mv * reaver && "
+    reaverCloneAndBuild += "cd */src && ./configure && make "
+    bashRun(reaverCloneAndBuild)
+def clonePixiewpsGitHub():
+    bashRun("rm ~/.airscriptNG/magic/ -r 2>/dev/null")
+    pixiewpsCloneAndBuild = "mkdir -p ~/.airscriptNG/magic && cd ~/.airscriptNG/magic && "
+    pixiewpsCloneAndBuild += "git clone https://github.com/wiire-a/pixiewps.git && "
+    pixiewpsCloneAndBuild += "cd * && make && make install"
+    bashRun(pixiewpsCloneAndBuild)
+#FINISH THIS
 def gitDeps():
     directoryMap = \
     {"aircrackDir" : "~/.airscriptNG/air/*/src/aircrack-ng",
     "reaverDir" : "~/.airscriptNG/wps/*/src/reaver",
-    "pixiewpsDir" : "~/.airscriptNG/magic/*/pixiewps"}
+    "pixiewpsDir" : "~/.airscriptNG/magic/*/pixiewps",
+    "mdk4Dir" : "~/.airscriptNG/mdk/*/src/mdk4"}
     cloneFunctionMap = \
     {"aircrackDir" : cloneAircrackDeps,
      "reaverDir" : cloneReaverDeps,
-     "pixiewpsDir" : clonePixiewpsDeps}
+     "pixiewpsDir" : clonePixiewpsDeps,
+     "mdk4Dir" : cloneMDK4Deps}
     initialSearchPath = ' '.join([directoryMap[i] for i in directoryMap])
     if bashReturnValue("ls {}".format(initialSearchPath)) != "0":
         if connActive():
             while True:
                 try:
                     clearTerm()
-                    printDeepBlue(col,"The following packages need to be downloaded and compiled from source: aircrack-ng, reaver and pixiewps.")
+                    printDeepBlue(col,"The following packages may need compilation: aircrack-ng, reaver, pixiewps and MDK4.")
                     printDeepBlue(col,"This may take up to 5 mins on older systems. This will only happen once (on first run).")
                     getGitCloneConfirmation = input("{}[i]{} Proceed and install? y/n >> ".format(col.blue_deep,col.endl))
                     if getGitCloneConfirmation.lower().startswith("y"):

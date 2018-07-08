@@ -22,3 +22,4 @@ from .run_command import *
 from .term_colors import *
 from .manage_deps import *
 from .gui_elements import *
+from .manage_inputs import *

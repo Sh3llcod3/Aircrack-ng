@@ -131,7 +131,7 @@ class aircrackObj(object):
     def gatherInitialData(self):
         COLOR = self.colors
         printDeepBlue(COLOR,returnBold(COLOR, "Let's run Airodump-ng for 5~ seconds to gather all the APs."))
-        printDeepBlue(COLOR,returnBlue(COLOR, "Press {0}CTRL+C{1} once you see your target network.".format(COLOR.green_deep,COLOR.blue_deep)))
+        printDeepBlue(COLOR,returnBlueDeep(COLOR, "Press {0}CTRL+C{1} once you see your target network.".format(COLOR.green_deep,COLOR.blue_deep)))
         input("{0}[i]{1} {2}Once you're ready, press enter. >>{1} ".format(COLOR.blue_deep,COLOR.endl, COLOR.yellow_deep))
         self.csvFilePath = ioStream('mktemp HANDSHAKES/TEMP_DUMP_XXXX')
         fetchAllAPs = "~/.airscriptNG/air/*/src/airodump-ng -a -w {}".format(self.csvFilePath)

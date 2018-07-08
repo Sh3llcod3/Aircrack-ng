@@ -94,3 +94,24 @@ def b64D(encodedStr):
     return base64.b64decode(encodedStr.encode('utf-8')).decode('utf-8')
 def createNewLine():
     sysWrite("\n")
+def getUserName():
+    return ioStream("id -un")
+def getNodeName():
+    return ioStream("uname -n")
+def getKernelRelease():
+    return ioStream("uname -r")
+def getUid():
+    return ioStream("id -u")
+def getInterfaceStatus(interfaceName):
+    return ioStream("iw {} info 2>/dev/null |"
+    " grep -i type | cut -d ' ' -f 2".format(
+        interfaceName))
+def getInterfaceState(interfaceName):
+    return ioStream(
+        "cat /sys/class/net/{}/operstate".format(
+        interfaceName))
+def getProcessName(processID):
+    try:
+        return ioStream("ps -p {} -o comm= 2>/dev/null".format(processID))
+    except(subprocess.CalledProcessError):
+        return "Unknown"

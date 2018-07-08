@@ -26,3 +26,5 @@ from .use_reaver import *
 from .create_fake_ap import *
 from .crack_handshake import *
 from .manage_wordlists import *
+from .use_mdk import *
+from .manage_interfaces import *
