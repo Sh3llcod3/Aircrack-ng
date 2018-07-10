@@ -38,19 +38,19 @@ How do you update this script? just run it and type `5` in the menu. Want to upd
 
 ## Upcoming
 - [x] Make a basic python script
-- [x] Make and integrate similar script for reaver/other-tools [Reaver/Pixie Dust added 11/06/17]
-- [x] Add option to resolve dependencies [Added 17/06/17]
-- [x] Add option to create captive portal/Evil-twin AP [Added 24/08/2017]
-- [x] Add option to crack existing *.cap* files using hashcat/GPU/CPU/Aircrack [Added 24/08/2017]
+- [x] Add support for reaver/pixiedust [Added 11/06/17]
+- [x] Add function to automatically download dependencies [Added 17/06/17]
+- [x] Add support for captive portal/Evil-twin AP [Added 24/08/2017]
+- [x] Add function to crack *.cap* files using GPU/CPU [Added 24/08/2017]
 - [x] Improve menu layout [Improved 30/9/2017]
-- [x] Add options to install opencl-runtime for hashcat [Added 30/9/2017]
-- [x] Add support for Hostapd [Added 27/10/2017]
-- [x] Add Airodump-ng CSV files support [Added 16/11/2017]
-- [x] Make code more efficient [Improved 20/06/2018] 
-- [ ] Add support for GENPMK/CoWPAtty [Coming soon]
-- [ ] Add FHS support/compliancy
-- [ ] Add support for MDK3
-- [ ] Design and build a GUI [Help needed]
+- [x] Add function to install Hashcat/Hashcat-utils [Added 30/9/2017]
+- [x] Add Hostapd as AP hosting method [Added 27/10/2017]
+- [x] Improve network selection process [Added 16/11/2017]
+- [x] Make code object oriented [Rewritten 20/06/2018] 
+- [x] Add support for MDK4 (Beacon-Flood and Deauth-DOS). [Added 07/07/2018]
+- [ ] Add support for Cowpatty/Genpmk [Coming soon]
+- [ ] Add FHS compliancy and lint code to conform with PEP8
+- [ ] Improve startup times, performance and code efficiency
 
 ## Screenshots
 [Title Menu](https://goo.gl/b94o9v)
