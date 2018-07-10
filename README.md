@@ -59,6 +59,7 @@ How do you update this script? just run it and type `5` in the menu. Want to upd
 [Fake AP](https://goo.gl/mXuBwR)
 [MITM](https://goo.gl/EmWBiH)
 [Crack Handshake](https://goo.gl/nSL1Bd)
+[Manual Control](https://goo.gl/awKRKL)
 
 ## Credits and inspirations
 > **Thanks to Joshua. for extensively testing it on his machine!**
