@@ -1,5 +1,5 @@
 # Airscript-ng ![Build](https://img.shields.io/badge/build-passing-green.svg?longCache=true&style=flat-square&colorA=273133) ![Version](https://img.shields.io/badge/version-1.9-blue.svg?longCache=true&style=flat-square&colorA=273133&colorB=2962FF) ![Bash_Version](https://img.shields.io/badge/bash-4.2+-blue.svg?longCache=true&style=flat-square&colorA=273133&colorB=FFD600) ![Python_Version](https://img.shields.io/badge/python-3.4+-blue.svg?longCache=true&style=flat-square&colorA=273133&colorB=E65100) ![Dependencies](https://img.shields.io/badge/dependencies-up--to--date-blue.svg?longCache=true&style=flat-square&colorA=273133&colorB=004D40)
-Airscript-ng is a modular, object-oriented framework written in Python3 to automate the process of performing basic penetration-testing on a wireless network. The goal here is not to compete with existing tools or scripts, but to provide as much functionality and simplicity to the end user as possible, so that someone with no previous experience can use a WiFi-cracking tool such as aircrack-ng or reaver. As long as you know some of the general theory behind cracking WPA2 or WPS, you will be able to use this script with ease.
+Airscript-ng is a modular, object-oriented program written in python3 to automate the process of performing basic manipulation on a wireless network. The goal here is not to compete with existing tools or scripts, but to provide as much functionality and simplicity to the end user as possible, so that someone with no previous experience can use a WiFi-cracking tool such as aircrack-ng or reaver. As long as you know some of the general theory behind cracking WPA2 or WPS, you will be able to use this script with ease.
 
 In addition to allowing a user to capture a handshake, this script can host a basic Evil-Twin wireless AP and crack a WPA2 handshake using your GPU with Hashcat. see https://hashcat.net/hashcat/.
 
@@ -47,7 +47,7 @@ How do you update this script? just run it and type `5` in the menu. Want to upd
 - [x] Add Hostapd as AP hosting method [Added 27/10/2017]
 - [x] Improve network selection process [Added 16/11/2017]
 - [x] Make code object oriented [Rewritten 20/06/2018] 
-- [x] Add support for MDK4 (Beacon-Flood and Deauth-DOS). [Added 07/07/2018]
+- [x] Add support for MDK4 (Beacon-Flood and Deauth-DOS) [Added 07/07/2018]
 - [ ] Add support for Cowpatty/Genpmk [Coming soon]
 - [ ] Add FHS compliancy and lint code to conform with PEP8
 - [ ] Improve startup times, performance and code efficiency
