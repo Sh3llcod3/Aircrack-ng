@@ -92,6 +92,7 @@ def quickCheckDepsInstalled():
     gitBinaryPaths = " ~/.airscriptNG/air/*/src/aircrack-ng"
     gitBinaryPaths += " ~/.airscriptNG/wps/*/src/reaver"
     gitBinaryPaths += " ~/.airscriptNG/magic/*/pixiewps"
+    gitBinaryPaths += " ~/.airscriptNG/mdk/*/src/mdk4"
     itemSearchList = ["hash dpkg","dpkg -s {}".format(fullList),"ls {}".format(gitBinaryPaths)]
     for i in itemSearchList:
         if bashReturnValue(i) != "0":
