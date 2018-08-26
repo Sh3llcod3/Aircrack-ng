@@ -34,7 +34,7 @@ The rest is self explainatory once run, choose your attack option from the menu 
 
 Additonal note: Airscript-ng is in active development. If you're going to fork this project, please ensure to keep checking back, as your fork may be outdated. Any contributions are absolutely welcome, please create a pull request.
 
-How do you update this script? just run it and type `5` in the menu. Want to update manually? Simply `git stash` the changes and `git pull` the new additions.
+How do you update this script? just run it and type `8` in the menu. Want to update manually? Simply `git stash` the changes and `git pull` the new additions.
 
 ## Upcoming
 - [x] Make a basic python script
@@ -53,13 +53,14 @@ How do you update this script? just run it and type `5` in the menu. Want to upd
 - [ ] Improve startup times, performance and code efficiency
 
 ## Screenshots
-[Title Menu](https://goo.gl/b94o9v)
+[Title Menu](https://goo.gl/GYE6LT)
 [Aircrack-ng](https://goo.gl/xEaXi1)
 [Reaver](https://goo.gl/aH4WGy)
 [Fake AP](https://goo.gl/mXuBwR)
 [MITM](https://goo.gl/EmWBiH)
 [Crack Handshake](https://goo.gl/nSL1Bd)
 [Manual Control](https://goo.gl/awKRKL)
+[Beacon Flood](https://goo.gl/6cpPoJ)
 
 ## Credits and inspirations
 > **Thanks to Joshua. for extensively testing it on his machine!**
