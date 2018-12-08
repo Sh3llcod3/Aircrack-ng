@@ -144,7 +144,7 @@ def cloneMDK4Deps():
     bashRun("rm ~/.airscriptNG/mdk/ -r 2>/dev/null")
     mdkCloneAndBuild = "mkdir -p ~/.airscriptNG/mdk && cd ~/.airscriptNG/mdk && "
     mdkCloneAndBuild += "git clone https://github.com/aircrack-ng/mdk4.git "
-    mdkCloneAndBuild += "&& cd * && make "
+    mdkCloneAndBuild += "&& cd */src/ && make "
     bashRun(mdkCloneAndBuild)
 def cloneAircrackGitHub():
     bashRun("rm ~/.airscriptNG/air/ -r 2>/dev/null")
