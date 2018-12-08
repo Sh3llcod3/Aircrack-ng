@@ -36,7 +36,7 @@ bashReturnValue = modules.bashReturnValue
 clearTerm = modules.clearTerm
 col = modules.col
 #Script Version number
-scriptVersion = "1.9_build_date_07/07/2018"
+scriptVersion = "1.9_build_date_08/12/2018"
 #Some variables which will find out some basic system info
 cpuModel = ioStream("cat /proc/cpuinfo | grep -i \"Model name\" | sort | uniq | awk -F ' ' {'print $4,$5,$6,$7,$8,$9,$10'}")
 userName = ioStream("uname -n")
