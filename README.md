@@ -52,6 +52,8 @@ How do you update this script? just run it and type `8` in the menu. Want to upd
 - [ ] Add FHS compliancy and lint code to conform with PEP8
 - [ ] Improve startup times, performance and code efficiency
 
+**Work on this project is expected to resume soon!**
+
 ## Screenshots
 [Title Menu](https://goo.gl/GYE6LT)
 [Aircrack-ng](https://goo.gl/xEaXi1)
