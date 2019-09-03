@@ -54,6 +54,8 @@ How do you update this script? just run it and type `8` in the menu. Want to upd
 
 **Work on this project is expected to resume soon!**
 
+- I plan to write three different interfaces for this, a GUI, a webapp and the script version as it stands now.
+
 ## Screenshots
 [Title Menu](https://goo.gl/GYE6LT)
 [Aircrack-ng](https://goo.gl/xEaXi1)
