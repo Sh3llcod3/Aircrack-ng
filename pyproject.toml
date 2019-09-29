@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "airscript-ng"
+version = "1.0"
+description = "Airscript-ng is a modular wireless network assessment suite."
+authors = ["Yudhajit N <28938427+Sh3llcod3@users.noreply.github.com>"]
+license = "MIT"
+readme = 'README.md'
+repository = "https://github.com/Sh3llcod3/Airscript-ng"
+homepage = "https://github.com/Sh3llcod3/Airscript-ng"
+
+classifiers = [
+  "Programming Language :: Python :: 3.6",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Security",
+  "Topic :: System :: Networking",
+  "Topic :: Security :: Cryptography",
+  "Topic :: System :: Systems Administration",
+  "Topic :: Terminals",
+  "Framework :: Flask",
+  "Environment :: Web Environment",
+  "Environment :: Console"
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+easyparse = "*"
+gevent = "*"
+Flask = "*"
+requests = "*"
+
+[tool.poetry.dev-dependencies]
+flake8 = "*"
+flake8-bandit = "*"
+flake8-bugbear = "*"
+flake8-import-order = "*"
+flake8-string-format = "*"
+flake8-tidy-imports = "*"
+flake8-todo = "*"
+setuptools = "*"
+twine = "*"
+pyinstaller = "*"
+Cython = "*"
+requests = "*"
+mypy = "*"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

@@ -121,20 +121,20 @@ def cloneAircrackDeps():
     bashRun("rm ~/.airscriptNG/air/ -r 2>/dev/null")
     aircrackCloneAndBuild = "mkdir -p ~/.airscriptNG/air && cd ~/.airscriptNG/air && "
     aircrackCloneAndBuild += "git clone git://git.kali.org/packages/aircrack-ng.git -b upstream "
-    aircrackCloneAndBuild += "&& cd * && make gcrypt=true"
+    aircrackCloneAndBuild += "&& cd * && make -j`nproc` gcrypt=true"
     bashRun(aircrackCloneAndBuild)
     bashRun("chmod +x ~/.airscriptNG/air/*/scripts/airmon-ng")
 def cloneReaverDeps():
     bashRun("rm ~/.airscriptNG/wps/ -r 2>/dev/null")
     reaverCloneAndBuild = "mkdir -p ~/.airscriptNG/wps && cd ~/.airscriptNG/wps && "
     reaverCloneAndBuild += "git clone git://git.kali.org/packages/reaver.git -b upstream && "
-    reaverCloneAndBuild += "cd */src && ./configure && make"
+    reaverCloneAndBuild += "cd */src && ./configure && make -j`nproc`"
     bashRun(reaverCloneAndBuild)
 def clonePixiewpsDeps():
     bashRun("rm ~/.airscriptNG/magic/ -r 2>/dev/null")
     pixiewpsCloneAndBuild = "mkdir -p ~/.airscriptNG/magic && cd ~/.airscriptNG/magic && "
     pixiewpsCloneAndBuild += "git clone git://git.kali.org/packages/pixiewps.git -b upstream && "
-    pixiewpsCloneAndBuild += "cd * && make && make install"
+    pixiewpsCloneAndBuild += "cd * && make -j`nproc` && make install"
     bashRun(pixiewpsCloneAndBuild)
 #These functions below will clone the packages mentioned above from GitHub
 #This is there as a backup as git.kali.org could experience outages
@@ -144,14 +144,14 @@ def cloneMDK4Deps():
     bashRun("rm ~/.airscriptNG/mdk/ -r 2>/dev/null")
     mdkCloneAndBuild = "mkdir -p ~/.airscriptNG/mdk && cd ~/.airscriptNG/mdk && "
     mdkCloneAndBuild += "git clone https://github.com/aircrack-ng/mdk4.git "
-    mdkCloneAndBuild += "&& cd */src/ && make "
+    mdkCloneAndBuild += "&& cd */src/ && make -j`nproc`"
     bashRun(mdkCloneAndBuild)
 def cloneAircrackGitHub():
     bashRun("rm ~/.airscriptNG/air/ -r 2>/dev/null")
     aircrackCloneAndBuild = "mkdir -p ~/.airscriptNG/air && cd ~/.airscriptNG/air && "
     aircrackCloneAndBuild += "git clone https://github.com/aircrack-ng/aircrack-ng.git "
     aircrackCloneAndBuild += "&& cd * && autoreconf -i && ./configure --with-gcrypt "
-    aircrackCloneAndBuild += "&& make"
+    aircrackCloneAndBuild += "&& make -j`nproc`"
     bashRun(aircrackCloneAndBuild)
     bashRun("chmod +x ~/.airscriptNG/air/*/scripts/airmon-ng")
 def cloneReaverGitHub():
@@ -159,13 +159,13 @@ def cloneReaverGitHub():
     reaverCloneAndBuild = "mkdir -p ~/.airscriptNG/wps && cd ~/.airscriptNG/wps && "
     reaverCloneAndBuild += "git clone https://github.com/t6x/reaver-wps-fork-t6x.git && "
     reaverCloneAndBuild += "mv * reaver && "
-    reaverCloneAndBuild += "cd */src && ./configure && make "
+    reaverCloneAndBuild += "cd */src && ./configure && make -j`nproc` "
     bashRun(reaverCloneAndBuild)
 def clonePixiewpsGitHub():
     bashRun("rm ~/.airscriptNG/magic/ -r 2>/dev/null")
     pixiewpsCloneAndBuild = "mkdir -p ~/.airscriptNG/magic && cd ~/.airscriptNG/magic && "
     pixiewpsCloneAndBuild += "git clone https://github.com/wiire-a/pixiewps.git && "
-    pixiewpsCloneAndBuild += "cd * && make && make install"
+    pixiewpsCloneAndBuild += "cd * && make -j`nproc` && make install"
     bashRun(pixiewpsCloneAndBuild)
 #FINISH THIS
 def gitDeps():
