@@ -17,6 +17,12 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>
 #   Contact: Please create a issue on my GitHub <https://github.com/Sh3llcod3>
 #
+
+# THIS IS DEPRECATED, UNSUPPORTED (AS OF COMMIT b238e6a2f2b6e506d9053a932744e054f46f4ea0)
+# AND WILL BE REMOVED IN THE FUTURE. PLEASE USE THE NEW SCRIPT, WEBAPP OR GUI INSTEAD.
+# THIS IS SIMPLY TOO OLD AND BAD CODE. DON'T USE THIS! THIS IS LEGACY!
+
+
 #Import standard modules
 import os
 import subprocess
@@ -120,7 +126,7 @@ class functions:
         finally:
             functions.menuOrExit()
     #This function used to add the Kali-Rolling repository to the apt lists, however it was too dangerous, so its has been deprecated and removed.
-    #Why was it dangerous? Because it replaces Ubuntu's Coreutils with Kali's Coreutils,Display manager, and breaks GPU (OpenCL) drivers. 
+    #Why was it dangerous? Because it replaces Ubuntu's Coreutils with Kali's Coreutils,Display manager, and breaks GPU (OpenCL) drivers.
     #Your system will refuse to boot properly if kali tools aren't installed correctly. Use Katoolin if your're on Ubuntu >> https://goo.gl/rykBwg
     #This function switches the colors on/off in realtime, without changing programs or restarting.
     def switchColors():
