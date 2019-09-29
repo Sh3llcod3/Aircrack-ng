@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "airscript-ng"
-version = "1.0"
+version = "2.0"
 description = "Airscript-ng is a modular wireless network assessment suite."
 authors = ["Yudhajit N <28938427+Sh3llcod3@users.noreply.github.com>"]
 license = "MIT"
