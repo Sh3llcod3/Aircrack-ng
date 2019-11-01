@@ -55,6 +55,7 @@ How do you update this script? just run it and type `8` in the menu. Want to upd
 **Work on this project is expected to resume soon!**
 
 - I plan to write three different interfaces for this, a GUI, a webapp and the script version as it stands now.
+- The expected timeframe to resume development is by Christmas 2019.
 
 ## Screenshots
 [Title Menu](https://goo.gl/GYE6LT)
