@@ -23,7 +23,7 @@ class Commands():
     def run(self, shell_cmd: str) -> None:
         call(shell_cmd, shell=True)
 
-    def return_value(self, shell_cmd: str) -> Union[str, bool]:
+    def check(self, shell_cmd: str) -> Union[str, bool]:
         try:
             return not bool(check_call(f"{shell_cmd} 2>/dev/null >/dev/null", shell=True))
 

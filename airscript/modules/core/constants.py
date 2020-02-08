@@ -5,7 +5,7 @@ from pathlib import Path as FilePath
 from typing import List
 
 
-# Define all the constant values here.
+# Pathlib file paths.
 BASE_PATH = FilePath(environ.get("BASE_PATH", path.expanduser("~/.cache/airscript-ng")))
 STORAGE_DIR = BASE_PATH / "storage"
 AIRCRACK_BASE_PATH = BASE_PATH / "air"
@@ -19,10 +19,17 @@ AIREPLAY_PATH = AIRCRACK_BASE_PATH / "src" / "aireplay-ng"
 MDK_PATH = MDK_BASE_PATH / "src" / "mdk4"
 CSV_POSTFIX = "-01.csv"
 CAP_POSTFIX = "-01.cap"
+
+# URLs of required software.
 AIRCRACK_GH_URL = "https://github.com/aircrack-ng/aircrack-ng.git"
 MDK_GH_URL = "https://github.com/aircrack-ng/mdk4.git"
 REAVER_GH_URL = "https://github.com/t6x/reaver-wps-fork-t6x.git"
 PIXIEWPS_GH_URL = "https://github.com/wiire-a/pixiewps.git"
+
+# Static system locations
+IFACES = FilePath("/sys/class/net/")
+
+# Required Packages
 DEBPKGS: List[str] = [
     "xterm",
     "gawk",
@@ -70,8 +77,12 @@ DEBPKGS: List[str] = [
     "wpasupplicant",
     "zlib1g-dev"
 ]
+
+# Instructions to compile
 COMPILATION_STEPS: List[str] = [
     "apt",
+    "apt update",
+    "apt install -y {DEBPKGS}", # TODO: SORT!
     f"git clone {AIRCRACK_GH_URL} {AIRCRACK_BASE_PATH}",
     f"git clone {REAVER_GH_URL} {REAVER_BASE_PATH}",
     f"git clone {PIXIEWPS_GH_URL} {PIXIEWPS_BASE_PATH}",

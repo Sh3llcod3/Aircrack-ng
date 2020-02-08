@@ -4,18 +4,19 @@ import platform
 from os import makedirs
 from pathlib import Path
 from shutil import rmtree
-from subprocess import CalledProcessError, check_call  # noqa: S404
 from typing import List, Union
 
 
 from .constants import BASE_PATH, DEBPKGS
+from .shell_commands import Commands
 
 
-class OSInteractionLayer():
+class OSInteractionLayer(Commands):
     """Detects package manager used by system and attempts to install dependencies."""
 
     def __init__(self) -> None:
         self.IS_WINDOWS: bool = (platform.system().lower() == "windows")
+        super().__init__()
 
     def __get_distro(self) -> bool:
         """Get the OS-release"""
@@ -37,21 +38,16 @@ class OSInteractionLayer():
                             f'|| command -v {pkg_mgr_name} '
                             '>/dev/null 2>/dev/null"'
                             )
-        try:
-            return not bool(
-                check_call(checker_cmd, shell=True)  # noqa: S602
-            )
-        except(CalledProcessError):
-            return False
+        return self.check(checker_cmd)
 
-    def __nix_pkg(self) -> bool:
+    def nix_pkg(self) -> bool:
         """Determine package manager and install packages required."""
 
         try:
             for name, actions in self.package_mapping.items():
                 if self.is_prog_present(name):
                     for pkg_mgr_cmd in actions:
-                        check_call(f"{pkg_mgr_cmd}", shell=True)  # noqa: S602
+                        self.check(pkg_mgr_cmd)
                     else:
                         return True
             else:
@@ -69,7 +65,7 @@ class OSInteractionLayer():
         self.package_mapping = package_mapping
 
         if not self.IS_WINDOWS:
-            return self.__nix_pkg()
+            return self.nix_pkg()
 
         else:
             return self.__win_pkg()
@@ -82,7 +78,7 @@ class OSInteractionLayer():
                 for rel_actual_name, actions in dist_mapping.items():
                     if self.OS_RELEASE == rel_actual_name:
                         for compile_instruction in actions[1:]:
-                            check_call(f"{compile_instruction}", shell=True)  # noqa: S602
+                            self.run(compile_instruction)
                         else:
                             return True
                 else:
@@ -90,7 +86,7 @@ class OSInteractionLayer():
                         if self.is_prog_present(actions[0]):
                             print(f"Distro not found, using fallback based on {actions[0]}")
                             for compile_instruction in actions[1:]:
-                                check_call(f"{compile_instruction}", shell=True)  # noqa: S602
+                                self.run(compile_instruction)
                             else:
                                 return True
                     else:
@@ -112,12 +108,12 @@ class PackageInstaller(OSInteractionLayer):
 
     def install(self, remove_prev=False) -> bool:
         try:
-            self.package_mapping = {"dpkg": f"dpkg -s {DEBPKGS} 2>/dev/null >/dev/null"}
+            self.package_mapping = {"dpkg": f"dpkg -s {DEBPKGS} 2>/dev/null >/dev/null"} # TODO: FIX
 
             if remove_prev:
                 rmtree(BASE_PATH)
 
-            if not self.__nix_pkg():
+            if not self.nix_pkg():
                 delattr(self, 'package_mapping')
                 self.install_packages(apt=["apt update", f"apt install -y {DEBPKGS}"])
 
