@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from typing import Dict
 
-from .constants import AIRMON_PATH, IFACES
+from .constants import IFACES
 from .shell_commands import Commands
 
 

@@ -7,15 +7,17 @@ from shutil import rmtree
 from typing import List, Union
 
 
-from .constants import BASE_PATH, DEBPKGS
+from .constants import (AIRCRACK_PATH, BASE_PATH, COMPILATION_STEPS, DEBPKGS, MDK_PATH,
+                        PIXIEWPS_PATH, REAVER_PATH)
 from .shell_commands import Commands
 
 
-class OSInteractionLayer(Commands):
+class PackageHandler(Commands):
     """Detects package manager used by system and attempts to install dependencies."""
 
     def __init__(self) -> None:
         self.IS_WINDOWS: bool = (platform.system().lower() == "windows")
+        self.display_output = False
         super().__init__()
 
     def __get_distro(self) -> bool:
@@ -31,46 +33,32 @@ class OSInteractionLayer(Commands):
         else:
             return False
 
-    def is_prog_present(self, pkg_mgr_name: str) -> bool:
-        checker_cmd: str = ('/usr/bin/env bash -c '
-                            f'"hash {pkg_mgr_name} '
-                            '>/dev/null 2>/dev/null '
-                            f'|| command -v {pkg_mgr_name} '
-                            '>/dev/null 2>/dev/null"'
-                            )
-        return self.check(checker_cmd)
-
-    def nix_pkg(self) -> bool:
-        """Determine package manager and install packages required."""
+    def manage(self, **package_mapping) -> Union[str, bool]:
+        """Manage Packages."""
+        result = []
 
         try:
-            for name, actions in self.package_mapping.items():
-                if self.is_prog_present(name):
-                    for pkg_mgr_cmd in actions:
-                        self.check(pkg_mgr_cmd)
+            for name, actions in package_mapping.items():
+                if self.valid_command(name):
+
+                    for cmd in actions:
+                        if not self.display_output:
+                            result.append(self.check(cmd))
+
+                        else:
+                            self.run(cmd)
+                            result.append(True)
+
                     else:
-                        return True
+                        return min(result)
+
             else:
                 return False
 
-        except(CalledProcessError, KeyboardInterrupt):
+        except(KeyboardInterrupt):
             return False
 
-    def __win_pkg(self) -> bool:
-        """Install the windows packages. Not added yet."""
-
-        return False
-
-    def install_packages(self, **package_mapping) -> bool:
-        self.package_mapping = package_mapping
-
-        if not self.IS_WINDOWS:
-            return self.nix_pkg()
-
-        else:
-            return self.__win_pkg()
-
-    def compile_dist_pkg(self, **dist_mapping) -> bool:
+    def compile(self, **dist_mapping) -> bool:
         """Compile source packages, discriminate based on os-release"""
 
         try:
@@ -83,43 +71,51 @@ class OSInteractionLayer(Commands):
                             return True
                 else:
                     for actions in dist_mapping.values():
-                        if self.is_prog_present(actions[0]):
-                            print(f"Distro not found, using fallback based on {actions[0]}")
+                        if self.valid_command(actions[0]):
                             for compile_instruction in actions[1:]:
                                 self.run(compile_instruction)
                             else:
                                 return True
                     else:
-                        print("Unable to match supported distro or package manager.")
-                        print("Please file an issue with your /etc/os-release file and package manager.")
                         return False
 
             return False
 
-        except(CalledProcessError, KeyboardInterrupt):
+        except(KeyboardInterrupt):
             return False
 
 
-class PackageInstaller(OSInteractionLayer):
-    """Uses OSInteractionLayer() and it's methods to actually install the packages."""
+class PackageInstaller(PackageHandler):
+    """Install the packages."""
 
     def __init__(self) -> None:
         super().__init__()
 
-    def install(self, remove_prev=False) -> bool:
+    def install(self, remove_prev=True) -> bool:
         try:
-            self.package_mapping = {"dpkg": f"dpkg -s {DEBPKGS} 2>/dev/null >/dev/null"} # TODO: FIX
 
-            if remove_prev:
-                rmtree(BASE_PATH)
+            if not self.manage(dpkg=[f"dpkg -s {DEBPKGS}"]):
 
-            if not self.nix_pkg():
-                delattr(self, 'package_mapping')
-                self.install_packages(apt=["apt update", f"apt install -y {DEBPKGS}"])
+                if remove_prev:
+                    rmtree(BASE_PATH)
+                    makedirs(BASE_PATH)
 
-            makedirs(BASE_PATH)
+                self.display_output = True
+                self.manage(apt=["apt update", f"apt install -y {DEBPKGS}"])
+
+            if not BASE_PATH.exists():
+                makedirs(BASE_PATH)
+
+            if not min([AIRCRACK_PATH.exists(), MDK_PATH.exists(), PIXIEWPS_PATH.exists(), REAVER_PATH.exists()]):
+                self.compile(
+                    ubuntu=COMPILATION_STEPS,
+                    debian=COMPILATION_STEPS,
+                    mint=COMPILATION_STEPS,
+                    kali=COMPILATION_STEPS,
+                    raspbian=COMPILATION_STEPS
+                )
+
             return True
 
-        except(CalledProcessError) as error:
-            print(error)
+        except(Exception):
             return False

@@ -30,6 +30,9 @@ class Commands():
         except(CalledProcessError):
             return False
 
+    def valid_command(self, command) -> Union[str, bool]:
+        return self.check(f'hash {command} >/dev/null 2>/dev/null || command -v {command}')
+
     def clear(self) -> None:
         self.run("clear || tput clear")
 

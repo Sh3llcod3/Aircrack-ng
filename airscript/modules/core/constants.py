@@ -12,11 +12,13 @@ AIRCRACK_BASE_PATH = BASE_PATH / "air"
 MDK_BASE_PATH = BASE_PATH / "mdk"
 REAVER_BASE_PATH = BASE_PATH / "wps"
 PIXIEWPS_BASE_PATH = BASE_PATH / "pixiewps"
-AIRODUMP_PATH = AIRCRACK_BASE_PATH / "src" / "airodump-ng"
-AIRCRACK_PATH = AIRCRACK_BASE_PATH / "src" / "aircrack-ng"
+AIRODUMP_PATH = AIRCRACK_BASE_PATH / "airodump-ng"
+AIRCRACK_PATH = AIRCRACK_BASE_PATH / "aircrack-ng"
 AIRMON_PATH = AIRCRACK_BASE_PATH / "scripts" / "airmon-ng"
-AIREPLAY_PATH = AIRCRACK_BASE_PATH / "src" / "aireplay-ng"
+AIREPLAY_PATH = AIRCRACK_BASE_PATH / "aireplay-ng"
 MDK_PATH = MDK_BASE_PATH / "src" / "mdk4"
+PIXIEWPS_PATH = PIXIEWPS_BASE_PATH / "pixiewps"
+REAVER_PATH = REAVER_BASE_PATH / "src" / "reaver"
 CSV_POSTFIX = "-01.csv"
 CAP_POSTFIX = "-01.cap"
 
@@ -30,7 +32,7 @@ PIXIEWPS_GH_URL = "https://github.com/wiire-a/pixiewps.git"
 IFACES = FilePath("/sys/class/net/")
 
 # Required Packages
-DEBPKGS: List[str] = [
+RAW_PACKAGES: List[str] = [
     "xterm",
     "gawk",
     "reaver",
@@ -78,11 +80,11 @@ DEBPKGS: List[str] = [
     "zlib1g-dev"
 ]
 
+DEBPKGS = ' '.join(RAW_PACKAGES)
+
 # Instructions to compile
 COMPILATION_STEPS: List[str] = [
     "apt",
-    "apt update",
-    "apt install -y {DEBPKGS}", # TODO: SORT!
     f"git clone {AIRCRACK_GH_URL} {AIRCRACK_BASE_PATH}",
     f"git clone {REAVER_GH_URL} {REAVER_BASE_PATH}",
     f"git clone {PIXIEWPS_GH_URL} {PIXIEWPS_BASE_PATH}",
