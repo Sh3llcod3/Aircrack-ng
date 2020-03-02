@@ -93,10 +93,14 @@ class PackageInstaller(PackageHandler):
 
     def install(self, remove_prev=True) -> bool:
         try:
+            check_paths: List[bool] = [AIRCRACK_PATH.exists(),
+                                       MDK_PATH.exists(),
+                                       PIXIEWPS_PATH.exists(),
+                                       REAVER_PATH.exists()]
 
             if not self.manage(dpkg=[f"dpkg -s {DEBPKGS}"]):
 
-                if remove_prev:
+                if remove_prev or not min(check_paths):
                     rmtree(BASE_PATH)
                     makedirs(BASE_PATH)
 
@@ -106,7 +110,7 @@ class PackageInstaller(PackageHandler):
             if not BASE_PATH.exists():
                 makedirs(BASE_PATH)
 
-            if not min([AIRCRACK_PATH.exists(), MDK_PATH.exists(), PIXIEWPS_PATH.exists(), REAVER_PATH.exists()]):
+            if not min(check_paths):
                 self.compile(
                     ubuntu=COMPILATION_STEPS,
                     debian=COMPILATION_STEPS,
@@ -117,5 +121,6 @@ class PackageInstaller(PackageHandler):
 
             return True
 
-        except(Exception):
+        except(Exception) as e:
+            print(e)
             return False

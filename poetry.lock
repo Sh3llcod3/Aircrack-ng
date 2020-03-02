@@ -41,7 +41,7 @@ description = "An easy safelist-based HTML-sanitizing tool."
 name = "bleach"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "3.1.0"
+version = "3.1.1"
 
 [package.dependencies]
 six = ">=1.9.0"
@@ -292,13 +292,13 @@ test = ["zope.interface", "zope.event", "requests", "objgraph", "psutil", "futur
 [[package]]
 category = "dev"
 description = "Git Object Database"
-name = "gitdb2"
+name = "gitdb"
 optional = false
 python-versions = ">=3.4"
-version = "3.0.2"
+version = "4.0.2"
 
 [package.dependencies]
-smmap2 = ">=2.0.0"
+smmap = ">=3.0.1,<4"
 
 [[package]]
 category = "dev"
@@ -306,10 +306,10 @@ description = "Python Git Library"
 name = "gitpython"
 optional = false
 python-versions = ">=3.4"
-version = "3.0.8"
+version = "3.1.0"
 
 [package.dependencies]
-gitdb2 = ">=3"
+gitdb = ">=4.0.1,<5"
 
 [[package]]
 category = "main"
@@ -326,7 +326,7 @@ description = "Internationalized Domain Names in Applications (IDNA)"
 name = "idna"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "2.8"
+version = "2.9"
 
 [[package]]
 category = "dev"
@@ -544,16 +544,16 @@ description = "Python HTTP for Humans."
 name = "requests"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "2.22.0"
+version = "2.23.0"
 
 [package.dependencies]
 certifi = ">=2017.4.17"
-chardet = ">=3.0.2,<3.1.0"
-idna = ">=2.5,<2.9"
+chardet = ">=3.0.2,<4"
+idna = ">=2.5,<3"
 urllib3 = ">=1.21.1,<1.25.0 || >1.25.0,<1.25.1 || >1.25.1,<1.26"
 
 [package.extras]
-security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)"]
+security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
 socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7)", "win-inet-pton"]
 
 [[package]]
@@ -591,10 +591,10 @@ version = "1.14.0"
 [[package]]
 category = "dev"
 description = "A pure Python implementation of a sliding window memory map manager"
-name = "smmap2"
+name = "smmap"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "2.0.5"
+version = "3.0.1"
 
 [[package]]
 category = "dev"
@@ -614,7 +614,7 @@ description = "Fast, Extensible Progress Meter"
 name = "tqdm"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*"
-version = "4.42.1"
+version = "4.43.0"
 
 [package.extras]
 dev = ["py-make (>=0.1.0)", "twine", "argopt", "pydoc-markdown"]
@@ -720,8 +720,8 @@ bandit = [
     {file = "bandit-1.6.2.tar.gz", hash = "sha256:41e75315853507aa145d62a78a2a6c5e3240fe14ee7c601459d0df9418196065"},
 ]
 bleach = [
-    {file = "bleach-3.1.0-py2.py3-none-any.whl", hash = "sha256:213336e49e102af26d9cde77dd2d0397afabc5a6bf2fed985dc35b5d1e285a16"},
-    {file = "bleach-3.1.0.tar.gz", hash = "sha256:3fdf7f77adcf649c9911387df51254b813185e32b2c6619f690b593a617e19fa"},
+    {file = "bleach-3.1.1-py2.py3-none-any.whl", hash = "sha256:44f69771e2ac81ff30d929d485b7f9919f3ad6d019b6b20c74f3b8687c3f70df"},
+    {file = "bleach-3.1.1.tar.gz", hash = "sha256:aa8b870d0f46965bac2c073a93444636b0e1ca74e9777e34f03dd494b8a59d48"},
 ]
 certifi = [
     {file = "certifi-2019.11.28-py2.py3-none-any.whl", hash = "sha256:017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3"},
@@ -902,13 +902,13 @@ gevent = [
     {file = "gevent-1.4.0-pp260-pypy_41-win32.whl", hash = "sha256:28a0c5417b464562ab9842dd1fb0cc1524e60494641d973206ec24d6ec5f6909"},
     {file = "gevent-1.4.0.tar.gz", hash = "sha256:1eb7fa3b9bd9174dfe9c3b59b7a09b768ecd496debfc4976a9530a3e15c990d1"},
 ]
-gitdb2 = [
-    {file = "gitdb2-3.0.2-py2.py3-none-any.whl", hash = "sha256:b2b3a67090c17dc61f8407ca485e79ae811225ab5ebcd98ac5ee01448e8987b5"},
-    {file = "gitdb2-3.0.2.tar.gz", hash = "sha256:0375d983fd887d03c8942e81b1b0abc6c320cfb500cd3fe0d9c0eac87fbf2b52"},
+gitdb = [
+    {file = "gitdb-4.0.2-py3-none-any.whl", hash = "sha256:284a6a4554f954d6e737cddcff946404393e030b76a282c6640df8efd6b3da5e"},
+    {file = "gitdb-4.0.2.tar.gz", hash = "sha256:598e0096bb3175a0aab3a0b5aedaa18a9a25c6707e0eca0695ba1a0baf1b2150"},
 ]
 gitpython = [
-    {file = "GitPython-3.0.8-py3-none-any.whl", hash = "sha256:a43a5d88a5bbc3cf32bb5223e4b4e68fd716db5e9996cad6e561bbfee6e5f4af"},
-    {file = "GitPython-3.0.8.tar.gz", hash = "sha256:620b3c729bbc143b498cfea77e302999deedc55faec5b1067086c9ef90e101bc"},
+    {file = "GitPython-3.1.0-py3-none-any.whl", hash = "sha256:43da89427bdf18bf07f1164c6d415750693b4d50e28fc9b68de706245147b9dd"},
+    {file = "GitPython-3.1.0.tar.gz", hash = "sha256:e426c3b587bd58c482f0b7fe6145ff4ac7ae6c82673fc656f489719abca6f4cb"},
 ]
 greenlet = [
     {file = "greenlet-0.4.15-cp27-cp27m-manylinux1_x86_64.whl", hash = "sha256:99a26afdb82ea83a265137a398f570402aa1f2b5dfb4ac3300c026931817b163"},
@@ -935,8 +935,8 @@ greenlet = [
     {file = "greenlet-0.4.15.tar.gz", hash = "sha256:9416443e219356e3c31f1f918a91badf2e37acf297e2fa13d24d1cc2380f8fbc"},
 ]
 idna = [
-    {file = "idna-2.8-py2.py3-none-any.whl", hash = "sha256:ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c"},
-    {file = "idna-2.8.tar.gz", hash = "sha256:c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407"},
+    {file = "idna-2.9-py2.py3-none-any.whl", hash = "sha256:a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"},
+    {file = "idna-2.9.tar.gz", hash = "sha256:7588d1c14ae4c77d74036e8c22ff447b26d0fde8f007354fd48a7814db15b7cb"},
 ]
 importlib-metadata = [
     {file = "importlib_metadata-1.5.0-py2.py3-none-any.whl", hash = "sha256:b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"},
@@ -1065,8 +1065,8 @@ readme-renderer = [
     {file = "readme_renderer-24.0.tar.gz", hash = "sha256:bb16f55b259f27f75f640acf5e00cf897845a8b3e4731b5c1a436e4b8529202f"},
 ]
 requests = [
-    {file = "requests-2.22.0-py2.py3-none-any.whl", hash = "sha256:9cf5292fcd0f598c671cfc1e0d7d1a7f13bb8085e9a590f48c010551dc6c4b31"},
-    {file = "requests-2.22.0.tar.gz", hash = "sha256:11e007a8a2aa0323f5a921e9e6a2d7e4e67d9877e85773fba9ba6419025cbeb4"},
+    {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
+    {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
 ]
 requests-toolbelt = [
     {file = "requests-toolbelt-0.9.1.tar.gz", hash = "sha256:968089d4584ad4ad7c171454f0a5c6dac23971e9472521ea3b6d49d610aa6fc0"},
@@ -1080,17 +1080,17 @@ six = [
     {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},
     {file = "six-1.14.0.tar.gz", hash = "sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a"},
 ]
-smmap2 = [
-    {file = "smmap2-2.0.5-py2.py3-none-any.whl", hash = "sha256:0555a7bf4df71d1ef4218e4807bbf9b201f910174e6e08af2e138d4e517b4dde"},
-    {file = "smmap2-2.0.5.tar.gz", hash = "sha256:29a9ffa0497e7f2be94ca0ed1ca1aa3cd4cf25a1f6b4f5f87f74b46ed91d609a"},
+smmap = [
+    {file = "smmap-3.0.1-py2.py3-none-any.whl", hash = "sha256:5fead614cf2de17ee0707a8c6a5f2aa5a2fc6c698c70993ba42f515485ffda78"},
+    {file = "smmap-3.0.1.tar.gz", hash = "sha256:171484fe62793e3626c8b05dd752eb2ca01854b0c55a1efc0dc4210fccb65446"},
 ]
 stevedore = [
     {file = "stevedore-1.32.0-py2.py3-none-any.whl", hash = "sha256:a4e7dc759fb0f2e3e2f7d8ffe2358c19d45b9b8297f393ef1256858d82f69c9b"},
     {file = "stevedore-1.32.0.tar.gz", hash = "sha256:18afaf1d623af5950cc0f7e75e70f917784c73b652a34a12d90b309451b5500b"},
 ]
 tqdm = [
-    {file = "tqdm-4.42.1-py2.py3-none-any.whl", hash = "sha256:fe231261cfcbc6f4a99165455f8f6b9ef4e1032a6e29bccf168b4bf42012f09c"},
-    {file = "tqdm-4.42.1.tar.gz", hash = "sha256:251ee8440dbda126b8dfa8a7c028eb3f13704898caaef7caa699b35e119301e2"},
+    {file = "tqdm-4.43.0-py2.py3-none-any.whl", hash = "sha256:0d8b5afb66e23d80433102e9bd8b5c8b65d34c2a2255b2de58d97bd2ea8170fd"},
+    {file = "tqdm-4.43.0.tar.gz", hash = "sha256:f35fb121bafa030bd94e74fcfd44f3c2830039a2ddef7fc87ef1c2d205237b24"},
 ]
 twine = [
     {file = "twine-3.1.1-py3-none-any.whl", hash = "sha256:c1af8ca391e43b0a06bbc155f7f67db0bf0d19d284bfc88d1675da497a946124"},

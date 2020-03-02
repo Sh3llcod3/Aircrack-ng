@@ -2,7 +2,7 @@
 
 from os import environ, path
 from pathlib import Path as FilePath
-from typing import List
+from typing import Dict, List
 
 
 # Pathlib file paths.
@@ -99,3 +99,10 @@ COMPILATION_STEPS: List[str] = [
      " make -j$(nproc)"),
 
 ]
+
+ADAPTER_MODES: Dict[int, str] = {0: "ip link set {0} down; iw dev {0} set type managed; ip link set {0} up",
+                                 1: "ip link set {0} down; iw dev {0} set type monitor; ip link set {0} up",
+                                 2: "nmcli dev set {0} managed yes",
+                                 3: "nmcli dev set {0} managed no",
+                                 4: "ip link set {0} up",
+                                 5: "ip link set {0} down"}
