@@ -3,7 +3,7 @@ from base64 import b64decode
 from subprocess import CalledProcessError, call, check_call, check_output
 from sys import exit, stdout
 from time import sleep
-from typing import Any, Union
+from typing import Any, Tuple, Union
 
 import requests
 
@@ -13,9 +13,17 @@ class Commands():
     def __init__(self) -> None:
         ...
 
-    def capture(self, shell_cmd: str) -> Any:
+    def capture(self, *shell_cmds: Union[str, Tuple[str]]) -> Any:
         try:
-            return check_output(shell_cmd, shell=True).decode().rstrip()
+            outputs = []
+
+            if len(shell_cmds) > 1:
+                for cmd in shell_cmds:
+                    outputs.append(check_output(cmd, shell=True).decode().rstrip())
+                return outputs
+
+            else:
+                return check_output(shell_cmds[0], shell=True).decode().rstrip()
 
         except(CalledProcessError):
             return False
