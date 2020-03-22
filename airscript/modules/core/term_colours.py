@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from typing import Tuple, Union
 
 
 class Colours():
@@ -60,8 +61,39 @@ class Colours():
             return f"[{symbol}] {message}"
 
     # Add a method to return the colourised text.
-    def return_colour(self, message) -> str:
-        if not Colours.reset_colours:
-            return f"{self.colour_code}{message}{self.end_code}"
+    def return_colour(self, *message) -> Union[Tuple, str]:
+        result = []
+
+        for msg in message:
+            if not Colours.reset_colours:
+                result.append(f"{self.colour_code}{msg}{self.end_code}")
+            else:
+                result.append(msg)
+
+        if len(result) > 1:
+            return tuple(result)
         else:
-            return message
+            return result[0]
+
+
+class StandardColours():
+    pink = Colours('\033[95m')
+    blue = Colours('\033[94m')
+    green = Colours('\033[92m')
+    yellow = Colours('\033[93m')
+    red = Colours('\033[91m')
+    black = Colours('\033[0;30;48m')
+    endl = Colours('\033[0m')
+    bold = Colours('\033[1m')
+    uline = Colours('\033[4m')
+    deep_blue = Colours('\033[1;34;48m')
+    deep_yellow = Colours('\033[1;33;48m')
+    deep_red = Colours('\033[1;31;48m')
+    deep_green = Colours('\033[1;32;48m')
+    deep_white = Colours('\033[1;39;48m')
+    deep_black = Colours('\033[1;30;48m')
+    deep_pink = Colours('\033[1;35;48m')
+    marine_blue = Colours('\033[0;36;48m')
+    dark_yellow = Colours('\033[0;33;48m')
+    light_blue = Colours('\033[1;36;48m')
+    highlight = Colours('\033[1;37;40m')

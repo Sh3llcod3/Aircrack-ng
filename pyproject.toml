@@ -9,7 +9,7 @@ repository = "https://github.com/Sh3llcod3/Airscript-ng"
 homepage = "https://github.com/Sh3llcod3/Airscript-ng"
 
 classifiers = [
-  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
   "License :: OSI Approved :: MIT License",
   "Topic :: Security",
   "Topic :: System :: Networking",
@@ -27,6 +27,7 @@ easyparse = "*"
 gevent = "*"
 Flask = "*"
 requests = "*"
+PTable = "*"
 
 [tool.poetry.dev-dependencies]
 flake8 = "*"

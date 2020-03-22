@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import platform
 from os import makedirs
 from pathlib import Path
@@ -16,9 +15,9 @@ class PackageHandler(Commands):
     """Detects package manager used by system and attempts to install dependencies."""
 
     def __init__(self) -> None:
+        super().__init__()
         self.IS_WINDOWS: bool = (platform.system().lower() == "windows")
         self.display_output = False
-        super().__init__()
 
     def __get_distro(self) -> bool:
         """Get the OS-release"""
