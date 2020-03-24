@@ -30,6 +30,7 @@ PIXIEWPS_GH_URL = "https://github.com/wiire-a/pixiewps.git"
 # Static system locations
 IFACES = FilePath("/sys/class/net/")
 HANDSHAKE_FILES = BASE_PATH / "handshakes"
+TEMP_FILES = BASE_PATH / "temp"
 
 # Required Packages
 RAW_PACKAGES: List[str] = [
@@ -100,6 +101,7 @@ COMPILATION_STEPS: List[str] = [
 
 ]
 
+# Manipulate the wifi card
 ADAPTER_MODES: Dict[int, str] = {0: "ip link set {0} down; iw dev {0} set type managed; ip link set {0} up",
                                  1: "ip link set {0} down; iw dev {0} set type monitor; ip link set {0} up",
                                  2: "nmcli dev set {0} managed yes",
@@ -107,7 +109,8 @@ ADAPTER_MODES: Dict[int, str] = {0: "ip link set {0} down; iw dev {0} set type m
                                  4: "ip link set {0} up",
                                  5: "ip link set {0} down"}
 
-VERSION_STRING = "v2.0, Q1-2020"
+# Version String
+VERSION_STRING = "v2.0, Q2-2020"
 
 # Signal Strengths
 SIGNAL_STRENGTHS = {-55: "Strong",

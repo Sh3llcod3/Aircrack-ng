@@ -25,6 +25,20 @@ def main() -> None:
         "Show version info and exit.",
         optional=True
     )
+    parser.add_arg(
+        "-m",
+        "--menu-opt",
+        "option",
+        "Skip menu, run directly that menu option.",
+        optional=False
+    )
+    parser.add_arg(
+        "-n",
+        "--no-stop-nm",
+        None,
+        "Don't stop the network-manager service for SSH connections (unstable)",
+        optional=False
+    )
     parser.parse_args()
 
     # Show help screen

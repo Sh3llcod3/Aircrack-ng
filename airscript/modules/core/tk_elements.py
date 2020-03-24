@@ -10,11 +10,14 @@ class InputManager(StandardColours):
         self.PS1 = (f"{self.uline.return_colour('airscript')} {self.section_type}"
                     f"({self.red.return_colour(question)}) > ")
 
-    def get(self, highest_val=None, boolean=False, *exclusions):
+    def get(self, highest_val=None, boolean=False, passthrough=False, *exclusions):
         while True:
 
             try:
                 value = input(self.PS1).strip()
+
+                if passthrough:
+                    return True
 
                 if boolean:
                     v_true, v_false = value.startswith("y"), value.startswith("n")
