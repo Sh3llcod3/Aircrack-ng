@@ -31,6 +31,7 @@ PIXIEWPS_GH_URL = "https://github.com/wiire-a/pixiewps.git"
 IFACES = FilePath("/sys/class/net/")
 HANDSHAKE_FILES = BASE_PATH / "handshakes"
 TEMP_FILES = BASE_PATH / "temp"
+CAP_FILES = BASE_PATH / "captures"
 
 # Required Packages
 RAW_PACKAGES: List[str] = [
@@ -111,9 +112,3 @@ ADAPTER_MODES: Dict[int, str] = {0: "ip link set {0} down; iw dev {0} set type m
 
 # Version String
 VERSION_STRING = "v2.0, Q2-2020"
-
-# Signal Strengths
-SIGNAL_STRENGTHS = {-55: "Strong",
-                    -67: "Medium",
-                    -72: "Weak  ",
-                    -80: "Faint "}

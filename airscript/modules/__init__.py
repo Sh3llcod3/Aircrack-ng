@@ -1,5 +1,6 @@
 # flake8: noqa
 from .aircrack_module import *
+from .pmk_module import *
 from .core import *
 from .mitm_ap import *
 from .use_mdk import *

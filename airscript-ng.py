@@ -6,6 +6,8 @@ from airscript import modules
 
 import easyparse
 
+# 8 discrete types of attacks on wifi + mdk fun + DOS
+
 
 def main() -> None:
 
