@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from typing import Union
+
 from .term_colours import StandardColours
 
 
@@ -10,7 +12,7 @@ class InputManager(StandardColours):
         self.PS1 = (f"{self.uline.return_colour('airscript')} {self.section_type}"
                     f"({self.red.return_colour(question)}) > ")
 
-    def get(self, highest_val=None, boolean=False, passthrough=False, *exclusions):
+    def get(self, highest_val=None, boolean=False, passthrough=False, *exclusions) -> Union[int, bool, None]:
         while True:
 
             try:

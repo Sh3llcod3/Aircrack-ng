@@ -79,7 +79,8 @@ RAW_PACKAGES: List[str] = [
     "tcpdump",
     "usbutils",
     "wpasupplicant",
-    "zlib1g-dev"
+    "zlib1g-dev",
+    "procps"
 ]
 
 DEBPKGS = ' '.join(RAW_PACKAGES)
@@ -112,3 +113,15 @@ ADAPTER_MODES: Dict[int, str] = {0: "ip link set {0} down; iw dev {0} set type m
 
 # Version String
 VERSION_STRING = "v2.0, Q2-2020"
+
+# Some wordlists
+WORDLISTS = {
+    1: ["Rockyou.txt (15m lines)"],
+    2: ["Xato.net (10m lines)"],
+    3: ["WPA Probable small (4800 lines)"],
+    4: ["WPA Probable medium (204k lines)"],
+    5: ["WPA Probable large (1.2m lines)"],
+    6: ["WPA Probable v.large (24m lines)"]
+}
+
+# TODO: https://mega.nz/#F!eVAGAArR!k5Lso87x7a4wrP03np_Eaw
