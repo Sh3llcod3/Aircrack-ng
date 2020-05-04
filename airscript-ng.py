@@ -41,6 +41,13 @@ def main() -> None:
         "Don't stop the network-manager service for SSH connections (unstable)",
         optional=False
     )
+    parser.add_arg(
+        "-i",
+        "--install-deps",
+        None,
+        "Install the required dependencies.",
+        optional=False
+    )
     parser.parse_args()
 
     # Show help screen
