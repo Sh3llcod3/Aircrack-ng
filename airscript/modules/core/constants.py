@@ -26,6 +26,7 @@ AIRCRACK_GH_URL = "https://github.com/aircrack-ng/aircrack-ng.git"
 MDK_GH_URL = "https://github.com/aircrack-ng/mdk4.git"
 REAVER_GH_URL = "https://github.com/t6x/reaver-wps-fork-t6x.git"
 PIXIEWPS_GH_URL = "https://github.com/wiire-a/pixiewps.git"
+WORDLIST_BASE_URL = "https://github.com/Sh3llcod3/Airscript-ng/releases/download/wordlists/"
 
 # Static system locations
 IFACES = FilePath("/sys/class/net/")
@@ -115,13 +116,21 @@ ADAPTER_MODES: Dict[int, str] = {0: "ip link set {0} down; iw dev {0} set type m
 VERSION_STRING = "v2.0, Q2-2020"
 
 # Some wordlists
+WORDLIST_PATH = BASE_PATH / "wordlists"
 WORDLISTS = {
-    1: ["Rockyou.txt (15m lines)"],
-    2: ["Xato.net (10m lines)"],
-    3: ["WPA Probable small (4800 lines)"],
-    4: ["WPA Probable medium (204k lines)"],
-    5: ["WPA Probable large (1.2m lines)"],
-    6: ["WPA Probable v.large (24m lines)"]
+    "WPA Probable small (4800 lines)": [
+        WORDLIST_BASE_URL + "Top4800-WPA-probable-v2.7z",
+    ],
+    "WPA Probable medium (204k lines)": [
+        WORDLIST_BASE_URL + "Top204Thousand-WPA-probable-v2.7z",
+    ],
+    "WPA Probable large (1.2m lines)": [
+        WORDLIST_BASE_URL + "Top1pt2Million-WPA-probable-v2.7z",
+    ],
+    "WPA Probable v.large (24m lines)": [
+        WORDLIST_BASE_URL + "Top24Million-WPA-probable-v2.7z",
+    ],
+    "WPA Probable e.large (85m lines)": [
+        WORDLIST_BASE_URL + "Top85Million-WPA-probable-v2.7z",
+    ]
 }
-
-# TODO: https://mega.nz/#F!eVAGAArR!k5Lso87x7a4wrP03np_Eaw
