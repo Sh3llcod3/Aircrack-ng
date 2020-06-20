@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import platform
-from os import makedirs
 from pathlib import Path
 from shutil import rmtree
 from typing import List, Union
@@ -100,14 +99,15 @@ class PackageInstaller(PackageHandler):
             if not self.manage(dpkg=[f"dpkg -s {DEBPKGS}"]):
 
                 if remove_prev or not min(check_paths):
-                    rmtree(BASE_PATH)
-                    makedirs(BASE_PATH)
+                    if BASE_PATH.exists():
+                        rmtree(BASE_PATH)
+                        BASE_PATH.mkdir(parents=True)
 
                 self.display_output = True
                 self.manage(apt=["apt update", f"apt install -y {DEBPKGS}"])
 
             if not BASE_PATH.exists():
-                makedirs(BASE_PATH)
+                BASE_PATH.mkdir(parents=True)
 
             if not min(check_paths):
                 self.compile(

