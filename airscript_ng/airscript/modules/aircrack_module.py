@@ -4,7 +4,7 @@ from pathlib import Path as FPath
 from secrets import token_hex
 from typing import Any
 
-from airscript.modules.core import (constants, install_packages,
+from .core import (constants, install_packages,
                                     term_colours, tk_elements, wireless_cards)
 
 from prettytable import PrettyTable

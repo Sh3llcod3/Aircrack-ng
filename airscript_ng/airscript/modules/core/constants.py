@@ -20,6 +20,7 @@ PIXIEWPS_PATH = PIXIEWPS_BASE_PATH / "pixiewps"
 REAVER_PATH = REAVER_BASE_PATH / "src" / "reaver"
 CSV_POSTFIX = "-01.csv"
 CAP_POSTFIX = "-01.cap"
+CONFIG = FilePath("airscript_ng/airscript/modules/core/config.cfg")
 
 # URLs of required software.
 AIRCRACK_GH_URL = "https://github.com/aircrack-ng/aircrack-ng.git"
