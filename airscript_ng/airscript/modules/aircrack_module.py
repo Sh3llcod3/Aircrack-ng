@@ -4,10 +4,10 @@ from pathlib import Path as FPath
 from secrets import token_hex
 from typing import Any
 
-from .core import (constants, install_packages,
-                                    term_colours, tk_elements, wireless_cards)
-
 from prettytable import PrettyTable
+
+from .core import (constants, install_packages,
+                   term_colours, tk_elements, wireless_cards)
 
 
 class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
@@ -120,6 +120,11 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
             "Send Deauth to specific client & capture handshake",
             "Don't send Deauths, listen passively for handshake"
         ]
+        ap_table = PrettyTable()
+        ap_table.field_names = list(self.yellow.return_colour("No.", "BSSID", "Channel", "Privacy",
+                                                              "Cipher", "Auth", "PWR", "ESSID"))
+        ap_table.add_row(self.target_ap)
+        print(ap_table, end="\n\n")
         opt_table.field_names = [self.green.return_colour("No."), self.yellow.return_colour("Action")]
         for i in enumerate(options, start=1):
             opt_table.add_row(i)
@@ -133,11 +138,6 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
             self.cleanup()
             return False
 
-        ap_table = PrettyTable()
-        ap_table.field_names = list(self.yellow.return_colour("No.", "BSSID", "Channel", "Privacy",
-                                                              "Cipher", "Auth", "PWR", "ESSID"))
-        ap_table.add_row(self.target_ap)
-        print(ap_table, end="\n\n")
         self.green.print_success("Target AP selected, let's capture a handshake for PSK retrieval.")
         self.cap_path = constants.CAP_FILES / token_hex()
 
@@ -239,9 +239,10 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
 
     def cleanup(self) -> None:
         self.set_mode(0)
-        self.nm_start()
+        if self.stop_nmgr:
+            self.nm_start()
         self.green.print_success(f"Cleaned up {self.card_name}.")
 
 
 # from airscript import modules;
-# a= modules.aircrack(stop_nmgr=False);a.scan_aps();a.select_target();a.deauth_capture();a.cleanup()
+# a= modules.aircrack(stop_nmgr=False);a.scan_aps();a.select_target();a.deauth_capture();a.recover_psk();a.cleanup()
