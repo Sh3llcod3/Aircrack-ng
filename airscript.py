@@ -20,7 +20,7 @@ class Airscript():
         self.setup_parser()
 
         for i in self.cfparser["airscript"].items():
-            self.config[i[0]] = True if "yes" else False
+            self.config[i[0]] = True if i[1] == "yes" else False
 
     def setup_parser(self) -> None:
 
@@ -161,8 +161,8 @@ class Airscript():
     def load_help(self) -> None:
 
         # Show help screen
-        if self.parser.is_present("-s"):
-            self.parser.opt_parser.__add_blank_colors()
+        if self.parser.is_present("-s") or not self.config["enable_color"]:
+            self.parser._opt_parser__add_blank_colors()
             modules.core.term_colours.Colours.reset_colours = True
 
         if self.parser.is_present("-h"):
@@ -176,7 +176,14 @@ class Airscript():
             exit(0)
 
     def show_menu(self) -> None:
-        ...
+
+        self.menu_items = [self.std_aircrack,
+                           self.reaver_wps,
+                           self.mitm_ap,
+                           self.beacon_flood,
+                           self.crack_cap,
+                           self.install_deps,
+                           self.install_hashcat]
 
     def std_aircrack(self) -> None:
         ...
@@ -192,10 +199,10 @@ class Airscript():
 
     def crack_cap(self) -> None:
         ...
-    
+
     def install_deps(self) -> None:
         ...
-    
+
     def install_hashcat(self) -> None:
         ...
 
