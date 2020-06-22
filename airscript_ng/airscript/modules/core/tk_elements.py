@@ -12,7 +12,7 @@ class InputManager(StandardColours):
         self.PS1 = (f"{self.uline.return_colour('airscript')} {self.section_type}"
                     f"({self.red.return_colour(question)}) > ")
 
-    def get(self, highest_val=None, boolean=False, passthrough=False, *exclusions) -> Union[int, bool, None]:
+    def get(self, highest_val=None, boolean=False, passthrough=False, *args, **kwargs) -> Union[int, bool, None]:
         while True:
 
             try:
@@ -32,7 +32,9 @@ class InputManager(StandardColours):
                         return True if v_true else False
 
                 else:
-                    v_range = [str(i) for i in range(1, highest_val + 1) if i not in exclusions]
+                    v_range = [str(i) for i in range(1, highest_val + 1) if i not in args]
+                    additions = [str(i) for i in kwargs.get("extra", None)]
+                    v_range += additions if additions is not None else []
                     return int(v_range[v_range.index(value)])
 
             except(ValueError, TypeError):
@@ -42,6 +44,8 @@ class InputManager(StandardColours):
             except(KeyboardInterrupt, EOFError):
                 return None
 
+    def exit_prompt(self) -> bool:
+        ...
 
 class TkManager():
 

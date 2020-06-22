@@ -50,11 +50,8 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
         self.blue.print_status("i", "Proceed? y/n\n")
         exp_cfm = self.InputManager("modules/aircrack/explore_aps").get(boolean=True)
 
-        if exp_cfm is None:
-            ...
-
-        elif not exp_cfm:
-            ...
+        if exp_cfm is None or not exp_cfm:
+            return exp_cfm
 
         self.fpath = constants.TEMP_FILES / token_hex()
         cmd = (f"{constants.AIRODUMP_PATH} -a -w {self.fpath}"

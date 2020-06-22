@@ -15,7 +15,7 @@ class Airscript():
 
     def __init__(self) -> None:
         self.cfparser = configparser.ConfigParser()
-        self.cfparser.read(modules.core.constants.CONFIG)
+        self.cfparser.read(modules.CONFIG)
         self.config = {}
         self.setup_parser()
 
@@ -44,7 +44,7 @@ class Airscript():
             "-m",
             "--mode",
             "option",
-            "Skip menu, run directly specified menu option with supplied arguments",
+            "Skip menu, run directly specified menu option",
             optional=False
         )
         self.parser.add_arg(
@@ -75,6 +75,7 @@ class Airscript():
             "Delete the directory containing dependencies",
             optional=False
         )
+        """
         self.parser.add_arg(
             "-b",
             "--bssid",
@@ -117,6 +118,7 @@ class Airscript():
             "Specify a time value for certain operations, such as scanning for APs",
             optional=False
         )
+        """
         self.parser.add_arg(
             "-e",
             "--edit-config",
@@ -145,25 +147,24 @@ class Airscript():
         # Manage depedencies
 
         if self.parser.is_present("-p"):
-            path = modules.core.constants.BASE_PATH
+            path = modules.BASE_PATH
             if path.exists():
                 rmtree(path)
                 path.mkdir()
 
         if self.parser.is_present("-i"):
-            from modules.core.install_packages import PackageInstaller
-            packages = PackageInstaller()
+            packages = modules.PackageInstaller()
             packages.install(True)
 
         if self.parser.is_present("-l"):
-            print(modules.core.constants.CONFIG.read_text())
+            print(modules.CONFIG.read_text())
 
     def load_help(self) -> None:
 
         # Show help screen
         if self.parser.is_present("-s") or not self.config["enable_color"]:
             self.parser._opt_parser__add_blank_colors()
-            modules.core.term_colours.Colours.reset_colours = True
+            modules.Colours.reset_colours = True
 
         if self.parser.is_present("-h"):
             self.parser.filename = "airscript-ng"
@@ -172,26 +173,73 @@ class Airscript():
 
         # Show version information
         elif self.parser.is_present("-v"):
-            print(modules.core.VERSION_STRING)
+            print(modules.VERSION_STRING)
             exit(0)
 
     def show_menu(self) -> None:
 
-        self.menu_items = [self.std_aircrack,
-                           self.reaver_wps,
-                           self.mitm_ap,
-                           self.beacon_flood,
-                           self.crack_cap,
-                           self.install_deps,
-                           self.install_hashcat]
+        if not len(argv) == 1:
+            return
+
+        self.menu_items = [[self.std_aircrack, "Capture handshake and run dictionary attack with aircrack-ng"],
+                           [self.pmkid_std, "Capture handshake using PMKID technique and run dictionary attack"],
+                           [self.reaver_wps, "Run a Pixiedust attack on select WPS enabled APs with Reaver"],
+                           [self.mitm_ap, "Host an MITM AP to phish credentials, sniff traffic and more"],
+                           [self.beacon_flood, "Create a beacon flood and fill the air with non-existent AP SSIDs"],
+                           [self.crack_cap, "Attempt PSK retrieval with an existing handshake capture file"],
+                           [self.manual_control, "Manipulate the system's WiFi cards with full manual control"],
+                           [self.install_deps, "(Re)Install the dependencies required for this script"],
+                           [self.install_hashcat, "Download and setup Hashcat and Hashcat utils to utilise GPU"]]
+
+        inp = modules.InputManager
+        inp.section_type = "main_menu"
+        colours = modules.StandardColours()
+
+        while True:
+            try:
+                cmd = modules.Commands(); cmd.clear()
+                colours.deep_red.print_colour(f"Welcome to Airscript-ng {modules.VERSION_STRING} (MIT license)\n")
+                for i in enumerate(self.menu_items, start=1):
+                    print(f"  {i[0]} - {i[1][-1]}")
+                colours.highlight.print_colour("\n99 - Exit")
+                print()
+                selected = inp("select_option").get(len(self.menu_items), extra=[99])
+
+                if selected == 99 or selected is None:
+                    break
+
+                else:
+                    self.menu_items[selected - 1][0]()
+
+            except(KeyboardInterrupt, EOFError):
+                break
 
     def std_aircrack(self) -> None:
+
+        packages = modules.PackageInstaller()
+        packages.install(False)
+        stop_nmgr = False if (self.parser.is_present("-n") or not self.config["stop_nm"]) else True
+        aircrack_instance = modules.aircrack(stop_nmgr=stop_nmgr)
+        ret = aircrack_instance.scan_aps()
+        if ret in [None, False]:
+            aircrack_instance.cleanup()
+            return
+        aircrack_instance.select_target()
+        aircrack_instance.deauth_capture()
+        aircrack_instance.recover_psk()
+        aircrack_instance.cleanup()
+        return
+
+    def pmkid_std(self) -> None:
         ...
 
     def reaver_wps(self) -> None:
         ...
 
     def mitm_ap(self) -> None:
+        ...
+
+    def manual_control(self) -> None:
         ...
 
     def beacon_flood(self) -> None:
@@ -206,11 +254,11 @@ class Airscript():
     def install_hashcat(self) -> None:
         ...
 
-
 def main() -> None:
 
     entrypoint = Airscript()
     entrypoint.load_help()
+    entrypoint.show_menu()
 
 
 if __name__ == "__main__":
