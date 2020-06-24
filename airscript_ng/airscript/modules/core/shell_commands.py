@@ -44,6 +44,9 @@ class Commands():
     def clear(self) -> None:
         self.run("clear || tput clear")
 
+    def reset_term(self) -> None:
+        self.run("reset")
+
     def quit(self, exit_code: int = 0) -> None:
         exit(exit_code)
 

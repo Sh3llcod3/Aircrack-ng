@@ -17,6 +17,7 @@ class Airscript():
         self.cfparser = configparser.ConfigParser()
         self.cfparser.read(modules.CONFIG)
         self.config = {}
+        self.colours = modules.StandardColours()
         self.setup_parser()
 
         for i in self.cfparser["airscript"].items():
@@ -75,50 +76,6 @@ class Airscript():
             "Delete the directory containing dependencies",
             optional=False
         )
-        """
-        self.parser.add_arg(
-            "-b",
-            "--bssid",
-            "bssid",
-            "For certain attacks, specify the AP BSSID",
-            optional=False
-        )
-        self.parser.add_arg(
-            "-c",
-            "--client-bssid",
-            "bssid",
-            "For certain attacks, specify the client BSSID",
-            optional=False
-        )
-        self.parser.add_arg(
-            "-d",
-            "--deauth-count",
-            "number",
-            "With certain attacks, specify the number of times to send deauth packets",
-            optional=False
-        )
-        self.parser.add_arg(
-            "-f",
-            "--file",
-            "path",
-            "For certain operations specify a file path",
-            optional=False
-        )
-        self.parser.add_arg(
-            "-w",
-            "--wordlist",
-            "path",
-            "Load the wordlist from the path supplied",
-            optional=False
-        )
-        self.parser.add_arg(
-            "-t",
-            "--time",
-            "seconds",
-            "Specify a time value for certain operations, such as scanning for APs",
-            optional=False
-        )
-        """
         self.parser.add_arg(
             "-e",
             "--edit-config",
@@ -141,16 +98,17 @@ class Airscript():
             # https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html
             optional=True
         )
-        self.parser.add_comment("If no options are supplied, launch the menu by default.")
         self.parser.parse_args()
 
-        # Manage depedencies
+        # Manage dependencies
 
         if self.parser.is_present("-p"):
             path = modules.BASE_PATH
             if path.exists():
                 rmtree(path)
                 path.mkdir()
+                self.colours.deep_green.print_success("Removed folder with dependencies")
+                exit(0)
 
         if self.parser.is_present("-i"):
             packages = modules.PackageInstaller()
@@ -178,32 +136,41 @@ class Airscript():
 
     def show_menu(self) -> None:
 
-        if not len(argv) == 1:
-            return
+        colours = self.colours
+        self.menu_items = [[self.std_aircrack, colours.deep_green.return_colour(
+                            "Capture handshake and run dictionary attack with aircrack-ng")],
+                           [self.pmkid_std, colours.deep_blue.return_colour(
+                            "Capture handshake using RSN PMKID and run dictionary attack")],
+                           [self.reaver_wps, colours.deep_pink.return_colour(
+                            "Run a Pixiedust attack on select WPS enabled APs with Reaver")],
+                           [self.mitm_ap, colours.deep_yellow.return_colour(
+                            "Host an MITM AP to phish credentials, sniff traffic and more")],
+                           [self.beacon_flood, colours.deep_green.return_colour(
+                            "Create a beacon flood and fill the air with non-existent AP SSIDs")],
+                           [self.crack_cap, colours.deep_red.return_colour(
+                            "Attempt PSK retrieval with an existing handshake capture file")],
+                           [self.manual_control, colours.deep_blue.return_colour(
+                            "Manipulate the system's WiFi cards with full manual control")],
+                           [self.install_deps, colours.deep_yellow.return_colour(
+                            "(Re)Install the dependencies required for this script")],
+                           [self.install_hashcat, colours.deep_black.return_colour(
+                            "Download and setup Hashcat and Hashcat utils to utilise GPU")]]
 
-        self.menu_items = [[self.std_aircrack, "Capture handshake and run dictionary attack with aircrack-ng"],
-                           [self.pmkid_std, "Capture handshake using PMKID technique and run dictionary attack"],
-                           [self.reaver_wps, "Run a Pixiedust attack on select WPS enabled APs with Reaver"],
-                           [self.mitm_ap, "Host an MITM AP to phish credentials, sniff traffic and more"],
-                           [self.beacon_flood, "Create a beacon flood and fill the air with non-existent AP SSIDs"],
-                           [self.crack_cap, "Attempt PSK retrieval with an existing handshake capture file"],
-                           [self.manual_control, "Manipulate the system's WiFi cards with full manual control"],
-                           [self.install_deps, "(Re)Install the dependencies required for this script"],
-                           [self.install_hashcat, "Download and setup Hashcat and Hashcat utils to utilise GPU"]]
+        self.inp = modules.InputManager
+        self.inp.section_type = "main_menu"
 
-        inp = modules.InputManager
-        inp.section_type = "main_menu"
-        colours = modules.StandardColours()
 
         while True:
             try:
-                cmd = modules.Commands(); cmd.clear()
+                cmd = modules.Commands()
+                cmd.clear()
                 colours.deep_red.print_colour(f"Welcome to Airscript-ng {modules.VERSION_STRING} (MIT license)\n")
                 for i in enumerate(self.menu_items, start=1):
-                    print(f"  {i[0]} - {i[1][-1]}")
-                colours.highlight.print_colour("\n99 - Exit")
+                    print(f"  [{colours.deep_green.return_colour(i[0])}] - {i[1][-1]}")
+                print("\n  ", end="")
+                colours.highlight.print_colour("[99] - Exit")
                 print()
-                selected = inp("select_option").get(len(self.menu_items), extra=[99])
+                selected = self.inp("select_option").get(len(self.menu_items), extra=[99])
 
                 if selected == 99 or selected is None:
                     break
@@ -216,18 +183,19 @@ class Airscript():
 
     def std_aircrack(self) -> None:
 
+        self.inp.section_type = "attacks"
         packages = modules.PackageInstaller()
         packages.install(False)
         stop_nmgr = False if (self.parser.is_present("-n") or not self.config["stop_nm"]) else True
         aircrack_instance = modules.aircrack(stop_nmgr=stop_nmgr)
-        ret = aircrack_instance.scan_aps()
-        if ret in [None, False]:
+        if aircrack_instance.scan_aps() in [None, False]:
             aircrack_instance.cleanup()
             return
         aircrack_instance.select_target()
         aircrack_instance.deauth_capture()
         aircrack_instance.recover_psk()
         aircrack_instance.cleanup()
+        self.inp("modules/aircrack/return_menu").exit_prompt()
         return
 
     def pmkid_std(self) -> None:
@@ -253,6 +221,7 @@ class Airscript():
 
     def install_hashcat(self) -> None:
         ...
+
 
 def main() -> None:
 

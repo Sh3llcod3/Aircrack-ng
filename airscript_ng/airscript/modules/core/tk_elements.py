@@ -33,8 +33,8 @@ class InputManager(StandardColours):
 
                 else:
                     v_range = [str(i) for i in range(1, highest_val + 1) if i not in args]
-                    additions = [str(i) for i in kwargs.get("extra", None)]
-                    v_range += additions if additions is not None else []
+                    extra_args = kwargs.get("extra", None)
+                    v_range += [str(i) for i in extra_args] if extra_args is not None else []
                     return int(v_range[v_range.index(value)])
 
             except(ValueError, TypeError):
@@ -45,7 +45,9 @@ class InputManager(StandardColours):
                 return None
 
     def exit_prompt(self) -> bool:
-        ...
+        self.marine_blue.print_question("Would you like to return to the menu? (otherwise, exit)")
+        return self.get(boolean=True)
+
 
 class TkManager():
 

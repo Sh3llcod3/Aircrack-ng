@@ -61,7 +61,7 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
         try:
             self.run(cmd)
         except(KeyboardInterrupt, EOFError):
-            ...
+            return True
 
     def select_target(self) -> None:
         self.clear()
@@ -101,6 +101,7 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
         )
         csv_dump.unlink()
         ap_counter -= 1
+        self.yellow.print_question("Please enter number of target AP.\n")
         self.target_ap: Any = ap_map.get(
             num_map.get(self.InputManager("modules/aircrack/select_ap").get(ap_counter), "")
         )
@@ -229,7 +230,7 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
             self.run(f'/usr/bin/env bash -c "{cmd}"')
 
         except(KeyboardInterrupt, EOFError):
-            ...
+            self.reset_term()
 
     def recover_psk(self) -> None:
         ...
@@ -238,7 +239,7 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
         self.set_mode(0)
         if self.stop_nmgr:
             self.nm_start()
-        self.green.print_success(f"Cleaned up {self.card_name}.")
+        self.green.print_success(f"Cleaned up {self.card_name}")
 
 
 # from airscript import modules;
