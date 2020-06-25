@@ -100,23 +100,6 @@ class Airscript():
         )
         self.parser.parse_args()
 
-        # Manage dependencies
-
-        if self.parser.is_present("-p"):
-            path = modules.BASE_PATH
-            if path.exists():
-                rmtree(path)
-                path.mkdir()
-                self.colours.deep_green.print_success("Removed folder with dependencies")
-                exit(0)
-
-        if self.parser.is_present("-i"):
-            packages = modules.PackageInstaller()
-            packages.install(True)
-
-        if self.parser.is_present("-l"):
-            print(modules.CONFIG.read_text())
-
     def load_help(self) -> None:
 
         # Show help screen
@@ -134,6 +117,26 @@ class Airscript():
             print(modules.VERSION_STRING)
             exit(0)
 
+    def manage_args(self) -> None:
+
+        # Manage dependencies
+        if self.parser.is_present("-p"):
+            path = modules.BASE_PATH
+            if path.exists():
+                rmtree(path)
+                path.mkdir()
+                self.colours.deep_green.print_success("Removed folder with dependencies")
+                exit(0)
+
+        if self.parser.is_present("-i"):
+            packages = modules.PackageInstaller()
+            packages.install(True)
+            exit(0)
+
+        if self.parser.is_present("-l"):
+            print(modules.CONFIG.read_text())
+            exit(0)
+
     def show_menu(self) -> None:
 
         colours = self.colours
@@ -143,22 +146,23 @@ class Airscript():
                             "Capture handshake using RSN PMKID and run dictionary attack")],
                            [self.reaver_wps, colours.deep_pink.return_colour(
                             "Run a Pixiedust attack on select WPS enabled APs with Reaver")],
+                           [self.deauth_fun, colours.deep_red.return_colour(
+                            "Flood a target client or access point with deauth packets")],
                            [self.mitm_ap, colours.deep_yellow.return_colour(
                             "Host an MITM AP to phish credentials, sniff traffic and more")],
                            [self.beacon_flood, colours.deep_green.return_colour(
-                            "Create a beacon flood and fill the air with non-existent AP SSIDs")],
+                            "Create a beacon flood and fill the air with non-existent SSIDs")],
                            [self.crack_cap, colours.deep_red.return_colour(
                             "Attempt PSK retrieval with an existing handshake capture file")],
                            [self.manual_control, colours.deep_blue.return_colour(
                             "Manipulate the system's WiFi cards with full manual control")],
                            [self.install_deps, colours.deep_yellow.return_colour(
                             "(Re)Install the dependencies required for this script")],
-                           [self.install_hashcat, colours.deep_black.return_colour(
+                           [self.install_hashcat, colours.deep_white.return_colour(
                             "Download and setup Hashcat and Hashcat utils to utilise GPU")]]
 
         self.inp = modules.InputManager
         self.inp.section_type = "main_menu"
-
 
         while True:
             try:
@@ -177,6 +181,10 @@ class Airscript():
 
                 else:
                     self.menu_items[selected - 1][0]()
+                    if self.inp("modules/aircrack/return_to_menu").exit_prompt():
+                        continue
+                    else:
+                        modules.Commands.quit(0)
 
             except(KeyboardInterrupt, EOFError):
                 break
@@ -188,15 +196,15 @@ class Airscript():
         packages.install(False)
         stop_nmgr = False if (self.parser.is_present("-n") or not self.config["stop_nm"]) else True
         aircrack_instance = modules.aircrack(stop_nmgr=stop_nmgr)
+
         if aircrack_instance.scan_aps() in [None, False]:
             aircrack_instance.cleanup()
             return
+
         aircrack_instance.select_target()
         aircrack_instance.deauth_capture()
         aircrack_instance.recover_psk()
         aircrack_instance.cleanup()
-        self.inp("modules/aircrack/return_menu").exit_prompt()
-        return
 
     def pmkid_std(self) -> None:
         ...
@@ -213,6 +221,9 @@ class Airscript():
     def beacon_flood(self) -> None:
         ...
 
+    def deauth_fun(self) -> None:
+        ...
+
     def crack_cap(self) -> None:
         ...
 
@@ -226,6 +237,7 @@ class Airscript():
 def main() -> None:
 
     entrypoint = Airscript()
+    entrypoint.manage_args()
     entrypoint.load_help()
     entrypoint.show_menu()
 

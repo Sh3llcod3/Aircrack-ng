@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from typing import Tuple, Union
+from typing import Any
 
 
 class Colours():
@@ -61,7 +61,7 @@ class Colours():
             return f"[{symbol}] {message}"
 
     # Add a method to return the colourised text.
-    def return_colour(self, *message) -> Union[Tuple, str]:
+    def return_colour(self, *message) -> Any:
         result = []
 
         for msg in message:

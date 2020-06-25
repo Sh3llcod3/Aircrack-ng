@@ -34,7 +34,7 @@ class card_manager(Commands):
 
             card_manager.card_count += 1
             BASE = f"{AIRMON_PATH} | grep {i[1]}"
-            card_manager.total_cards[i[0]] = [i[1], *self.capture(f"{BASE} | cut -f4", f"{BASE} | cut -f5")]
+            card_manager.total_cards[i[0]] = [i[1], *self.capture(f"{BASE} | cut -f3,4", f"{BASE} | cut -f5")]
 
     def __update_state(self) -> None:
         self.card_status, self.card_state = self.capture(f"iw {self.card_name} info 2>/dev/null "
@@ -73,3 +73,9 @@ class card_manager(Commands):
 
         except(Exception):
             return False
+
+    def reset_cards(self) -> None:
+        card_manager.card_count = 0
+        card_manager.total_cards = {}
+        card_manager.selected_cards = {}
+        self.__update_state() if self.card_name != "" else ...

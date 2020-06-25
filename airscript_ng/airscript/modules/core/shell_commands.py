@@ -47,7 +47,8 @@ class Commands():
     def reset_term(self) -> None:
         self.run("reset")
 
-    def quit(self, exit_code: int = 0) -> None:
+    @staticmethod
+    def quit(exit_code: int = 0) -> None:
         exit(exit_code)
 
     def stdout_write(self, str_to_write: str) -> None:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from typing import Union
+from typing import Any, Union
 
 from .term_colours import StandardColours
 
@@ -12,7 +12,7 @@ class InputManager(StandardColours):
         self.PS1 = (f"{self.uline.return_colour('airscript')} {self.section_type}"
                     f"({self.red.return_colour(question)}) > ")
 
-    def get(self, highest_val=None, boolean=False, passthrough=False, *args, **kwargs) -> Union[int, bool, None]:
+    def get(self, highest_val=None, boolean=False, passthrough=False, *args, **kwargs) -> Any:
         while True:
 
             try:
@@ -44,8 +44,9 @@ class InputManager(StandardColours):
             except(KeyboardInterrupt, EOFError):
                 return None
 
-    def exit_prompt(self) -> bool:
-        self.marine_blue.print_question("Would you like to return to the menu? (otherwise, exit)")
+    def exit_prompt(self) -> Union[int, bool, None]:
+        print()
+        self.deep_yellow.print_question("Would you like to return to the menu? (y/n)")
         return self.get(boolean=True)
 
 
