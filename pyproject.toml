@@ -9,7 +9,7 @@ repository = "https://github.com/Sh3llcod3/Airscript-ng"
 homepage = "https://github.com/Sh3llcod3/Airscript-ng"
 
 classifiers = [
-  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
   "License :: OSI Approved :: MIT License",
   "Topic :: Security",
   "Topic :: System :: Networking",
@@ -28,7 +28,7 @@ include = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.8"
 easyparse = "*"
 gevent = "*"
 Flask = "*"

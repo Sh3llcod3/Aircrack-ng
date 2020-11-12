@@ -19,6 +19,7 @@ class Airscript():
         self.config = {}
         self.colours = modules.StandardColours()
         self.setup_parser()
+        self.inp = modules.InputManager("main_menu", "options")
 
         for i in self.cfparser["airscript"].items():
             self.config[i[0]] = True if i[1] == "yes" else False
@@ -147,7 +148,7 @@ class Airscript():
                            [self.reaver_wps, colours.deep_pink.return_colour(
                             "Run a Pixiedust attack on select WPS enabled APs with Reaver")],
                            [self.deauth_fun, colours.deep_red.return_colour(
-                            "Flood a target client or access point with deauth packets")],
+                            "Flood a target client or access point with deauth/disassoc packets")],
                            [self.mitm_ap, colours.deep_yellow.return_colour(
                             "Host an MITM AP to phish credentials, sniff traffic and more")],
                            [self.beacon_flood, colours.deep_green.return_colour(
@@ -158,30 +159,26 @@ class Airscript():
                             "Manipulate the system's WiFi cards with full manual control")],
                            [self.install_deps, colours.deep_yellow.return_colour(
                             "(Re)Install the dependencies required for this script")],
-                           [self.install_hashcat, colours.deep_white.return_colour(
+                           [self.install_hashcat, colours.deep_pink.return_colour(
                             "Download and setup Hashcat and Hashcat utils to utilise GPU")]]
-
-        self.inp = modules.InputManager
-        self.inp.section_type = "main_menu"
 
         while True:
             try:
-                cmd = modules.Commands()
-                cmd.clear()
+                modules.Commands().clear()
                 colours.deep_red.print_colour(f"Welcome to Airscript-ng {modules.VERSION_STRING} (MIT license)\n")
                 for i in enumerate(self.menu_items, start=1):
                     print(f"  [{colours.deep_green.return_colour(i[0])}] - {i[1][-1]}")
                 print("\n  ", end="")
                 colours.highlight.print_colour("[99] - Exit")
                 print()
-                selected = self.inp("select_option").get(len(self.menu_items), extra=[99])
+                selected = self.inp.get(len(self.menu_items), extra=[99], pos="choose")
 
                 if selected == 99 or selected is None:
                     break
 
                 else:
                     self.menu_items[selected - 1][0]()
-                    if self.inp("modules/aircrack/return_to_menu").exit_prompt():
+                    if self.inp.exit_prompt():
                         continue
                     else:
                         modules.Commands.quit(0)
@@ -194,8 +191,9 @@ class Airscript():
         self.inp.section_type = "attacks"
         packages = modules.PackageInstaller()
         packages.install(False)
-        stop_nmgr = False if (self.parser.is_present("-n") or not self.config["stop_nm"]) else True
-        aircrack_instance = modules.aircrack(stop_nmgr=stop_nmgr)
+        aircrack_instance = modules.aircrack(
+            stop_nmgr=False if (self.parser.is_present("-n") or not self.config["stop_nm"]) else True
+        )
 
         if aircrack_instance.scan_aps() in [None, False]:
             aircrack_instance.cleanup()

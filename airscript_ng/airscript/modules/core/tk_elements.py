@@ -5,18 +5,25 @@ from .term_colours import StandardColours
 
 
 class InputManager(StandardColours):
-    prog_name = "airscript"
-    section_type = "attacks"
 
-    def __init__(self, question) -> None:
-        self.PS1 = (f"{self.uline.return_colour('airscript')} {self.section_type}"
-                    f"({self.red.return_colour(question)}) > ")
+    def __init__(self, section: str = "", fh: str = "") -> None:
+        self.prog_name = 'airscript'
+        self.section = section
+        self.fh = fh
 
-    def get(self, highest_val=None, boolean=False, passthrough=False, *args, **kwargs) -> Any:
+    def get(self, highest_val: int = 0, boolean: bool = False, passthrough: bool = False, *args, **kwargs) -> Any:
         while True:
 
             try:
-                value = input(self.PS1).strip()
+
+                pos = f"{self.fh}/{kwargs.get('pos', '')}"
+                value = input(
+                    f"{self.uline.return_colour(self.prog_name)} {self.section}"
+                    f"({self.red.return_colour(pos)}) > "
+                ).strip()
+
+                if kwargs.get("space"):
+                    print()
 
                 if passthrough:
                     return True
@@ -47,7 +54,7 @@ class InputManager(StandardColours):
     def exit_prompt(self) -> Union[int, bool, None]:
         print()
         self.deep_yellow.print_question("Would you like to return to the menu? (y/n)")
-        return self.get(boolean=True)
+        return self.get(boolean=True, pos="return_back")
 
 
 class TkManager():
